@@ -7,12 +7,49 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E113014D1A881F2900A63C9D /* LoadingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E113014C1A881F2900A63C9D /* LoadingViewController.swift */; };
+		E14CA0E11A8827A100D02313 /* GameManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E14CA0E01A8827A100D02313 /* GameManager.swift */; };
+		E14CA0F21A88351500D02313 /* Array.swift in Sources */ = {isa = PBXBuildFile; fileRef = E14CA0E51A88351500D02313 /* Array.swift */; };
+		E14CA0F31A88351500D02313 /* Character.swift in Sources */ = {isa = PBXBuildFile; fileRef = E14CA0E61A88351500D02313 /* Character.swift */; };
+		E14CA0F41A88351500D02313 /* Dictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = E14CA0E71A88351500D02313 /* Dictionary.swift */; };
+		E14CA0F51A88351500D02313 /* Double.swift in Sources */ = {isa = PBXBuildFile; fileRef = E14CA0E81A88351500D02313 /* Double.swift */; };
+		E14CA0F61A88351500D02313 /* ExSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = E14CA0EA1A88351500D02313 /* ExSwift.swift */; };
+		E14CA0F71A88351500D02313 /* Float.swift in Sources */ = {isa = PBXBuildFile; fileRef = E14CA0EB1A88351500D02313 /* Float.swift */; };
+		E14CA0F81A88351500D02313 /* Int.swift in Sources */ = {isa = PBXBuildFile; fileRef = E14CA0EC1A88351500D02313 /* Int.swift */; };
+		E14CA0F91A88351500D02313 /* NSArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = E14CA0ED1A88351500D02313 /* NSArray.swift */; };
+		E14CA0FA1A88351500D02313 /* NSDate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E14CA0EE1A88351500D02313 /* NSDate.swift */; };
+		E14CA0FB1A88351500D02313 /* Range.swift in Sources */ = {isa = PBXBuildFile; fileRef = E14CA0EF1A88351500D02313 /* Range.swift */; };
+		E14CA0FC1A88351500D02313 /* Sequence.swift in Sources */ = {isa = PBXBuildFile; fileRef = E14CA0F01A88351500D02313 /* Sequence.swift */; };
+		E14CA0FD1A88351500D02313 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = E14CA0F11A88351500D02313 /* String.swift */; };
+		E14CA0FF1A8888D000D02313 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E14CA0FE1A8888D000D02313 /* SettingsViewController.swift */; };
+		E14CA1011A88944F00D02313 /* no-face.png in Resources */ = {isa = PBXBuildFile; fileRef = E14CA1001A88944F00D02313 /* no-face.png */; };
+		E174F5FF1A7DA0A900C58B48 /* BeaconMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = E174F5FE1A7DA0A900C58B48 /* BeaconMonitor.swift */; };
+		E195F94F1A217832008D8661 /* IMG_1484.jpg in Resources */ = {isa = PBXBuildFile; fileRef = E195F94E1A217832008D8661 /* IMG_1484.jpg */; };
+		E195F9511A2181DB008D8661 /* Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = E195F9501A2181DB008D8661 /* Game.swift */; };
 		E1CC11C419E0930C006EA27D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1CC11C319E0930C006EA27D /* AppDelegate.swift */; };
 		E1CC11C619E0930C006EA27D /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1CC11C519E0930C006EA27D /* ViewController.swift */; };
 		E1CC11C919E0930C006EA27D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E1CC11C719E0930C006EA27D /* Main.storyboard */; };
 		E1CC11CB19E0930C006EA27D /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E1CC11CA19E0930C006EA27D /* Images.xcassets */; };
 		E1CC11CE19E0930C006EA27D /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = E1CC11CC19E0930C006EA27D /* LaunchScreen.xib */; };
 		E1CC11DA19E0930C006EA27D /* bluechipperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1CC11D919E0930C006EA27D /* bluechipperTests.swift */; };
+		E1CC11E419E09431006EA27D /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1CC11E319E09431006EA27D /* StoreKit.framework */; };
+		E1CC11E619E0946E006EA27D /* CoreBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1CC11E519E0946E006EA27D /* CoreBluetooth.framework */; };
+		E1CC11E819E094CB006EA27D /* MultipeerConnectivity.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1CC11E719E094CB006EA27D /* MultipeerConnectivity.framework */; };
+		E1CC11EB19E79DD9006EA27D /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1CC11E919E79DD9006EA27D /* Bolts.framework */; };
+		E1CC11EC19E79DD9006EA27D /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1CC11EA19E79DD9006EA27D /* Parse.framework */; };
+		E1CC11EE19E79E04006EA27D /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1CC11ED19E79E04006EA27D /* AudioToolbox.framework */; };
+		E1CC11F019E79E0C006EA27D /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1CC11EF19E79E0C006EA27D /* CFNetwork.framework */; };
+		E1CC11F219E79E13006EA27D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1CC11F119E79E13006EA27D /* CoreGraphics.framework */; };
+		E1CC11F419E79E17006EA27D /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1CC11F319E79E17006EA27D /* CoreLocation.framework */; };
+		E1CC11F619E79E1C006EA27D /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E1CC11F519E79E1C006EA27D /* libz.dylib */; };
+		E1CC11F819E79E23006EA27D /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1CC11F719E79E23006EA27D /* MobileCoreServices.framework */; };
+		E1CC11FA19E79E27006EA27D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1CC11F919E79E27006EA27D /* QuartzCore.framework */; };
+		E1CC11FC19E79E2D006EA27D /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1CC11FB19E79E2D006EA27D /* Security.framework */; };
+		E1CC11FE19E79E35006EA27D /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1CC11FD19E79E35006EA27D /* SystemConfiguration.framework */; };
+		E1CC120119E79E85006EA27D /* Bridge.m in Sources */ = {isa = PBXBuildFile; fileRef = E1CC120019E79E85006EA27D /* Bridge.m */; };
+		E1E8AEA81A216869008097A9 /* PlayersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1E8AEA71A216869008097A9 /* PlayersViewController.swift */; };
+		E1E8AEAA1A216B7B008097A9 /* PlayerTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1E8AEA91A216B7B008097A9 /* PlayerTableViewCell.swift */; };
+		E1FCCE831A889F2500257E15 /* table.html in Resources */ = {isa = PBXBuildFile; fileRef = E1FCCE821A889F2500257E15 /* table.html */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -26,6 +63,26 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		E113014C1A881F2900A63C9D /* LoadingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoadingViewController.swift; sourceTree = "<group>"; };
+		E14CA0E01A8827A100D02313 /* GameManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameManager.swift; sourceTree = "<group>"; };
+		E14CA0E51A88351500D02313 /* Array.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Array.swift; path = ExSwift/Array.swift; sourceTree = "<group>"; };
+		E14CA0E61A88351500D02313 /* Character.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Character.swift; path = ExSwift/Character.swift; sourceTree = "<group>"; };
+		E14CA0E71A88351500D02313 /* Dictionary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Dictionary.swift; path = ExSwift/Dictionary.swift; sourceTree = "<group>"; };
+		E14CA0E81A88351500D02313 /* Double.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Double.swift; path = ExSwift/Double.swift; sourceTree = "<group>"; };
+		E14CA0E91A88351500D02313 /* ExSwift.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ExSwift.h; path = ExSwift/ExSwift.h; sourceTree = "<group>"; };
+		E14CA0EA1A88351500D02313 /* ExSwift.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ExSwift.swift; path = ExSwift/ExSwift.swift; sourceTree = "<group>"; };
+		E14CA0EB1A88351500D02313 /* Float.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Float.swift; path = ExSwift/Float.swift; sourceTree = "<group>"; };
+		E14CA0EC1A88351500D02313 /* Int.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Int.swift; path = ExSwift/Int.swift; sourceTree = "<group>"; };
+		E14CA0ED1A88351500D02313 /* NSArray.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NSArray.swift; path = ExSwift/NSArray.swift; sourceTree = "<group>"; };
+		E14CA0EE1A88351500D02313 /* NSDate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NSDate.swift; path = ExSwift/NSDate.swift; sourceTree = "<group>"; };
+		E14CA0EF1A88351500D02313 /* Range.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Range.swift; path = ExSwift/Range.swift; sourceTree = "<group>"; };
+		E14CA0F01A88351500D02313 /* Sequence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Sequence.swift; path = ExSwift/Sequence.swift; sourceTree = "<group>"; };
+		E14CA0F11A88351500D02313 /* String.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = String.swift; path = ExSwift/String.swift; sourceTree = "<group>"; };
+		E14CA0FE1A8888D000D02313 /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
+		E14CA1001A88944F00D02313 /* no-face.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "no-face.png"; sourceTree = "<group>"; };
+		E174F5FE1A7DA0A900C58B48 /* BeaconMonitor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BeaconMonitor.swift; sourceTree = "<group>"; };
+		E195F94E1A217832008D8661 /* IMG_1484.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = IMG_1484.jpg; path = ../../IMG_1484.jpg; sourceTree = "<group>"; };
+		E195F9501A2181DB008D8661 /* Game.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Game.swift; sourceTree = "<group>"; };
 		E1CC11BE19E0930C006EA27D /* bluechipper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = bluechipper.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E1CC11C219E0930C006EA27D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E1CC11C319E0930C006EA27D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -36,6 +93,25 @@
 		E1CC11D319E0930C006EA27D /* bluechipperTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = bluechipperTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E1CC11D819E0930C006EA27D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E1CC11D919E0930C006EA27D /* bluechipperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = bluechipperTests.swift; sourceTree = "<group>"; };
+		E1CC11E319E09431006EA27D /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
+		E1CC11E519E0946E006EA27D /* CoreBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreBluetooth.framework; path = System/Library/Frameworks/CoreBluetooth.framework; sourceTree = SDKROOT; };
+		E1CC11E719E094CB006EA27D /* MultipeerConnectivity.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MultipeerConnectivity.framework; path = System/Library/Frameworks/MultipeerConnectivity.framework; sourceTree = SDKROOT; };
+		E1CC11E919E79DD9006EA27D /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Bolts.framework; path = ../../../../Library/Frameworks/Bolts.framework; sourceTree = "<group>"; };
+		E1CC11EA19E79DD9006EA27D /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Parse.framework; path = ../../../../Library/Frameworks/Parse.framework; sourceTree = "<group>"; };
+		E1CC11ED19E79E04006EA27D /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		E1CC11EF19E79E0C006EA27D /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
+		E1CC11F119E79E13006EA27D /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		E1CC11F319E79E17006EA27D /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		E1CC11F519E79E1C006EA27D /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
+		E1CC11F719E79E23006EA27D /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
+		E1CC11F919E79E27006EA27D /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		E1CC11FB19E79E2D006EA27D /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		E1CC11FD19E79E35006EA27D /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		E1CC11FF19E79E84006EA27D /* bluechipper-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "bluechipper-Bridging-Header.h"; sourceTree = "<group>"; };
+		E1CC120019E79E85006EA27D /* Bridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Bridge.m; sourceTree = "<group>"; };
+		E1E8AEA71A216869008097A9 /* PlayersViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayersViewController.swift; sourceTree = "<group>"; };
+		E1E8AEA91A216B7B008097A9 /* PlayerTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerTableViewCell.swift; sourceTree = "<group>"; };
+		E1FCCE821A889F2500257E15 /* table.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = table.html; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -43,6 +119,20 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E1CC11FE19E79E35006EA27D /* SystemConfiguration.framework in Frameworks */,
+				E1CC11FC19E79E2D006EA27D /* Security.framework in Frameworks */,
+				E1CC11FA19E79E27006EA27D /* QuartzCore.framework in Frameworks */,
+				E1CC11F819E79E23006EA27D /* MobileCoreServices.framework in Frameworks */,
+				E1CC11F619E79E1C006EA27D /* libz.dylib in Frameworks */,
+				E1CC11F419E79E17006EA27D /* CoreLocation.framework in Frameworks */,
+				E1CC11F219E79E13006EA27D /* CoreGraphics.framework in Frameworks */,
+				E1CC11F019E79E0C006EA27D /* CFNetwork.framework in Frameworks */,
+				E1CC11EE19E79E04006EA27D /* AudioToolbox.framework in Frameworks */,
+				E1CC11E819E094CB006EA27D /* MultipeerConnectivity.framework in Frameworks */,
+				E1CC11E619E0946E006EA27D /* CoreBluetooth.framework in Frameworks */,
+				E1CC11E419E09431006EA27D /* StoreKit.framework in Frameworks */,
+				E1CC11EB19E79DD9006EA27D /* Bolts.framework in Frameworks */,
+				E1CC11EC19E79DD9006EA27D /* Parse.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -56,9 +146,43 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		E14CA0E21A8834AA00D02313 /* ExSwift */ = {
+			isa = PBXGroup;
+			children = (
+				E14CA0E51A88351500D02313 /* Array.swift */,
+				E14CA0E61A88351500D02313 /* Character.swift */,
+				E14CA0E71A88351500D02313 /* Dictionary.swift */,
+				E14CA0E81A88351500D02313 /* Double.swift */,
+				E14CA0E91A88351500D02313 /* ExSwift.h */,
+				E14CA0EA1A88351500D02313 /* ExSwift.swift */,
+				E14CA0EB1A88351500D02313 /* Float.swift */,
+				E14CA0EC1A88351500D02313 /* Int.swift */,
+				E14CA0ED1A88351500D02313 /* NSArray.swift */,
+				E14CA0EE1A88351500D02313 /* NSDate.swift */,
+				E14CA0EF1A88351500D02313 /* Range.swift */,
+				E14CA0F01A88351500D02313 /* Sequence.swift */,
+				E14CA0F11A88351500D02313 /* String.swift */,
+			);
+			name = ExSwift;
+			sourceTree = "<group>";
+		};
 		E1CC11B519E0930C006EA27D = {
 			isa = PBXGroup;
 			children = (
+				E1CC11FD19E79E35006EA27D /* SystemConfiguration.framework */,
+				E1CC11FB19E79E2D006EA27D /* Security.framework */,
+				E1CC11F919E79E27006EA27D /* QuartzCore.framework */,
+				E1CC11F719E79E23006EA27D /* MobileCoreServices.framework */,
+				E1CC11F519E79E1C006EA27D /* libz.dylib */,
+				E1CC11F319E79E17006EA27D /* CoreLocation.framework */,
+				E1CC11F119E79E13006EA27D /* CoreGraphics.framework */,
+				E1CC11EF19E79E0C006EA27D /* CFNetwork.framework */,
+				E1CC11ED19E79E04006EA27D /* AudioToolbox.framework */,
+				E1CC11E919E79DD9006EA27D /* Bolts.framework */,
+				E1CC11EA19E79DD9006EA27D /* Parse.framework */,
+				E1CC11E719E094CB006EA27D /* MultipeerConnectivity.framework */,
+				E1CC11E519E0946E006EA27D /* CoreBluetooth.framework */,
+				E1CC11E319E09431006EA27D /* StoreKit.framework */,
 				E1CC11C019E0930C006EA27D /* bluechipper */,
 				E1CC11D619E0930C006EA27D /* bluechipperTests */,
 				E1CC11BF19E0930C006EA27D /* Products */,
@@ -77,12 +201,25 @@
 		E1CC11C019E0930C006EA27D /* bluechipper */ = {
 			isa = PBXGroup;
 			children = (
+				E1FCCE821A889F2500257E15 /* table.html */,
+				E14CA1001A88944F00D02313 /* no-face.png */,
+				E14CA0E21A8834AA00D02313 /* ExSwift */,
+				E195F94E1A217832008D8661 /* IMG_1484.jpg */,
 				E1CC11C319E0930C006EA27D /* AppDelegate.swift */,
 				E1CC11C519E0930C006EA27D /* ViewController.swift */,
 				E1CC11C719E0930C006EA27D /* Main.storyboard */,
 				E1CC11CA19E0930C006EA27D /* Images.xcassets */,
 				E1CC11CC19E0930C006EA27D /* LaunchScreen.xib */,
 				E1CC11C119E0930C006EA27D /* Supporting Files */,
+				E1CC120019E79E85006EA27D /* Bridge.m */,
+				E1CC11FF19E79E84006EA27D /* bluechipper-Bridging-Header.h */,
+				E1E8AEA71A216869008097A9 /* PlayersViewController.swift */,
+				E1E8AEA91A216B7B008097A9 /* PlayerTableViewCell.swift */,
+				E195F9501A2181DB008D8661 /* Game.swift */,
+				E174F5FE1A7DA0A900C58B48 /* BeaconMonitor.swift */,
+				E113014C1A881F2900A63C9D /* LoadingViewController.swift */,
+				E14CA0E01A8827A100D02313 /* GameManager.swift */,
+				E14CA0FE1A8888D000D02313 /* SettingsViewController.swift */,
 			);
 			path = bluechipper;
 			sourceTree = "<group>";
@@ -161,6 +298,15 @@
 				TargetAttributes = {
 					E1CC11BD19E0930C006EA27D = {
 						CreatedOnToolsVersion = 6.0.1;
+						DevelopmentTeam = 6QXU23Q59K;
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+							com.apple.InAppPurchase = {
+								enabled = 1;
+							};
+						};
 					};
 					E1CC11D219E0930C006EA27D = {
 						CreatedOnToolsVersion = 6.0.1;
@@ -192,7 +338,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E195F94F1A217832008D8661 /* IMG_1484.jpg in Resources */,
+				E1FCCE831A889F2500257E15 /* table.html in Resources */,
 				E1CC11C919E0930C006EA27D /* Main.storyboard in Resources */,
+				E14CA1011A88944F00D02313 /* no-face.png in Resources */,
 				E1CC11CE19E0930C006EA27D /* LaunchScreen.xib in Resources */,
 				E1CC11CB19E0930C006EA27D /* Images.xcassets in Resources */,
 			);
@@ -212,8 +361,28 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E14CA0F91A88351500D02313 /* NSArray.swift in Sources */,
 				E1CC11C619E0930C006EA27D /* ViewController.swift in Sources */,
+				E14CA0F21A88351500D02313 /* Array.swift in Sources */,
+				E14CA0F61A88351500D02313 /* ExSwift.swift in Sources */,
+				E14CA0FB1A88351500D02313 /* Range.swift in Sources */,
+				E14CA0FA1A88351500D02313 /* NSDate.swift in Sources */,
+				E14CA0F31A88351500D02313 /* Character.swift in Sources */,
+				E14CA0E11A8827A100D02313 /* GameManager.swift in Sources */,
+				E14CA0F51A88351500D02313 /* Double.swift in Sources */,
+				E195F9511A2181DB008D8661 /* Game.swift in Sources */,
+				E14CA0F41A88351500D02313 /* Dictionary.swift in Sources */,
+				E1E8AEA81A216869008097A9 /* PlayersViewController.swift in Sources */,
+				E113014D1A881F2900A63C9D /* LoadingViewController.swift in Sources */,
+				E14CA0FF1A8888D000D02313 /* SettingsViewController.swift in Sources */,
+				E1E8AEAA1A216B7B008097A9 /* PlayerTableViewCell.swift in Sources */,
+				E14CA0F71A88351500D02313 /* Float.swift in Sources */,
+				E1CC120119E79E85006EA27D /* Bridge.m in Sources */,
 				E1CC11C419E0930C006EA27D /* AppDelegate.swift in Sources */,
+				E174F5FF1A7DA0A900C58B48 /* BeaconMonitor.swift in Sources */,
+				E14CA0FD1A88351500D02313 /* String.swift in Sources */,
+				E14CA0FC1A88351500D02313 /* Sequence.swift in Sources */,
+				E14CA0F81A88351500D02313 /* Int.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -292,6 +461,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -327,6 +497,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
+				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -336,9 +507,20 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LOCAL_LIBRARY_DIR)/Frameworks",
+				);
 				INFOPLIST_FILE = bluechipper/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "9e9e4427-1faf-4c8f-8ee2-8b55a4ced1bc";
+				SWIFT_OBJC_BRIDGING_HEADER = "bluechipper/bluechipper-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
 		};
@@ -346,9 +528,19 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LOCAL_LIBRARY_DIR)/Frameworks",
+				);
 				INFOPLIST_FILE = bluechipper/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "9e9e4427-1faf-4c8f-8ee2-8b55a4ced1bc";
+				SWIFT_OBJC_BRIDGING_HEADER = "bluechipper/bluechipper-Bridging-Header.h";
 			};
 			name = Release;
 		};
@@ -405,6 +597,7 @@
 				E1CC11DF19E0930C006EA27D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		E1CC11E019E0930C006EA27D /* Build configuration list for PBXNativeTarget "bluechipperTests" */ = {
 			isa = XCConfigurationList;
@@ -413,6 +606,7 @@
 				E1CC11E219E0930C006EA27D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
