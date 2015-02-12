@@ -1,0 +1,30 @@
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0">
+  <link rel="stylesheet" type="text/css" href="style.css" />
+</head>
+<body>
+  <script type='text/javascript' src='bluechipper.js'></script>
+  <script type='text/javascript' src='player.js'></script>
+  <script type='text/javascript' src='button.js'></script>
+  <script type='text/javascript' src='menu.js'></script>
+  <script type='text/javascript' src='hand.js'></script>
+  <script type='text/javascript' src='pot.js'></script>
+  <script type='text/javascript' src='table.js'></script>
+
+  <script>
+
+    var table = new BC.table()
+    for (var i = 0; i < 4; ++i) {
+      table.addPlayer(i+1, 100)
+    }
+
+    document.body.appendChild(table.el)
+
+    table.randomizePlayers()
+    table.layoutPlayers()
+    table.startGame()
+
+  </script>
+</body>
+</html>
