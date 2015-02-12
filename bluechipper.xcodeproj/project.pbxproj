@@ -50,6 +50,8 @@
 		E1E8AEA81A216869008097A9 /* PlayersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1E8AEA71A216869008097A9 /* PlayersViewController.swift */; };
 		E1E8AEAA1A216B7B008097A9 /* PlayerTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1E8AEA91A216B7B008097A9 /* PlayerTableViewCell.swift */; };
 		E1FCCE831A889F2500257E15 /* table.html in Resources */ = {isa = PBXBuildFile; fileRef = E1FCCE821A889F2500257E15 /* table.html */; };
+		E1FCCE861A8A06BE00257E15 /* table.js in Resources */ = {isa = PBXBuildFile; fileRef = E1FCCE841A8A06BE00257E15 /* table.js */; };
+		E1FCCE871A8A06BE00257E15 /* style.css in Resources */ = {isa = PBXBuildFile; fileRef = E1FCCE851A8A06BE00257E15 /* style.css */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -112,6 +114,8 @@
 		E1E8AEA71A216869008097A9 /* PlayersViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayersViewController.swift; sourceTree = "<group>"; };
 		E1E8AEA91A216B7B008097A9 /* PlayerTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerTableViewCell.swift; sourceTree = "<group>"; };
 		E1FCCE821A889F2500257E15 /* table.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = table.html; sourceTree = "<group>"; };
+		E1FCCE841A8A06BE00257E15 /* table.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = table.js; sourceTree = "<group>"; };
+		E1FCCE851A8A06BE00257E15 /* style.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = style.css; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -201,6 +205,8 @@
 		E1CC11C019E0930C006EA27D /* bluechipper */ = {
 			isa = PBXGroup;
 			children = (
+				E1FCCE841A8A06BE00257E15 /* table.js */,
+				E1FCCE851A8A06BE00257E15 /* style.css */,
 				E1FCCE821A889F2500257E15 /* table.html */,
 				E14CA1001A88944F00D02313 /* no-face.png */,
 				E14CA0E21A8834AA00D02313 /* ExSwift */,
@@ -339,8 +345,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				E195F94F1A217832008D8661 /* IMG_1484.jpg in Resources */,
+				E1FCCE871A8A06BE00257E15 /* style.css in Resources */,
 				E1FCCE831A889F2500257E15 /* table.html in Resources */,
 				E1CC11C919E0930C006EA27D /* Main.storyboard in Resources */,
+				E1FCCE861A8A06BE00257E15 /* table.js in Resources */,
 				E14CA1011A88944F00D02313 /* no-face.png in Resources */,
 				E1CC11CE19E0930C006EA27D /* LaunchScreen.xib in Resources */,
 				E1CC11CB19E0930C006EA27D /* Images.xcassets in Resources */,

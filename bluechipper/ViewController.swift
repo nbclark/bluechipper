@@ -17,6 +17,8 @@ class ViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     
+    // Yes I am going to write the game table in HTML
+    // Once they make a better UI language, I'll use that - but fuck recompiling
     let url = NSBundle.mainBundle().URLForResource("table", withExtension:"html")
     self.webView.scrollView.scrollEnabled = false
     self.webView.loadRequest(NSURLRequest(URL: url!))

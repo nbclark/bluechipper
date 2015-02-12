@@ -1,0 +1,44 @@
+
+
+	function setButton(index) {
+		potValue = 0
+
+		var buttonIndex = index
+		var halfLeft = container.clientWidth / 2
+		var halfTop = container.clientHeight / 2
+		var halfCell = cellSize / 2
+
+		var sbPlayer = players[(buttonIndex+1) % players.length]
+		var bbPlayer = players[(buttonIndex+2) % players.length]
+
+		if (sbPlayer.offsetLeft + halfCell == halfLeft) {
+			sb.style.left = sbPlayer.offsetLeft + halfCell - buttonSize / 2
+		}
+		else if (sbPlayer.offsetLeft + halfCell < halfLeft) {
+			sb.style.left = sbPlayer.offsetLeft + cellSize - buttonSize / 2
+		} else {
+			sb.style.left = sbPlayer.offsetLeft - buttonSize / 2
+		}
+		if (sbPlayer.offsetTop + halfCell == halfTop) {
+			sb.style.top = sbPlayer.offsetTop + halfCell - buttonSize / 2
+		} else if (sbPlayer.offsetTop < halfTop) {
+			sb.style.top = sbPlayer.offsetTop + cellSize - buttonSize / 2
+		} else {
+			sb.style.top = sbPlayer.offsetTop - buttonSize / 2
+		}
+
+		if (bbPlayer.offsetLeft + halfCell == halfLeft) {
+			bb.style.left = bbPlayer.offsetLeft + halfCell - buttonSize / 2
+		} else if (bbPlayer.offsetLeft < halfLeft) {
+			bb.style.left = bbPlayer.offsetLeft + cellSize - buttonSize / 2
+		} else {
+			bb.style.left = bbPlayer.offsetLeft - buttonSize / 2
+		}
+		if (bbPlayer.offsetTop + halfCell == halfTop) {
+			bb.style.top = bbPlayer.offsetTop + halfCell - buttonSize / 2
+		} else if (bbPlayer.offsetTop < halfTop) {
+			bb.style.top = bbPlayer.offsetTop + cellSize - buttonSize / 2
+		} else {
+			bb.style.top = bbPlayer.offsetTop - buttonSize / 2
+		}
+	}
