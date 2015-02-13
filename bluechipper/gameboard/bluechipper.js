@@ -1,7 +1,6 @@
 
 	(function() {
 		// utils
-		var BC = {}
 
 		ce = function(tag, props) {
 			var e = document.createElement(tag)
@@ -19,23 +18,14 @@
 		}
 		Array.prototype.shuffle = function() {
 		    for (var i = this.length - 1; i > 0; i--) {
-		        var j = Math.floor(Math.random() * (i + 1));
-		        var temp = this[i];
-		        this[i] = this[j];
-		        this[j] = temp;
+		        var j = Math.floor(Math.random() * (i + 1))
+		        var temp = this[i]
+		        this[i] = this[j]
+		        this[j] = temp
 		    }
 		}
 
-		// classes
-		var classes = {
-			player : '',
-			hand : '',
-			table : '',
-			pot : '',
-			button: '',
-			menu : ''
-		}
-
+		var BC = {}
 		BC.mapToObj = function(container, name, map) {
 			var cons = map['constructor']
 			container[name] = cons ? cons : function() {}
@@ -46,8 +36,4 @@
 		}
 
 		window.BC = BC
-
-		// for (var className in classes) {
-		// 	mapToObj(window.BC, className, classes[className])
-		// }
 	})()

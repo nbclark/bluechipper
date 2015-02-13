@@ -19,10 +19,10 @@
 				},
 				show: function(callback) {
 					this.callback = callback
-					this.el.style.bottom = 0;
+					this.el.style.bottom = 0
 				},
 				hide: function() {
-					this.el.style.bottom = -this.el.clientHeight;
+					this.el.style.bottom = -this.el.clientHeight
 				}
 			},
 			menuOption : {

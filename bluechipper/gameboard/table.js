@@ -116,7 +116,7 @@
 				sidePlayersPerSide = Math.ceil((this.players.length - 2 * topPlayersPerSide) / 2)
 
 				// We are going to put playersPerSide on the top, bottom, left, right until we are full
-				var elemIndex = 0;
+				var elemIndex = 0
 				var horizSpace = Math.floor((this.el.clientWidth - topPlayersPerSide * cellSize) / (topPlayersPerSide + 1))
 				var vertSpace = Math.floor((this.el.clientHeight - sidePlayersPerSide * cellSize) / (sidePlayersPerSide + 1))
 
