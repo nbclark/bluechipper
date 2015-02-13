@@ -45,7 +45,8 @@
 					ac(this.el, this.players[i].el)
 				}
 
-				this.buttonIndex = Math.floor(Math.random() * this.players.length)
+				// Select the first player randomly
+				this.buttonIndex = Math.floor(Math.random() * this.activePlayers().length)
 			},
 			startGame: function() {
 				this.isActive = true
@@ -53,28 +54,14 @@
 				// Our button is set
 				// We will now communicate back to the native app (TBD)
 				// We will then show the action sheet if we are the host player, and the action is on us
-				this.positionButtons()
+				this.startHand()
 			},
-			getFirstActivePlayerIndexFrom: function(startIndex) {
-				startIndex = startIndex % this.players.length
-				var startPlayer = this.players[startIndex]
-
-				for (var i = 0; i < this.players.length; ++i) {
-					var idx = (startIndex + i) % this.players.length
-					if (this.players[idx].isInHand) return idx
-				}
-
-				return -1
+			_hand: null,
+			activePlayers: function() {
+				return this.players.filter(function(p) { return p.isActive })
 			},
-			positionButtons: function() {
-				// Button is set, put them onto the screen, and assign action
-				// TODO - put rules in for 2 player
-				this.players[this.buttonIndex % this.players.length].layoutButton(this.dealerButton)
-				this.players[this.getFirstActivePlayerIndexFrom(this.buttonIndex+1)].layoutButton(this.smallBlindButton)
-				this.players[this.getFirstActivePlayerIndexFrom(this.buttonIndex+2)].layoutButton(this.bigBlindButton)
-
-				this.actionIndex = this.getFirstActivePlayerIndexFrom(this.buttonIndex+3)
-				this.proceed()
+			startHand: function() {
+				_hand = new BC.hand(this.activePlayers(), this.buttonIndex, this)
 			},
 			proceed: function () {
 				this.players[this.actionIndex % this.players.length].layoutButton(this.actionButton)
@@ -82,9 +69,26 @@
 				this.menu.show(function(result) {
 					this.menu.hide()
 
-					if (result == 'fold') {
-						this.players[this.actionIndex].isInHand = false
-						this.players[this.actionIndex].el.style.opacity = 0.15 // do something better here
+					switch (result) {
+						case 'fold' : {
+							this.players[this.actionIndex].isInHand = false
+							this.players[this.actionIndex].el.style.opacity = 0.15 // do something better here
+						} break;
+						case 'call' : {
+							//
+						} break;
+						case 'raise' : {
+							//
+						} break;
+						case 'all-in' : {
+							//
+						} break;
+						case 'bet' : {
+							//
+						} break;
+						case 'check' : {
+							//
+						} break;
 					}
 
 					this.actionIndex = this.getFirstActivePlayerIndexFrom(this.actionIndex+1)

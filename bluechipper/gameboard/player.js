@@ -2,13 +2,27 @@
 	(function() {
 		// classes
 		var player = {
-			isActive: false,
+			isActive: true,
 			isPaused: false,
 			isInHand: true,
+			isCurrentUser: true,
 			purse: 100,
 			constructor: function(name, value) {
 				this.name = name
 				this.el = ce('div', { className: 'player', innerHTML: name })
+				this.withdraw(0)
+			},
+			withdraw: function(sum) {
+				// TODO bounds checking
+				this.purse -= sum
+
+				this.el.innerHTML = this.name + ' - ' + this.purse
+			},
+			deposit: function(sum) {
+				// TODO bounds checking
+				this.purse += sum
+
+				this.el.innerHTML = this.name + ' - ' + this.purse
 			},
 			setPosition: function(l, t, r, b) {
 				this.l = l, this.t = t, this.r = r, this.b = b
