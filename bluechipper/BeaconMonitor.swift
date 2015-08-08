@@ -20,10 +20,10 @@ protocol BeaconMonitorProtocol : NSObjectProtocol {
 
 internal class BeaconMonitor : NSObject
 {
-  var locMan: CLLocationManager?
-  var locAdv: CBPeripheralManager?
-  var locReg: CLBeaconRegion?
-  var advReg: CLBeaconRegion?
+  var locMan: CLLocationManager
+  var locAdv: CBPeripheralManager
+  var locReg: CLBeaconRegion
+  var advReg: CLBeaconRegion
   var uuid  : NSUUID! = NSUUID(UUIDString: "CC7E6EC0-0D78-449C-9737-92333CB38238")
   var rangedUsers : Dictionary<UInt32, PFUser> = Dictionary()
   var monitorEnabled: Bool = false
@@ -48,10 +48,13 @@ internal class BeaconMonitor : NSObject
   }
   
   override init() {
+    self.locMan = CLLocationManager()
+    self.locAdv = CBPeripheralManager()
+    self.locReg = CLBeaconRegion()
+    self.advReg = CLBeaconRegion()
     super.init()
     
-    locMan = CLLocationManager()
-    locMan?.delegate = self
+    self.locMan.delegate = self
     
     let options: Dictionary<NSString, AnyObject> = [ CBPeripheralManagerOptionShowPowerAlertKey: true ]
     locAdv = CBPeripheralManager(delegate: self, queue: nil, options: options)
@@ -63,7 +66,7 @@ internal class BeaconMonitor : NSObject
     // When a turn is ready,
     
     locReg = CLBeaconRegion(proximityUUID: uuid, identifier: "")
-    locMan?.startMonitoringForRegion(locReg)
+    locMan.startMonitoringForRegion(locReg)
   }
   
   func checkLoaded() {
@@ -77,19 +80,19 @@ internal class BeaconMonitor : NSObject
   }
   
   internal func start() {
-    if (self.locMan?.respondsToSelector(Selector("requestAlwaysAuthorization")) != nil) {
-      self.locMan?.requestAlwaysAuthorization()
-    }
+    //if (self.locMan.respondsToSelector(Selector("requestAlwaysAuthorization")) != nil) {
+      self.locMan.requestAlwaysAuthorization()
+    //}
     
-    let hashValue : Int = PFUser.currentUser()["hashvalue"].integerValue
+    let hashValue : Int = PFUser.currentUser()!["hashvalue"]!.integerValue
     let major : UInt16 = (UInt16(hashValue >> 16) & 0xFFFF)
     let minor : UInt16 = UInt16(hashValue & 0xFFFF)
     println("\(major) - \(minor)")
     println("\(hashValue)")
     
     advReg = CLBeaconRegion(proximityUUID: uuid, major: major, minor: minor, identifier: "")
-    let data = advReg?.peripheralDataWithMeasuredPower(nil)
-    locAdv?.startAdvertising(data)
+    let data = advReg.peripheralDataWithMeasuredPower(nil) as [NSObject : AnyObject]
+    locAdv.startAdvertising(data)
   }
 }
 
@@ -99,13 +102,13 @@ extension BeaconMonitor : CBPeripheralManagerDelegate
   func peripheralManagerDidUpdateState(peripheral: CBPeripheralManager!) {
     if (peripheral.state == CBPeripheralManagerState.PoweredOn) {
       
-      let perData = advReg?.peripheralDataWithMeasuredPower(-63)
-      locAdv?.startAdvertising(perData)
+      let perData = advReg.peripheralDataWithMeasuredPower(-63) as [NSObject : AnyObject]
+      locAdv.startAdvertising(perData)
       
       self.advertisingEnabled = true
       self.checkLoaded()
     } else {
-      locAdv?.stopAdvertising()
+      locAdv.stopAdvertising()
     }
   }
 }
@@ -133,12 +136,13 @@ extension BeaconMonitor : CLLocationManagerDelegate
     self.monitorEnabled = true
     self.checkLoaded()
   }
-  func locationManager(manager: CLLocationManager!, didRangeBeacons beacons: [CLBeacon]!, inRegion region: CLBeaconRegion!) {
+  func locationManager(manager: CLLocationManager!, didRangeBeacons beacons: [AnyObject]!, inRegion region: CLBeaconRegion!) {
     var needsUpdate : Bool = false
     
     var hashes : Array<AnyObject> = []
     
-    for beacon : CLBeacon in beacons {
+    for obj : AnyObject in beacons {
+      let beacon : CLBeacon = obj as! CLBeacon
       let hashValue : UInt32 = (((UInt32(beacon.major.unsignedShortValue) << 16) & 0xFFFF0000) | UInt32(beacon.minor.unsignedShortValue & 0xFFFF)) & 0x7FFF7FFF;
       
       if (nil == rangedUsers.indexForKey(hashValue)) {
@@ -148,11 +152,11 @@ extension BeaconMonitor : CLLocationManagerDelegate
     }
     
     if (needsUpdate) {
-      var query : PFQuery = PFUser.query()
+      var query : PFQuery = PFUser.query()!
       query.whereKey("hashvalue", containedIn: hashes)
       self.isUpdating = true
       query.findObjectsInBackgroundWithBlock({ (users, error) -> Void in
-        for user in users as [PFUser] {
+        for user in users as! [PFUser] {
           let hashValue = user.hashvalue!.unsignedIntValue
           let name = user.name
           let pfUser = user as PFUser
@@ -161,7 +165,7 @@ extension BeaconMonitor : CLLocationManagerDelegate
         }
         
         for rangedDelegate in self.rangedDelegates {
-          let d = (rangedDelegate as BeaconRangedMonitorProtocol)
+          let d = (rangedDelegate as! BeaconRangedMonitorProtocol)
           d.rangedBeacons()
         }
         self.isUpdating = false
@@ -174,7 +178,7 @@ extension Array {
   mutating func removeObject<T: Equatable>(object: T) {
     var index: Int?
     for (idx, objectToCompare) in enumerate(self) {
-      let to = objectToCompare as T
+      let to = objectToCompare as! T
       if object == to {
         index = idx
       }

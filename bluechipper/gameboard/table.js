@@ -7,7 +7,8 @@
 			players: [],
 			smallBlind: 1,
 			bigBlind: 2,
-			constructor: function (a,b) {
+			_hand: null,
+			constructor: function (menuHandler) {
 				this.el = ce('div', { id: 'container' })
 				this.pot = new BC.pot()
 				this.smallBlindButton = new BC.button('sb')
@@ -23,8 +24,8 @@
 				ac(this.el, this.actionButton.el)
 				ac(this.el, this.menu.el)
 			},
-			addPlayer: function(name, value) {
-				var p = new BC.player(name, value)
+			addPlayer: function(id, name, value) {
+				var p = new BC.player(id, name, value)
 
 				if (this.isActive) {
 					// Game is active, we need to insert them randomly
@@ -56,47 +57,11 @@
 				// We will then show the action sheet if we are the host player, and the action is on us
 				this.startHand()
 			},
-			_hand: null,
 			activePlayers: function() {
 				return this.players.filter(function(p) { return p.isActive })
 			},
 			startHand: function() {
-				_hand = new BC.hand(this.activePlayers(), this.buttonIndex, this)
-			},
-			proceed: function () {
-				this.players[this.actionIndex % this.players.length].layoutButton(this.actionButton)
-
-				this.menu.show(function(result) {
-					this.menu.hide()
-
-					switch (result) {
-						case 'fold' : {
-							this.players[this.actionIndex].isInHand = false
-							this.players[this.actionIndex].el.style.opacity = 0.15 // do something better here
-						} break;
-						case 'call' : {
-							//
-						} break;
-						case 'raise' : {
-							//
-						} break;
-						case 'all-in' : {
-							//
-						} break;
-						case 'bet' : {
-							//
-						} break;
-						case 'check' : {
-							//
-						} break;
-					}
-
-					this.actionIndex = this.getFirstActivePlayerIndexFrom(this.actionIndex+1)
-
-					// TODO - this is where we need to call back to the app
-					// PARSE it up
-					this.proceed()
-				}.bind(this))
+				this._hand = new BC.hand(this.activePlayers(), this.buttonIndex, this)
 			},
 			layoutPlayers: function() {
 				var ratio = this.el.clientHeight / this.el.clientWidth
@@ -141,6 +106,10 @@
 				var vertSpace = Math.floor((this.el.clientHeight - sidePlayersPerSide * cellSize) / (sidePlayersPerSide + 1))
 				for (var i = 0; i < sidePlayersPerSide && elemIndex < this.players.length; i++, elemIndex++) {
 					this.players[elemIndex].setPosition(0, null, null, ((vertSpace + cellSize) * (i+1)) - cellSize - margin)
+				}
+				
+				if (this._hand) {
+					this._hand.positionButtons()
 				}
 			}
 		}

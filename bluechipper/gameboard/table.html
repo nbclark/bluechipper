@@ -15,15 +15,22 @@
   <script>
 
     var table = new BC.table()
-    for (var i = 0; i < 4; ++i) {
-      table.addPlayer(i+1, 100)
-    }
-
     document.body.appendChild(table.el)
-
-    table.randomizePlayers()
-    table.layoutPlayers()
-    table.startGame()
+    
+    if(navigator.userAgent.indexOf('Chrome') >= 0) {
+      for (var i = 0; i < 6; ++i) {
+        table.addPlayer(i, i+1, 100)
+      }
+      table.randomizePlayers()
+      table.layoutPlayers()
+      table.startGame()
+    }
+    
+    window['table'] = table
+    
+    window.addEventListener('resize', function() {
+      //table.layoutPlayers()
+    })
 
   </script>
 </body>

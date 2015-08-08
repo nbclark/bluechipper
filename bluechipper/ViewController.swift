@@ -11,17 +11,34 @@ import MultipeerConnectivity
 import CoreBluetooth
 
 class ViewController: UIViewController {
-  
-  @IBOutlet var webView : UIWebView!
-  
-  override func viewDidLoad() {
-    super.viewDidLoad()
     
-    // Yes I am going to write the game table in HTML
-    // Once they make a better UI language, I'll use that - but fuck recompiling
-    let url = NSBundle.mainBundle().URLForResource("table", withExtension:"html")
-    self.webView.scrollView.scrollEnabled = false
-    self.webView.loadRequest(NSURLRequest(URL: url!))
-  }
-  
+    @IBOutlet var webView : UIWebView!
+    var firstLoad : Bool
+    
+    required init(coder aDecoder: NSCoder)
+    {
+        self.firstLoad = true
+        super.init(coder: aDecoder)
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        // Yes I am going to write the game table in HTML
+        // Once they make a better UI language, I'll use that - but fuck recompiling
+        let url = NSBundle.mainBundle().URLForResource("table", withExtension:"html")
+        self.webView.scrollView.scrollEnabled = false
+        self.webView.loadRequest(NSURLRequest(URL: url!))
+        self.webView.delegate = Settings.gameManager
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        if (self.firstLoad) {
+            self.performSegueWithIdentifier("PlayersSegue", sender: self)
+        }
+        
+        self.firstLoad = false
+    }
 }

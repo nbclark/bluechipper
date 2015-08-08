@@ -1,12 +1,11 @@
+(function() {
+	// classes
+	var pot = {
+		players : {},
+		constructor: function() {
+			this.el = ce('div', { id: 'pot' })
+		},
+	}
 
-	(function() {
-		// classes
-		var pot = {
-			players : {},
-			constructor: function() {
-				this.el = ce('div', { id: 'pot' })
-			},
-		}
-
-		BC.mapToObj(window.BC, 'pot', pot)
-	})()
+	BC.mapToObj(window.BC, 'pot', pot)
+})()
