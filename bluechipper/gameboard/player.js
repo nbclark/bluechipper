@@ -7,7 +7,6 @@
 		isCurrentUser: true,
 		purse: 5,
 		constructor: function(id, name, value) {
-			alert(id)
 			this.id = id
 			this.name = name
 			this.el = ce('div', { className: 'player', innerHTML: name })

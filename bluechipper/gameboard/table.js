@@ -8,14 +8,15 @@
 			smallBlind: 1,
 			bigBlind: 2,
 			_hand: null,
-			constructor: function (menuHandler) {
+			constructor: function (bridge) {
+				this.bridge = bridge
 				this.el = ce('div', { id: 'container' })
 				this.pot = new BC.pot()
 				this.smallBlindButton = new BC.button('sb')
 				this.bigBlindButton = new BC.button('bb')
 				this.dealerButton = new BC.button('db')
 				this.actionButton = new BC.button('ab')
-				this.menu = new BC.menu()
+				this.menu = new BC.menu(bridge)
 
 				ac(this.el, this.pot.el)
 				ac(this.el, this.smallBlindButton.el)
@@ -61,7 +62,8 @@
 				return this.players.filter(function(p) { return p.isActive })
 			},
 			startHand: function() {
-				this._hand = new BC.hand(this.activePlayers(), this.buttonIndex, this)
+				this._hand = new BC.hand(this.bridge, this.activePlayers(), this.buttonIndex, this)
+				this.buttonIndex = (this.buttonIndex + 1) % this.activePlayers().length;
 			},
 			layoutPlayers: function() {
 				var ratio = this.el.clientHeight / this.el.clientWidth

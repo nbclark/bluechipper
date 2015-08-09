@@ -6,8 +6,8 @@
 			actionValues: {},
 			callback: function() {},
 			menuHandler : null,
-			constructor: function(menuHandler) {
-				this.menuHandler = menuHandler;
+			constructor: function(bridge) {
+				this.bridge = bridge
 				this.el = ce('div', { id: 'menu' })
 				var os = ['check','call','fold','raise']
 				for (var i = 0; i < os.length; ++i) {
@@ -22,8 +22,8 @@
 			show: function(callback) {
 				this.callback = callback
 				
-				if (this.menuHandler) {
-					this.menuHandler(this.actionValues)
+				if (this.bridge && this.bridge.playerActionNeeded) {
+					this.bridge.playerActionNeeded(this.actionValues)
 				} else {
 					this.el.style.bottom = 0
 				}

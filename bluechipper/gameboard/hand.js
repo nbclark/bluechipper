@@ -13,7 +13,8 @@
 		lastRaise: 0,
 		lastRaiserIndex: -1,
 		round: 0,
-		constructor: function(players, dealerButtonIndex, table) {
+		constructor: function(bridge, players, dealerButtonIndex, table) {
+			this.bridge = bridge
 			this.players = players
 			this.dealerButtonIndex = dealerButtonIndex
 			this.table = table
@@ -53,6 +54,9 @@
 			this.totalPot += sum
 			this.table.pot.el.innerHTML = this.totalPot
 		},
+		signalResult: function(playerRanks) {
+			// [[]]
+		},
 		checkState: function() {
 			var roundFinished = false
 			var handFinished = false
@@ -72,24 +76,62 @@
 
 			if (handFinished) {
 				// TODO assign chips here
+				// We actually need to know who won the hand, huh? Well one person, so I guess we know
 				// For now we will give it all to the first person
-				alert('finished with ' + playersInHand.length + ' players')
 				playersInHand[0].withdraw(-this.totalPot)
 				this.table.pot.el.innerHTML = 0
+				
+				if (this.bridge && this.bridge.handStateChanged) {
+					this.bridge.handStateChanged('end', playersInHand.map(function(player) { return player.id }))
+				} else {
+					alert('finished with ' + playersInHand.length + ' players')
+				}
+				
 				return
 			} else if (roundFinished) {
 				// TODO - change the state around
-				if (this.round == 2) {
+				if (this.round == 3) {
 					// We are at the river
-					alert('finished with ' + playersInHand.length + ' players')
+					var pots = {}
+					for (var i = 0; i < this.players.length; ++i) {
+						if (this.players[i].isInHand) {
+							var total = this.playerActions[i].totalBet;
+							if (!pots[total]) {
+								pots[total] = [];
+							}
+							pots[total].push(this.players[i].id)
+						}
+					}
+					
+					if (this.bridge && this.bridge.handResultNeeded) {
+						// Fire off a request for the winners of the main + side pots
+						this.bridge.handResultNeeded(pots)
+					} else {
+						// TODO - for now just move to the next hand
+						playersInHand[0].withdraw(-this.totalPot)
+						alert('finished with ' + playersInHand.length + ' players')
+						this.table.startHand()
+					}
 					return
 				} else {
 					this.totalBet = 0
 					this.lastRaise = this.table.bigBlind
 					this.round++
-					var roundName = this.round == 1 ? 'flop' : 'river'
+					var roundName;
+					
+					if (this.round == 1) {
+						roundName = 'flop'
+					} else if (this.round == 2) {
+						roundName = 'turn'
+					} else if (this.round == 3) {
+						roundName = 'river'
+					}
 
-					alert('get ready for the ' + roundName)
+					if (this.bridge && this.bridge.handStateChanged) {
+						this.bridge.handStateChanged(roundName, playersInHand.map(function(player) { return player.id }))
+					} else {
+						alert('get ready for the ' + roundName)
+					}
 
 					for (var i = 0; i < this.players.length; ++i) {
 						this.playerActions[i].bet = 0
@@ -98,6 +140,11 @@
 
 					this.actionIndex = this.getFirstActivePlayerIndexFrom(this.smallBlindIndex)
 					this.lastRaiserIndex = this.actionIndex
+				}
+			} else {
+				if (this.bridge && this.bridge.handStateChanged) {
+					this.bridge.handStateChanged('start', playersInHand.map(function(player) { return player.id }))
+				} else {
 				}
 			}
 
