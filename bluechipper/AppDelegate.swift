@@ -16,7 +16,7 @@ struct Settings {
 }
 
 @UIApplicationMain
-internal class AppDelegate: UIResponder, UIApplicationDelegate, BeaconMonitorProtocol {
+internal class AppDelegate: UIResponder, UIApplicationDelegate {
     
     var window: UIWindow?
     
@@ -29,41 +29,15 @@ internal class AppDelegate: UIResponder, UIApplicationDelegate, BeaconMonitorPro
         PFUser.enableAutomaticUser()
         PFAnalytics.trackAppOpenedWithLaunchOptionsInBackground(launchOptions, block: nil)
         
-        let user = PFUser.currentUser()!
-        user.saveInBackgroundWithBlock { (result, error) -> Void in
-            let userId = user.objectId!;
-            let hashValue = userId.hash & 0x7FFF7FFF
-            user.hashvalue = hashValue
-            user.name = UIDevice.currentDevice().name
-            user.saveInBackgroundWithBlock { (result, error) -> Void in
-                Settings.beaconMonitor = BeaconMonitor(delegate: self)
-                Settings.beaconMonitor?.start()
-                
-                // TODO remove
-                Settings.gameManager = GameManager(beaconMonitor: Settings.beaconMonitor!)
-            }
-            
-            let settings = UIUserNotificationSettings(forTypes: UIUserNotificationType.Alert | UIUserNotificationType.Badge | UIUserNotificationType.Sound, categories: nil)
-            let types : UIRemoteNotificationType = UIRemoteNotificationType.Alert | UIRemoteNotificationType.Badge | UIRemoteNotificationType.Sound;
-            
-            application.registerUserNotificationSettings(settings)
-            application.registerForRemoteNotifications()
-        }
+        let settings = UIUserNotificationSettings(forTypes: UIUserNotificationType.Alert | UIUserNotificationType.Badge | UIUserNotificationType.Sound, categories: nil)
+        let types : UIRemoteNotificationType = UIRemoteNotificationType.Alert | UIRemoteNotificationType.Badge | UIRemoteNotificationType.Sound;
+        
+        application.registerUserNotificationSettings(settings)
+        application.registerForRemoteNotifications()
+        
+        Settings.gameManager = GameManager()
         
         return true
-    }
-    
-    func monitoringAndAdvertisingEnabled() {
-        // Give 2 seconds to range beacons
-        let time = dispatch_time(DISPATCH_TIME_NOW, Int64(2 * Double(NSEC_PER_SEC)))
-        dispatch_after(time, dispatch_get_main_queue()) { () -> Void in
-            let loadingController = self.window?.rootViewController as! LoadingViewController
-            //loadingController.loaded()
-            
-            dispatch_after(time, dispatch_get_main_queue()) { () -> Void in
-                Settings.gameManager = GameManager(beaconMonitor: Settings.beaconMonitor!)
-            }
-        }
     }
     
     func application(application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: NSError) {

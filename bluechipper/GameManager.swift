@@ -8,32 +8,110 @@
 
 import Foundation
 
-class GameManager: NSObject, BeaconRangedMonitorProtocol, UIWebViewDelegate, UIActionSheetDelegate {
+typealias BCLocalGamesResultBlock = (Array<Game>, NSError?) -> Void
+typealias BCGameResultBlock = (Game?, NSError?) -> Void
+
+@objc protocol GameManagerDelegate : NSObjectProtocol {
+    optional func didEnableAdvertising()
+    optional func didFindGames(games: Array<Game>)
+    optional func didChangeState(state: Int, message: String)
+    optional func foundExistingGame(game: Game)
+    optional func joinedGame(game: Game)
+}
+
+class GameManager: NSObject, BeaconRangedMonitorDelegate, BeaconMonitorDelegate, UIWebViewDelegate {
     var beaconMonitor : BeaconMonitor
     var gameId : String?
     var webView : UIWebView?
-    var mainVC : UIViewController
     var game : Game!
     var isProcessing : Bool
     var joinGames : Array<Game>
+    var delegates : NSMutableArray = NSMutableArray()
     
-    init(beaconMonitor:BeaconMonitor) {
-        self.beaconMonitor = beaconMonitor
+    override init() {
+        self.beaconMonitor = BeaconMonitor()
+        
+        // TODO - remove this and let gamemanager centralize ranged users
+        Settings.beaconMonitor = self.beaconMonitor
         self.isProcessing = false
         self.joinGames = Array<Game>()
-        self.mainVC = Settings.current!.window!.rootViewController!
+        
         super.init()
+        
+        // Read some settings
+        let userDefaults = NSUserDefaults.standardUserDefaults()
+        let gid : AnyObject? = userDefaults.valueForKey("gameid")
+        
+        if (nil != gid) {
+            self.gameId = gid as! String?
+        }
+        
+        self.beaconMonitor.delegate = self
+        
+        let user = PFUser.currentUser()!
+        user.saveInBackgroundWithBlock { (result, error) -> Void in
+            let userId = user.objectId!;
+            let hashValue = userId.hash & 0x7FFF7FFF
+            user.hashvalue = hashValue
+            user.name = UIDevice.currentDevice().name
+            user.saveInBackgroundWithBlock { (result, error) -> Void in
+                self.start()
+            }
+        }
+    }
+    
+    private func notifyState(state: Int, message: String) {
+        for del in self.delegates {
+            let gameDel = del as! GameManagerDelegate
+            gameDel.didChangeState?(state, message: message)
+        }
+    }
+    
+    func addDelegate(delegate: GameManagerDelegate) {
+        self.delegates.addObject(delegate)
+    }
+    
+    func removeDelegate(delegate: GameManagerDelegate) {
+        self.delegates.removeObject(delegate)
+    }
+    
+    func monitoringAndAdvertisingEnabled() {
+        self.notifyState(2, message: "intialized beacons...")
+        // Give 2 seconds to range beacons
+        let time = dispatch_time(DISPATCH_TIME_NOW, Int64(2 * Double(NSEC_PER_SEC)))
+        dispatch_after(time, dispatch_get_main_queue()) { () -> Void in
+            self.notifyState(3, message: "searching for games...")
+            dispatch_after(time, dispatch_get_main_queue()) { () -> Void in
+                self.rangedBeacons()
+            }
+        }
+    }
+    
+    func start() {
+        self.notifyState(1, message: "intializing beacons...")
+        
+        if (nil != self.gameId) {
+            // We have an existing game -- try to find it
+            self.fetchGame(self.gameId!, block: { (game, error) -> Void in
+                if (nil != error) {
+                    self.beaconMonitor.addRangeDelegate(self)
+                    self.beaconMonitor.start()
+                } else {
+                    // We found an existing game, let's notify
+                    for del in self.delegates {
+                        let gameDel = del as! GameManagerDelegate
+                        gameDel.foundExistingGame?(game!)
+                    }
+                }
+            })
+        } else {
+            self.beaconMonitor.addRangeDelegate(self)
+            self.beaconMonitor.start()
+        }
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "gameMembersChanged", name: "gameMembersChangedNotification", object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "gameMembersChanged", name: UIApplicationDidBecomeActiveNotification, object: nil)
-        
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "gameMemberChanged:", name: "gameMemberChangedNotification", object: nil)
-        
-        self.beaconMonitor.addRangeDelegate(self)
-        
-        if (self.beaconMonitor.isUpdating == false) {
-            self.processRange()
-        }
     }
     
     func webView(webView: UIWebView, shouldStartLoadWithRequest request: NSURLRequest, navigationType: UIWebViewNavigationType) -> Bool {
@@ -86,7 +164,9 @@ class GameManager: NSObject, BeaconRangedMonitorProtocol, UIWebViewDelegate, UIA
     }
     
     func gameMembersChanged() {
-        self.reload()
+        if (self.game != nil) {
+            self.reload()
+        }
     }
     
     func rangedBeacons() {
@@ -118,25 +198,49 @@ class GameManager: NSObject, BeaconRangedMonitorProtocol, UIWebViewDelegate, UIA
         }
     }
     
-    func reload() {
+    func fetchGame(gameId: String, block: BCGameResultBlock?) {
         var query = PFQuery(className: "game")
-        query.whereKey("objectId", equalTo: self.game!.objectId!)
+        query.whereKey("objectId", equalTo: self.gameId!)
         
         query.findObjectsInBackgroundWithBlock { (results, error) -> Void in
             if (nil != error) {
+                block?(nil, error)
                 return
-                // TODO
             }
             
             var game = results!.first as! Game
             var existingUserList = game.users
             var activeUserList = game.activeusers
             
-            PFObject.fetchAllIfNeededInBackground(existingUserList.union(activeUserList), block: { (res, error) -> Void in
-                self.game = game as Game
-                NSNotificationCenter.defaultCenter().postNotificationName("gameStateChangedNotification", object: self.game)
+            PFObject.fetchAllIfNeededInBackground(existingUserList.union(activeUserList), block: { (results, error) -> Void in
+                if (nil != error) {
+                    block?(nil, error)
+                    return
+                }
+                
+                block?(game, nil)
             })
         }
+    }
+    
+    func save() {
+        self.game.saveInBackgroundWithBlock { (res, error) -> Void in
+            NSNotificationCenter.defaultCenter().postNotificationName("gameStateChangedNotification", object: self.game)
+        }
+    }
+    
+    func reload() {
+        self.fetchGame(self.gameId!, block: { (game, error) -> Void in
+            if (nil == self.game) {
+                // We just loaded our game for the first time - send a state change perhaps
+                self.processGame(game!)
+            } else {
+                // We just reloaded
+                self.game = game
+            }
+            
+            NSNotificationCenter.defaultCenter().postNotificationName("gameStateChangedNotification", object: self.game)
+        })
     }
     
     func processRange() {
@@ -148,14 +252,7 @@ class GameManager: NSObject, BeaconRangedMonitorProtocol, UIWebViewDelegate, UIA
         
         // At this point, we know the games...
         // We should prompt to join, or to create a new game
-        var sheet = UIActionSheet(title: "Pick your game", delegate: self, cancelButtonTitle: nil, destructiveButtonTitle: nil)
-        sheet.tag = 0
-        
-        sheet.addButtonWithTitle("Create New Game")
-        sheet.addButtonWithTitle("Join Existing Game")
-        sheet.cancelButtonIndex = 0
-        
-        sheet.showInView(self.mainVC.view)
+        self.joinExistingGame()
     }
     
     func createGame() {
@@ -168,7 +265,10 @@ class GameManager: NSObject, BeaconRangedMonitorProtocol, UIWebViewDelegate, UIA
     
     func processGame(game : Game) {
         self.game = game
-        self.mainVC.performSegueWithIdentifier("GameSettingsSegue", sender: self.mainVC)
+        self.gameId = self.game.objectId
+        let userDefaults = NSUserDefaults.standardUserDefaults()
+        userDefaults.setValue(self.game.objectId!, forKey: "gameid")
+        userDefaults.synchronize()
         
         // Send a push that people should update the game
         PFInstallation.currentInstallation().addUniqueObject("c" + game.objectId!, forKey: "channels")
@@ -178,9 +278,16 @@ class GameManager: NSObject, BeaconRangedMonitorProtocol, UIWebViewDelegate, UIA
             push.setData([ "action" : "gamemembers" ]) // the game should be refetched...
             push.sendPushInBackgroundWithBlock(nil)
         })
+        
+        for del in self.delegates {
+            let gameDel = del as! GameManagerDelegate
+            gameDel.joinedGame?(game)
+        }
     }
     
     func joinExistingGame() {
+        self.notifyState(3, message: String(format: "searching for games (%d)...", self.beaconMonitor.rangedUsers.count))
+        
         self.joinGames.removeAll(keepCapacity: true)
         let dict = self.beaconMonitor.rangedUsers
         var existingGameId : String = ""
@@ -222,9 +329,6 @@ class GameManager: NSObject, BeaconRangedMonitorProtocol, UIWebViewDelegate, UIA
             
             // At this point, we know the games...
             // We should prompt to join, or to create a new game
-            var sheet = UIActionSheet(title: "Pick your game", delegate: self, cancelButtonTitle: "Cancel", destructiveButtonTitle: nil)
-            sheet.tag = 1
-            
             if (mgames!.count > 0) {
                 let game = mgames?.first as! Game
                 var activeUserList = game["activeusers"] as! [PFUser]
@@ -240,13 +344,59 @@ class GameManager: NSObject, BeaconRangedMonitorProtocol, UIWebViewDelegate, UIA
                 }
                 
                 if (nil != name) {
-                    sheet.addButtonWithTitle(name!)
                     self.joinGames.push(game)
                 }
             }
             
-            sheet.showInView(self.mainVC.view)
+            self.notifyState(4, message: String(format: "found existing games (%d)...", self.joinGames.count))
         }
+    }
+    
+    func joinGameId(gameId : String) {
+        let game = self.joinGames.find({ (t) -> Bool in
+            if (t.objectId == gameId) {
+                return true
+            }
+            return false
+        })
+        if (nil != game) {
+            self.joinGame(game!)
+        }
+    }
+    
+    func exitGame(game : Game) {
+        self.gameId = nil
+        self.game = nil
+        
+        let userDefaults = NSUserDefaults.standardUserDefaults()
+        userDefaults.removeObjectForKey("gameid")
+        userDefaults.synchronize()
+        
+        var existingUserList = game["users"] as! [PFUser]
+        var activeUserList = game["activeusers"] as! [PFUser]
+        
+        var index = activeUserList.indexOf({ (u) -> Bool in u.objectId == PFUser.currentUser()!.objectId })
+        if (index != nil) {
+            activeUserList.removeAtIndex(index!)
+        }
+        
+        index = existingUserList.indexOf({ (u) -> Bool in u.objectId == PFUser.currentUser()!.objectId })
+        if (index != nil) {
+            existingUserList.removeAtIndex(index!)
+        }
+        
+        if (game["owner"] as! String? == PFUser.currentUser()?.objectId!) {
+            game["disabled"] = true
+        }
+        
+        game.saveInBackgroundWithBlock(nil)
+        
+        var push = PFPush()
+        push.setChannel("c" + game.objectId!)
+        push.setData([ "action" : "gamemembers" ]) // the game should be refetched...
+        push.sendPushInBackgroundWithBlock(nil)
+        
+        self.start()
     }
     
     func joinGame(game : Game) {
@@ -267,28 +417,5 @@ class GameManager: NSObject, BeaconRangedMonitorProtocol, UIWebViewDelegate, UIA
             })
             
         })
-    }
-    
-    func actionSheet(actionSheet: UIActionSheet, willDismissWithButtonIndex buttonIndex: Int) {
-        if (actionSheet.tag == 0) {
-            // Create / vs join
-            if (buttonIndex == actionSheet.cancelButtonIndex) {
-                // Hack, but this means create a new game
-                self.createGame()
-            } else {
-                self.joinExistingGame()
-            }
-        } else if (actionSheet.tag == 1) {
-            // Join existing
-            if (buttonIndex == actionSheet.cancelButtonIndex) {
-                // We are cancelling now
-                self.isProcessing = false
-                self.processRange()
-            } else {
-                var game = self.joinGames[buttonIndex-1]
-                self.joinGame(game)
-                sleep(0)
-            }
-        }
     }
 }

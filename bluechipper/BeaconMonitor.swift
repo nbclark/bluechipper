@@ -10,11 +10,11 @@ import Foundation
 import CoreBluetooth
 
 
-protocol BeaconMonitorProtocol : NSObjectProtocol {
+protocol BeaconMonitorDelegate : NSObjectProtocol {
   func monitoringAndAdvertisingEnabled()
 }
 
-@objc protocol BeaconRangedMonitorProtocol {
+@objc protocol BeaconRangedMonitorDelegate {
   func rangedBeacons()
 }
 
@@ -29,21 +29,21 @@ internal class BeaconMonitor : NSObject
   var monitorEnabled: Bool = false
   var advertisingEnabled: Bool = false
   var enableAlerted: Bool = false
-  var delegate: BeaconMonitorProtocol?
+  var delegate: BeaconMonitorDelegate?
   var rangedDelegates : NSMutableArray = NSMutableArray()
   var isUpdating : Bool = false
   
-  convenience init(delegate:BeaconMonitorProtocol) {
+  convenience init(delegate:BeaconMonitorDelegate) {
     self.init()
     
     self.delegate = delegate
   }
   
-  internal func addRangeDelegate(delegate: BeaconRangedMonitorProtocol) {
+  internal func addRangeDelegate(delegate: BeaconRangedMonitorDelegate) {
     self.rangedDelegates.addObject(delegate)
   }
   
-  internal func removeRangeDelegate(delegate: BeaconRangedMonitorProtocol) {
+  internal func removeRangeDelegate(delegate: BeaconRangedMonitorDelegate) {
     self.rangedDelegates.removeObject(delegate)
   }
   
@@ -55,18 +55,6 @@ internal class BeaconMonitor : NSObject
     super.init()
     
     self.locMan.delegate = self
-    
-    let options: Dictionary<NSString, AnyObject> = [ CBPeripheralManagerOptionShowPowerAlertKey: true ]
-    locAdv = CBPeripheralManager(delegate: self, queue: nil, options: options)
-    
-    // We will set up a beacon and range with the major and minor being this hash value
-    // Use that to pool people together, and set up a push group
-    // When new devices show up, show them in the list
-    // Allow reordering
-    // When a turn is ready,
-    
-    locReg = CLBeaconRegion(proximityUUID: uuid, identifier: "")
-    locMan.startMonitoringForRegion(locReg)
   }
   
   func checkLoaded() {
@@ -83,6 +71,18 @@ internal class BeaconMonitor : NSObject
     //if (self.locMan.respondsToSelector(Selector("requestAlwaysAuthorization")) != nil) {
       self.locMan.requestAlwaysAuthorization()
     //}
+    
+    let options: Dictionary<NSString, AnyObject> = [ CBPeripheralManagerOptionShowPowerAlertKey: true ]
+    self.locAdv = CBPeripheralManager(delegate: self, queue: nil, options: options)
+    
+    // We will set up a beacon and range with the major and minor being this hash value
+    // Use that to pool people together, and set up a push group
+    // When new devices show up, show them in the list
+    // Allow reordering
+    // When a turn is ready,
+    
+    self.locReg = CLBeaconRegion(proximityUUID: uuid, identifier: "")
+    self.locMan.startMonitoringForRegion(self.locReg)
     
     let hashValue : Int = PFUser.currentUser()!["hashvalue"]!.integerValue
     let major : UInt16 = (UInt16(hashValue >> 16) & 0xFFFF)
@@ -165,7 +165,7 @@ extension BeaconMonitor : CLLocationManagerDelegate
         }
         
         for rangedDelegate in self.rangedDelegates {
-          let d = (rangedDelegate as! BeaconRangedMonitorProtocol)
+          let d = (rangedDelegate as! BeaconRangedMonitorDelegate)
           d.rangedBeacons()
         }
         self.isUpdating = false

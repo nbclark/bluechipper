@@ -10,7 +10,7 @@ import UIKit
 import CoreBluetooth
 
 
-class PlayersViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, BeaconRangedMonitorProtocol {
+class PlayersViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, BeaconRangedMonitorDelegate {
     @IBOutlet var tableView : UITableView?
     @IBOutlet var startButton : UIBarButtonItem?
     @IBOutlet var settingsButton : UIBarButtonItem?
@@ -24,19 +24,25 @@ class PlayersViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        self.rangedBeacons()
         Settings.beaconMonitor?.addRangeDelegate(self)
-        
-        
+                
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "gameStateChanged", name: "gameStateChangedNotification", object: nil)
     }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         self.tableView!.reloadData()
-        
         self.startButton!.enabled = true
+        
+        if (Settings.gameManager!.game.owner == PFUser.currentUser()?.objectId!) {
+            if (nil == Settings.gameManager!.game.bigBlind) {
+                self.performSegueWithIdentifier("SettingsSegue", sender: nil)
+            }
+        } else {
+            // We are not the owner
+            // TODO - we need to transfer the owner when someone leaves, n'est pas?
+            self.settingsButton?.enabled = false
+        }
     }
     
     override func viewDidDisappear(animated: Bool) {
