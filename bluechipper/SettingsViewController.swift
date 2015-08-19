@@ -32,16 +32,18 @@ class SettingsViewController : XLFormViewController {
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
         
-        let values = self.formValues()
-        Settings.gameManager!.game.stakes = values[Tags.Stakes.rawValue] as! NSNumber
-        Settings.gameManager!.game.smallBlind = values[Tags.SmallBlind.rawValue] as! NSNumber
-        Settings.gameManager!.game.bigBlind = values[Tags.BigBlind.rawValue] as! NSNumber
-        Settings.gameManager!.game.isNoLimit = values[Tags.IsNoLimit.rawValue] as! Bool
-        Settings.gameManager!.game.isOpen = values[Tags.IsOpen.rawValue] as! Bool
-        
-        // TODO - need to communicate this out
-        Settings.gameManager!.save()
-        sleep(0)
+        if (!self.form.disabled) {
+            let values = self.formValues()
+            Settings.gameManager!.game.stakes = values[Tags.Stakes.rawValue] as! NSNumber
+            Settings.gameManager!.game.smallBlind = values[Tags.SmallBlind.rawValue] as! NSNumber
+            Settings.gameManager!.game.bigBlind = values[Tags.BigBlind.rawValue] as! NSNumber
+            Settings.gameManager!.game.isNoLimit = values[Tags.IsNoLimit.rawValue] as! Bool
+            Settings.gameManager!.game.isOpen = values[Tags.IsOpen.rawValue] as! Bool
+            
+            // TODO - need to communicate this out
+            Settings.gameManager!.game.isConfigured = true
+            Settings.gameManager!.save()
+        }
     }
     
     func initializeForm() {
@@ -84,7 +86,6 @@ class SettingsViewController : XLFormViewController {
         section.addFormRow(row)
         
         self.form = form
-        
         self.form.disabled = !Settings.gameManager!.isOwner
     }
     

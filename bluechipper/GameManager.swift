@@ -19,6 +19,11 @@ typealias BCGameResultBlock = (Game?, NSError?) -> Void
     optional func joinedGame(game: Game)
 }
 
+enum GameNotificationActions : String {
+    case GameMembersChanged = "gamemembers"
+    case GameStateChanged = "gamestate"
+}
+
 class GameManager: NSObject, BeaconRangedMonitorDelegate, BeaconMonitorDelegate, UIWebViewDelegate {
     var beaconMonitor : BeaconMonitor
     var gameId : String?
@@ -71,6 +76,20 @@ class GameManager: NSObject, BeaconRangedMonitorDelegate, BeaconMonitorDelegate,
             let gameDel = del as! GameManagerDelegate
             gameDel.didChangeState?(state, message: message)
         }
+    }
+    
+    private func sendPlayerPush(user : PFUser, message: String) {
+        var push = PFPush()
+        push.setChannel("c" + user.objectId!)
+        push.setMessage(message) // the game should be refetched...
+        push.sendPushInBackgroundWithBlock(nil)
+    }
+    
+    private func sendGamePush(action : GameNotificationActions) {
+        var push = PFPush()
+        push.setChannel("c" + self.game.objectId!)
+        push.setData([ "action" : action.rawValue ])
+        push.sendPushInBackgroundWithBlock(nil)
     }
     
     func addDelegate(delegate: GameManagerDelegate) {
@@ -155,16 +174,11 @@ class GameManager: NSObject, BeaconRangedMonitorDelegate, BeaconMonitorDelegate,
         self.game.activeusers.append(user)
         self.game.users.remove(user)
         
-        var push = PFPush()
-        push.setChannel("c" + user.objectId!)
-        push.setMessage("Welcome to the game") // the game should be refetched...
-        push.sendPushInBackgroundWithBlock(nil)
+        self.sendPlayerPush(user, message: "Welcome to the game")
 
         Settings.gameManager?.game?.saveInBackgroundWithBlock({ (res, err) -> Void in
-            
-            dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                block?(res, err)
-            })
+            self.sendGamePush(GameNotificationActions.GameMembersChanged)
+            block?(res, err)
         })
     }
     
@@ -173,53 +187,55 @@ class GameManager: NSObject, BeaconRangedMonitorDelegate, BeaconMonitorDelegate,
         
         self.game.activeusers.remove(user)
         
-        var push = PFPush()
-        push.setChannel("c" + user.objectId!)
-        push.setMessage("Sorry to see you go") // the game should be refetched...
-        push.sendPushInBackgroundWithBlock(nil)
+        self.sendPlayerPush(user, message: "Sorry to see you go")
         
         Settings.gameManager?.game?.saveInBackgroundWithBlock({ (res, err) -> Void in
+            self.sendGamePush(GameNotificationActions.GameMembersChanged)
             block?(res, err)
         })
     }
     
     func loadState() {
-        assert(!self.isOwner, "startGame should only be called by non-game owners")
-        // TODO
-        self.fetchGame(self.gameId!, block: { (game, error) -> Void in
+        if (!self.isOwner) {
+            assert(!self.isOwner, "startGame should only be called by non-game owners")
             // TODO
-            self.webView?.stringByEvaluatingJavaScriptFromString(String(format: "table.loadState('%@')", game!.state!))
-            return
-        })
+            self.fetchGame(self.gameId!, block: { (game, error) -> Void in
+                // TODO
+                self.webView?.stringByEvaluatingJavaScriptFromString(String(format: "table.loadState('%@')", game!.gameState!))
+                return
+            })
+        }
     }
     
     func startGame() {
         assert(self.isOwner, "startGame should only be called by game owner")
         
-        for user in self.game.activeusers {
-            var name = user.name!.stringByReplacingOccurrencesOfString("'", withString: "_")
-            self.webView?.stringByEvaluatingJavaScriptFromString(String(format: "table.addPlayer('%@', '%@', %d)", user.objectId!, name, 100))
-        }
-        
-        self.webView?.stringByEvaluatingJavaScriptFromString("table.randomizePlayers()")
-        self.webView?.stringByEvaluatingJavaScriptFromString("table.layoutPlayers()")
-        self.webView?.stringByEvaluatingJavaScriptFromString("table.startGame()")
-        
-        self.game.isActive = true
-        
-        // Fetch the serialized state
-        let state = self.webView?.stringByEvaluatingJavaScriptFromString("table.getState()")
-        
-        // Save off the state and notify
-        self.game.state = state
-        self.game.saveInBackgroundWithBlock { (res, err) -> Void in
-            // Communicate out that our game state has changed
-            // The clients should take the notice and call loadState on their clients
+        if (!self.game.isActive) {
+            for user in self.game.activeusers {
+                var name = user.name!.stringByReplacingOccurrencesOfString("'", withString: "_")
+                self.webView?.stringByEvaluatingJavaScriptFromString(String(format: "table.addPlayer('%@', '%@', %d)", user.objectId!, name, 100))
+            }
+            
+            self.webView?.stringByEvaluatingJavaScriptFromString("table.randomizePlayers()")
+            self.webView?.stringByEvaluatingJavaScriptFromString("table.layoutPlayers()")
+            self.webView?.stringByEvaluatingJavaScriptFromString("table.startGame()")
+            
+            self.game.isActive = true
+            
+            // Fetch the serialized state
+            let state = self.webView?.stringByEvaluatingJavaScriptFromString("table.getState()")
+            
+            // Save off the state and notify
+            self.game.gameState = state
+            self.game.saveInBackgroundWithBlock { (res, err) -> Void in
+                // Communicate out that our game state has changed
+                // The clients should take the notice and call loadState on their clients
+                // TODO
+                self.sendGamePush(GameNotificationActions.GameStateChanged)
+            }
+        } else {
             // TODO
-            var push = PFPush()
-            push.setChannel("c" + self.game.objectId!)
-            push.setData([ "action" : "gamestate" ]) // the game state should be reloaded
-            push.sendPushInBackgroundWithBlock(nil)
+            // We really need to figure out how to handle new player additions / removals
         }
     }
     
@@ -333,10 +349,7 @@ class GameManager: NSObject, BeaconRangedMonitorDelegate, BeaconMonitorDelegate,
         // Send a push that people should update the game
         PFInstallation.currentInstallation().addUniqueObject("c" + game.objectId!, forKey: "channels")
         PFInstallation.currentInstallation().saveInBackgroundWithBlock({ (res, error) -> Void in
-            var push = PFPush()
-            push.setChannel("c" + game.objectId!)
-            push.setData([ "action" : "gamemembers" ]) // the game should be refetched...
-            push.sendPushInBackgroundWithBlock(nil)
+            self.sendGamePush(GameNotificationActions.GameMembersChanged)
         })
         
         for del in self.delegates {
@@ -378,15 +391,7 @@ class GameManager: NSObject, BeaconRangedMonitorDelegate, BeaconMonitorDelegate,
                 
                 return pa.createdAt!.compare(pb.createdAt!) == NSComparisonResult.OrderedDescending
             })
-            
-//            for (index, element) in enumerate(mgames!) {
-//                if (index > 0) {
-//                    let po = element as! PFObject
-//                    po["disabled"] = true
-//                    po.saveInBackgroundWithBlock(nil)
-//                }
-//            }
-            
+
             // At this point, we know the games...
             // We should prompt to join, or to create a new game
             if (mgames!.count > 0) {
@@ -409,6 +414,7 @@ class GameManager: NSObject, BeaconRangedMonitorDelegate, BeaconMonitorDelegate,
             }
             
             self.notifyState(4, message: String(format: "found existing games (%d)...", self.joinGames.count))
+            self.isProcessing = false
         }
     }
     
@@ -449,14 +455,10 @@ class GameManager: NSObject, BeaconRangedMonitorDelegate, BeaconMonitorDelegate,
             game["disabled"] = true
         }
         
-        game.saveInBackgroundWithBlock(nil)
-        
-        var push = PFPush()
-        push.setChannel("c" + game.objectId!)
-        push.setData([ "action" : "gamemembers" ]) // the game should be refetched...
-        push.sendPushInBackgroundWithBlock(nil)
-        
-        self.start()
+        game.saveInBackgroundWithBlock { (res, err) -> Void in
+            self.sendGamePush(GameNotificationActions.GameMembersChanged)
+            self.start()
+        }
     }
     
     func joinGame(game : Game) {

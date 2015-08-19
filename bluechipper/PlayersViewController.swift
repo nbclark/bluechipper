@@ -28,6 +28,14 @@ class PlayersViewController: UIViewController, UITableViewDelegate, UITableViewD
         Settings.beaconMonitor?.addRangeDelegate(self)
                 
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "gameStateChanged", name: "gameStateChangedNotification", object: nil)
+        
+        self.startButton.enabled = false
+        if (Settings.gameManager!.isOwner) {
+            self.startButton.enabled = true
+        } else if (Settings.gameManager!.game.isActive) {
+            self.startButton.enabled = true
+            self.startButton.titleLabel!.text = "Back to Game"
+        }
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -36,7 +44,7 @@ class PlayersViewController: UIViewController, UITableViewDelegate, UITableViewD
         self.startButton!.enabled = true
         
         if (Settings.gameManager!.game.owner == PFUser.currentUser()?.objectId!) {
-            if (!Settings.gameManager!.game.isActive) {
+            if (!Settings.gameManager!.game.isConfigured) {
                 self.performSegueWithIdentifier("SettingsSegue", sender: nil)
             }
         } else {
@@ -66,17 +74,13 @@ class PlayersViewController: UIViewController, UITableViewDelegate, UITableViewD
     @IBAction func startClicked() {
         // TODO - if we are in a game, let it go
         // Otherwise, start
-        Settings.gameManager!.startGame()
+        if (!Settings.gameManager!.game.isActive) {
+            Settings.gameManager!.startGame()
+        }
         self.dismissViewControllerAnimated(true, completion: nil);
     }
     
     func updatedPlayerList() {
-        // TODO - this should be in the game manager
-        var push = PFPush()
-        push.setChannel("c" + Settings.gameManager!.game!.objectId!)
-        push.setData([ "action" : "gamemembers" ]) // the game should be refetched...
-        push.sendPushInBackgroundWithBlock(nil)
-        
         self.tableView?.reloadData()
     }
     

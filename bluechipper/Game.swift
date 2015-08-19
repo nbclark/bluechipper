@@ -32,6 +32,15 @@ public class Game : PFObject, PFSubclassing {
         }
     }
     
+    var isConfigured : Bool {
+        get {
+            return (self["isconfigured"] != nil) ? (self["isconfigured"] as! Bool) : false
+        }
+        set(value) {
+            self["isconfigured"] = value
+        }
+    }
+    
     var isActive : Bool {
         get {
             return (self["isactive"] != nil) ? (self["isactive"] as! Bool) : false
@@ -95,12 +104,12 @@ public class Game : PFObject, PFSubclassing {
         }
     }
     
-    var state : NSString? {
+    var gameState : NSString? {
         get {
-            return (self["state"] != nil) ? (self["state"] as! NSString) : nil
+            return (self["gamestate"] != nil) ? (self["gamestate"] as! NSString) : nil
         }
         set(value) {
-            self["state"] = value
+            self["gamestate"] = value
         }
     }
 }

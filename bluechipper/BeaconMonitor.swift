@@ -93,6 +93,13 @@ internal class BeaconMonitor : NSObject
     advReg = CLBeaconRegion(proximityUUID: uuid, major: major, minor: minor, identifier: "")
     let data = advReg.peripheralDataWithMeasuredPower(nil) as [NSObject : AnyObject]
     locAdv.startAdvertising(data)
+    
+    // For the simulator, pretend beacons are on
+    #if arch(i386) || arch(x86_64)
+        self.monitorEnabled = true
+        self.advertisingEnabled = true
+        self.checkLoaded()
+    #endif
   }
 }
 
