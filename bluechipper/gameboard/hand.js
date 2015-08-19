@@ -24,7 +24,7 @@
 				this.players[i].isInHand = true
 			}
 
-			this.positionButtons()
+			this.assignButtons()
 
 			// TODO - we need to handle if they have money, but not the full blind
 			this.exchangeSum(this.smallBlindIndex, this.table.smallBlind)
@@ -56,6 +56,11 @@
 			this.dealerButtonIndex = state.dealerButtonIndex
 			this.smallBlindIndex = state.smallBlindIndex
 			this.bigBlindIndex = state.bigBlindIndex
+
+			// Do some layout
+			this.positionButtons()
+			
+			// Set some more - actionIndex is modified in positionButtons
 			this.actionIndex = state.actionIndex
 			this.totalBet = state.totalBet
 			this.totalPot = state.totalPot
@@ -64,9 +69,6 @@
 			this.round = state.round
 			this.players = players
 			this.playerActions = state.playerActions
-
-			// Do some layout
-			this.positionButtons()
 			
 			// Let's go
 			this.proceed()
@@ -296,20 +298,22 @@
 			return -1
 		},
 		positionButtons: function() {
+
+			this.players[this.dealerButtonIndex].layoutButton(this.table.dealerButton)
+			this.players[this.smallBlindIndex].layoutButton(this.table.smallBlindButton)
+			this.players[this.bigBlindIndex].layoutButton(this.table.bigBlindButton)
+			this.players[this.actionIndex].layoutButton(this.table.actionButton)
+		},
+		assignButtons: function() {
 			// Button is set, put them onto the screen, and assign action
 			// TODO - put rules in for 2 player
 			this.dealButtonIndex = this.dealerButtonIndex % this.players.length
 			this.smallBlindIndex = this.getFirstActivePlayerIndexFrom(this.dealerButtonIndex+1)
 			this.bigBlindIndex = this.getFirstActivePlayerIndexFrom(this.dealerButtonIndex+2)
-
-			this.players[this.dealerButtonIndex].layoutButton(this.table.dealerButton)
-			this.players[this.smallBlindIndex].layoutButton(this.table.smallBlindButton)
-			this.players[this.bigBlindIndex].layoutButton(this.table.bigBlindButton)
-
 			this.actionIndex = this.getFirstActivePlayerIndexFrom(this.dealerButtonIndex+3)
-			this.players[this.actionIndex].layoutButton(this.table.actionButton)
-
 			this.lastRaiserIndex = this.actionIndex
+			
+			this.positionButtons()
 		},
 	}
 

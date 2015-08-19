@@ -3,7 +3,6 @@
 		var table = {
 			isActive: false,
 			buttonIndex: 0,
-			actionIndex: 0,
 			players: [],
 			smallBlind: 1,
 			bigBlind: 2,
@@ -29,7 +28,6 @@
 				return {
 					isActive: this.isActive,
 					buttonIndex: this.buttonIndex,
-					actionIndex: this.actionIndex,
 					players : this.players.map(function (p) { return p.getState() }),
 					hand : this._hand ? this._hand.getState() : {}
 				}
@@ -40,15 +38,24 @@
 				// The first time we load, we can add players, and skip the randomize
 				// to put people in a fixed order
 				// (I guess randomizing we can skip since they came in order)
+				// We should be able to call this function over and over with no effect
 				this.buttonIndex = state.buttonIndex
-				this.actionIndex = state.actionIndex
 				
 				// Load the players (in theory we should remove old players)
 				// Or at least do a diff of the new ones
 				// TODO - diff new players
 				for (var i = 0; i < state.players.length; ++i) {
 					var p = state.players[i]
-					this.addPlayer(p.id, p.name, p.purse).loadState(p)
+					var player = (i < this.players.length) ? this.players[i] : this.addPlayer(p.id, p.name, p.purse)
+					player.loadState(p)
+				}
+				
+				// Remove any extra players we may have (in case someone dropped out)
+				if (state.players.length < this.players.length) {
+					for (var i = this.players.length; i > state.players.length; i--) {
+						// TODO - not sure the syntax, but remove from array, and remove from dom
+						this.players.slice(i-1, i)[0].remove()
+					}
 				}
 				
 				// Get players in position
@@ -57,10 +64,10 @@
 				// We are active now
 				this.isActive = state.isActive
 				
-				if (state.hand) {}
+				if (state.hand) {
 					// Load the hand (only create if new)
-					if (!this._hand || this._hand.buttonIndex != this.buttonIndex) {
-						this._hand = new BC.hand(this.bridge, this.activePlayers(), this.buttonIndex, this)
+					if (!this._hand || this._hand.dealerButtonIndex != state.hand.dealerButtonIndex) {
+						this._hand = new BC.hand(this.bridge, this.activePlayers(), state.hand.dealerButtonIndex, this)
 					}
 					this._hand.loadState(state.hand, this.activePlayers())
 				}

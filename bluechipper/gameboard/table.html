@@ -19,11 +19,23 @@
     
     if(navigator.userAgent.indexOf('Chrome') >= 0) {
       for (var i = 0; i < 6; ++i) {
-        table.addPlayer(i, i+1, 100)
+        table.addPlayer(i, i+1, 100, '../no-face.png')
       }
+      
+      // This one can be super optional
       table.randomizePlayers()
       table.layoutPlayers()
       table.startGame()
+      
+      setTimeout(function() {
+        var s = table.getState()
+        console.log(s)
+        
+        setTimeout(function() {
+          console.log(s)
+          table.loadState(s)
+        }, 1000)
+      }, 5000)
     }
     
     window['table'] = table

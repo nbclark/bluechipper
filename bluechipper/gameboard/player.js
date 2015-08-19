@@ -10,7 +10,7 @@
 			this.id = id
 			this.name = name
 			this.purse = purse
-			this.el = ce('div', { className: 'player', innerHTML: name })
+			this.el = ce('div', { className: 'player', innerHTML: name, id: id })
 			this.withdraw(0)
 		},
 		getState: function() {
@@ -25,10 +25,18 @@
 			}
 		},
 		loadState: function(state) {
+			this.id = state.id
+			this.name = state.name
 			this.isActive = state.isActive
 			this.isPaused = state.isPaused
 			this.isInHand = state.isInHand
 			this.purse = state.purse
+			
+			this.el.id = state.id
+			this.el.innerHTML = state.name + ' - ' + this.purse
+		},
+		remove: function() {
+			this.el.parentNode.removeChild(this.el)
 		},
 		withdraw: function(sum) {
 			// TODO bounds checking
