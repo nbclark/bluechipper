@@ -64,7 +64,8 @@ internal class AppDelegate: UIResponder, UIApplicationDelegate {
             if (msg!.isEqualToString("gamemembers")) {
                 NSNotificationCenter.defaultCenter().postNotificationName("gameMembersChangedNotification", object: nil)
             } else if (msg!.isEqualToString("gamestate")) {
-                //
+                // TODO
+                Settings.gameManager!.loadState()
             }
         }
         

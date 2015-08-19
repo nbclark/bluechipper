@@ -183,6 +183,16 @@ class GameManager: NSObject, BeaconRangedMonitorDelegate, BeaconMonitorDelegate,
         })
     }
     
+    func loadState() {
+        assert(!self.isOwner, "startGame should only be called by non-game owners")
+        // TODO
+        self.fetchGame(self.gameId!, block: { (game, error) -> Void in
+            // TODO
+            self.webView?.stringByEvaluatingJavaScriptFromString(String(format: "table.loadState('%@')", game!.state!))
+            return
+        })
+    }
+    
     func startGame() {
         assert(self.isOwner, "startGame should only be called by game owner")
         
@@ -195,9 +205,21 @@ class GameManager: NSObject, BeaconRangedMonitorDelegate, BeaconMonitorDelegate,
         self.webView?.stringByEvaluatingJavaScriptFromString("table.layoutPlayers()")
         self.webView?.stringByEvaluatingJavaScriptFromString("table.startGame()")
         
-        if (self.isOwner) {
-            self.game.isActive = true
-            self.game.saveInBackgroundWithBlock(nil)
+        self.game.isActive = true
+        
+        // Fetch the serialized state
+        let state = self.webView?.stringByEvaluatingJavaScriptFromString("table.getState()")
+        
+        // Save off the state and notify
+        self.game.state = state
+        self.game.saveInBackgroundWithBlock { (res, err) -> Void in
+            // Communicate out that our game state has changed
+            // The clients should take the notice and call loadState on their clients
+            // TODO
+            var push = PFPush()
+            push.setChannel("c" + self.game.objectId!)
+            push.setData([ "action" : "gamestate" ]) // the game state should be reloaded
+            push.sendPushInBackgroundWithBlock(nil)
         }
     }
     

@@ -77,6 +77,8 @@ class AddPlayerViewController : XLFormViewController {
         if (nil == self.player) {
             let username = NSUUID().UUIDString
             let name = values[Tags.Name.rawValue] as! NSString
+            
+            // TODO - save this player in game manager
             PFCloud.callFunctionInBackground("createNewUser", withParameters: ["username" : username, "name" : name], block: { (res, errno_t) -> Void in
                 let query = PFUser.query()!
                 query.whereKey("username", equalTo: username)
@@ -88,6 +90,7 @@ class AddPlayerViewController : XLFormViewController {
                 })
             })
         } else {
+            // TODO - save this player in game manager
             self.player?.purse = values[Tags.Purse.rawValue] as! NSNumber?
             self.player?.name = values[Tags.Name.rawValue] as! NSString?
             self.player?.paid = values[Tags.Paid.rawValue] as! NSNumber?

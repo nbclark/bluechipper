@@ -94,6 +94,15 @@ public class Game : PFObject, PFSubclassing {
             self["dealerbutton"] = value
         }
     }
+    
+    var state : NSString? {
+        get {
+            return (self["state"] != nil) ? (self["state"] as! NSString) : nil
+        }
+        set(value) {
+            self["state"] = value
+        }
+    }
 }
 
 extension PFUser {

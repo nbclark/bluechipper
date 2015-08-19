@@ -31,7 +31,7 @@
 					buttonIndex: this.buttonIndex,
 					actionIndex: this.actionIndex,
 					players : this.players.map(function (p) { return p.getState() }),
-					hand : this._hand.getState()
+					hand : this._hand ? this._hand.getState() : {}
 				}
 			},
 			loadState: function(state) {
@@ -43,20 +43,27 @@
 				this.buttonIndex = state.buttonIndex
 				this.actionIndex = state.actionIndex
 				
-				// Load the players
+				// Load the players (in theory we should remove old players)
+				// Or at least do a diff of the new ones
+				// TODO - diff new players
 				for (var i = 0; i < state.players.length; ++i) {
 					var p = state.players[i]
 					this.addPlayer(p.id, p.name, p.purse).loadState(p)
 				}
 				
+				// Get players in position
+				this.layoutPlayers()
+				
 				// We are active now
 				this.isActive = state.isActive
 				
-				// Load the hand (only create if new)
-				if (!this._hand || this._hand.buttonIndex != this.buttonIndex) {
-					this._hand = new BC.hand(this.bridge, this.activePlayers(), this.buttonIndex, this)
+				if (state.hand) {}
+					// Load the hand (only create if new)
+					if (!this._hand || this._hand.buttonIndex != this.buttonIndex) {
+						this._hand = new BC.hand(this.bridge, this.activePlayers(), this.buttonIndex, this)
+					}
+					this._hand.loadState(state.hand, this.activePlayers())
 				}
-				this._hand.loadState(state.hand, this.activePlayers())
 			},
 			addPlayer: function(id, name, value) {
 				var p = new BC.player(id, name, value)
