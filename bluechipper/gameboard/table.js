@@ -52,8 +52,10 @@
 				// We are active now
 				this.isActive = state.isActive
 				
-				// Load the hand
-				this._hand = new BC.hand(this.bridge, this.activePlayers(), this.buttonIndex, this)
+				// Load the hand (only create if new)
+				if (!this._hand || this._hand.buttonIndex != this.buttonIndex) {
+					this._hand = new BC.hand(this.bridge, this.activePlayers(), this.buttonIndex, this)
+				}
 				this._hand.loadState(state.hand, this.activePlayers())
 			},
 			addPlayer: function(id, name, value) {

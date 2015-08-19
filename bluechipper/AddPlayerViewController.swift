@@ -17,7 +17,7 @@ class AddPlayerViewController : XLFormViewController {
     private enum Tags : String {
         case Name = "name"
         case Paid = "paid"
-        case Stack = "stack"
+        case Purse = "purse"
     }
     
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
@@ -58,8 +58,8 @@ class AddPlayerViewController : XLFormViewController {
         section.addFormRow(row)
         
         if (nil != self.player) {
-            row = XLFormRowDescriptor(tag: Tags.Stack.rawValue, rowType: XLFormRowDescriptorTypeDecimal, title:"$ Remaining")
-            row.value = nil != self.player ? self.player!.stack : Settings.gameManager!.game.stakes
+            row = XLFormRowDescriptor(tag: Tags.Purse.rawValue, rowType: XLFormRowDescriptorTypeDecimal, title:"$ Remaining")
+            row.value = nil != self.player ? self.player!.purse : Settings.gameManager!.game.stakes
             row.cellConfig.setObject(NSTextAlignment.Right.rawValue, forKey: "textField.textAlignment")
             section.addFormRow(row)
         }
@@ -88,7 +88,7 @@ class AddPlayerViewController : XLFormViewController {
                 })
             })
         } else {
-            self.player?.stack = values[Tags.Stack.rawValue] as! NSNumber?
+            self.player?.purse = values[Tags.Purse.rawValue] as! NSNumber?
             self.player?.name = values[Tags.Name.rawValue] as! NSString?
             self.player?.paid = values[Tags.Paid.rawValue] as! NSNumber?
             

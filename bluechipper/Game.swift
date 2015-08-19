@@ -142,12 +142,12 @@ extension PFUser {
         }
     }
     
-    var stack : NSNumber? {
+    var purse : NSNumber? {
         get {
-            return (self["stack"] != nil) ? (self["stack"] as! NSNumber) : nil
+            return (self["purse"] != nil) ? (self["purse"] as! NSNumber) : nil
         }
         set(value) {
-            self["stack"] = value
+            self["purse"] = value
         }
     }
     

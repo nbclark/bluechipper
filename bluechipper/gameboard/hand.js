@@ -64,6 +64,9 @@
 			this.round = state.round
 			this.players = players
 			this.playerActions = state.playerActions
+
+			// Do some layout
+			this.positionButtons()
 			
 			// Let's go
 			this.proceed()
