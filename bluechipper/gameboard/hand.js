@@ -37,6 +37,37 @@
 			// Action is on actionIndex
 			this.proceed()
 		},
+		getState: function() {
+			return {
+				dealerButtonIndex: this.dealerButtonIndex,
+				smallBlindIndex: this.smallBlindIndex,
+				bigBlindIndex: this.bigBlindIndex,
+				actionIndex: this.actionIndex,
+				totalBet: this.totalBet,
+				totalPot: this.totalPot,
+				lastRaise: this.lastRaise,
+				lastRaiserIndex: this.lastRaiserIndex,
+				round: this.round,
+				players: this.players.map(function(p) { return p.getState() }),
+				playerActions: this.playerActions
+			}
+		},
+		loadState: function(state, players) {
+			this.dealerButtonIndex = state.dealerButtonIndex
+			this.smallBlindIndex = state.smallBlindIndex
+			this.bigBlindIndex = state.bigBlindIndex
+			this.actionIndex = state.actionIndex
+			this.totalBet = state.totalBet
+			this.totalPot = state.totalPot
+			this.lastRaise = state.lastRaise
+			this.lastRaiserIndex = state.lastRaiserIndex
+			this.round = state.round
+			this.players = players
+			this.playerActions = state.playerActions
+			
+			// Let's go
+			this.proceed()
+		},
 		exchangeSum: function(index, sum) {
 
 			player = this.players[index]

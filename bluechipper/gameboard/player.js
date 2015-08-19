@@ -6,11 +6,29 @@
 		isInHand: true,
 		isCurrentUser: true,
 		purse: 5,
-		constructor: function(id, name, value) {
+		constructor: function(id, name, purse) {
 			this.id = id
 			this.name = name
+			this.purse = purse
 			this.el = ce('div', { className: 'player', innerHTML: name })
 			this.withdraw(0)
+		},
+		getState: function() {
+			return {
+				id: this.id,
+				name: this.name,
+				isActive: this.isActive,
+				isPaused: this.isPaused,
+				isInHand: this.isInHand,
+				isCurrentUser: this.isCurrentUser,
+				purse: this.purse
+			}
+		},
+		loadState: function(state) {
+			this.isActive = state.isActive
+			this.isPaused = state.isPaused
+			this.isInHand = state.isInHand
+			this.purse = state.purse
 		},
 		withdraw: function(sum) {
 			// TODO bounds checking

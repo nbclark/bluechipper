@@ -28,6 +28,12 @@ class GameManager: NSObject, BeaconRangedMonitorDelegate, BeaconMonitorDelegate,
     var joinGames : Array<Game>
     var delegates : NSMutableArray = NSMutableArray()
     
+    var isOwner : Bool {
+        get {
+            return nil != self.game ? self.game.owner == PFUser.currentUser()?.objectId : false
+        }
+    }
+    
     override init() {
         self.beaconMonitor = BeaconMonitor()
         
@@ -143,24 +149,56 @@ class GameManager: NSObject, BeaconRangedMonitorDelegate, BeaconMonitorDelegate,
         webView.stringByEvaluatingJavaScriptFromString("table.menu.menuHandler = function(actions) { document.location = 'bc://proceed/' + JSON.stringify(actions) }")
     }
     
-    func addPlayer(player : PFUser) {
-        //
+    func addPlayer(player : PFUser, block : PFBooleanResultBlock?) {
+        let user = player
+        
+        self.game.activeusers.append(user)
+        self.game.users.remove(user)
+        
+        var push = PFPush()
+        push.setChannel("c" + user.objectId!)
+        push.setMessage("Welcome to the game") // the game should be refetched...
+        push.sendPushInBackgroundWithBlock(nil)
+
+        Settings.gameManager?.game?.saveInBackgroundWithBlock({ (res, err) -> Void in
+            
+            dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                block?(res, err)
+            })
+        })
     }
     
-    func removePlayer(player : PFUser) {
-        //
+    func removePlayer(player : PFUser, block : PFBooleanResultBlock?) {
+        let user = player
+        
+        self.game.activeusers.remove(user)
+        
+        var push = PFPush()
+        push.setChannel("c" + user.objectId!)
+        push.setMessage("Sorry to see you go") // the game should be refetched...
+        push.sendPushInBackgroundWithBlock(nil)
+        
+        Settings.gameManager?.game?.saveInBackgroundWithBlock({ (res, err) -> Void in
+            block?(res, err)
+        })
     }
     
     func startGame() {
+        assert(self.isOwner, "startGame should only be called by game owner")
+        
         for user in self.game.activeusers {
             var name = user.name!.stringByReplacingOccurrencesOfString("'", withString: "_")
             self.webView?.stringByEvaluatingJavaScriptFromString(String(format: "table.addPlayer('%@', '%@', %d)", user.objectId!, name, 100))
         }
         
-        self.webView?.stringByEvaluatingJavaScriptFromString("table.addPlayer('1', 'test', 100)")
         self.webView?.stringByEvaluatingJavaScriptFromString("table.randomizePlayers()")
         self.webView?.stringByEvaluatingJavaScriptFromString("table.layoutPlayers()")
         self.webView?.stringByEvaluatingJavaScriptFromString("table.startGame()")
+        
+        if (self.isOwner) {
+            self.game.isActive = true
+            self.game.saveInBackgroundWithBlock(nil)
+        }
     }
     
     func gameMembersChanged() {

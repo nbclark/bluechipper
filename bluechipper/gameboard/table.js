@@ -25,6 +25,37 @@
 				ac(this.el, this.actionButton.el)
 				ac(this.el, this.menu.el)
 			},
+			getState: function() {
+				return {
+					isActive: this.isActive,
+					buttonIndex: this.buttonIndex,
+					actionIndex: this.actionIndex,
+					players : this.players.map(function (p) { return p.getState() }),
+					hand : this._hand.getState()
+				}
+			},
+			loadState: function(state) {
+				// Adjust our current state to match the one passed in
+				// Ideally we should do a diff and only change what we need to
+				// The first time we load, we can add players, and skip the randomize
+				// to put people in a fixed order
+				// (I guess randomizing we can skip since they came in order)
+				this.buttonIndex = state.buttonIndex
+				this.actionIndex = state.actionIndex
+				
+				// Load the players
+				for (var i = 0; i < state.players.length; ++i) {
+					var p = state.players[i]
+					this.addPlayer(p.id, p.name, p.purse).loadState(p)
+				}
+				
+				// We are active now
+				this.isActive = state.isActive
+				
+				// Load the hand
+				this._hand = new BC.hand(this.bridge, this.activePlayers(), this.buttonIndex, this)
+				this._hand.loadState(state.hand, this.activePlayers())
+			},
 			addPlayer: function(id, name, value) {
 				var p = new BC.player(id, name, value)
 
@@ -38,6 +69,8 @@
 					this.players.push(p)
 					ac(this.el, p.el)
 				}
+				
+				return p
 			},
 			randomizePlayers: function() {
 				// If we shuffle the players, then remove/add, we change the order

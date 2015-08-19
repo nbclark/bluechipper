@@ -12,8 +12,9 @@ import CoreBluetooth
 
 class PlayersViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, BeaconRangedMonitorDelegate {
     @IBOutlet var tableView : UITableView?
-    @IBOutlet var startButton : UIBarButtonItem?
+    @IBOutlet var addPlayerButton : UIBarButtonItem?
     @IBOutlet var settingsButton : UIBarButtonItem?
+    @IBOutlet var startButton : UIButton!
     
     var eligbleUsers : Array<PFUser> = Array()
     
@@ -35,13 +36,13 @@ class PlayersViewController: UIViewController, UITableViewDelegate, UITableViewD
         self.startButton!.enabled = true
         
         if (Settings.gameManager!.game.owner == PFUser.currentUser()?.objectId!) {
-            if (nil == Settings.gameManager!.game.bigBlind) {
+            if (!Settings.gameManager!.game.isActive) {
                 self.performSegueWithIdentifier("SettingsSegue", sender: nil)
             }
         } else {
             // We are not the owner
             // TODO - we need to transfer the owner when someone leaves, n'est pas?
-            self.settingsButton?.enabled = false
+            self.addPlayerButton?.enabled = false
         }
     }
     
@@ -50,12 +51,33 @@ class PlayersViewController: UIViewController, UITableViewDelegate, UITableViewD
         NSNotificationCenter.defaultCenter().removeObserver(self)
     }
     
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        super.prepareForSegue(segue, sender: sender)
+        
+        // If we are editing an existing player, set the property
+        // TODO - no clue if this is the right way to do this
+        if (segue.identifier == "AddPlayerSegue" && nil != sender) {
+            let navVC = segue.destinationViewController as! UINavigationController
+            let playerVC = navVC.topViewController as! AddPlayerViewController
+            playerVC.player = sender as? PFUser
+        }
+    }
+    
+    @IBAction func startClicked() {
+        // TODO - if we are in a game, let it go
+        // Otherwise, start
+        Settings.gameManager!.startGame()
+        self.dismissViewControllerAnimated(true, completion: nil);
+    }
+    
     func updatedPlayerList() {
         // TODO - this should be in the game manager
         var push = PFPush()
         push.setChannel("c" + Settings.gameManager!.game!.objectId!)
         push.setData([ "action" : "gamemembers" ]) // the game should be refetched...
         push.sendPushInBackgroundWithBlock(nil)
+        
+        self.tableView?.reloadData()
     }
     
     func gameStateChanged() {
@@ -75,13 +97,6 @@ class PlayersViewController: UIViewController, UITableViewDelegate, UITableViewD
         }
         
         self.tableView?.reloadData()
-    }
-    
-    @IBAction func startClicked() {
-        // TODO - if we are in a game, let it go
-        // Otherwise, start
-        Settings.gameManager!.startGame()
-        self.dismissViewControllerAnimated(true, completion: nil);
     }
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -123,49 +138,21 @@ class PlayersViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         var deleteAction = UITableViewRowAction(style: .Default, title: "Reject") { (action, indexPath) -> Void in
             var game = Settings.gameManager!.game
-            var user = game.activeusers[indexPath.row] as PFUser
+            let user = game.activeusers[indexPath.row] as PFUser
             
-            game.activeusers.remove(user)
-            tableView.editing = false
-            
-            var push = PFPush()
-            push.setChannel("c" + user.objectId!)
-            push.setMessage("Sorry to see you go") // the game should be refetched...
-            push.sendPushInBackgroundWithBlock(nil)
-            
-            self.rangedBeacons()
-            Settings.gameManager?.game?.saveInBackgroundWithBlock({ (res, err) -> Void in
-                
-                dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                    self.updatedPlayerList()
-                    return
-                })
+            Settings.gameManager!.removePlayer(user, block: { (res, err) -> Void in
+                self.updatedPlayerList()
             })
         }
+        
         deleteAction.backgroundColor = UIColor.redColor()
         
         var acceptAction = UITableViewRowAction(style: .Default, title: "Accept") { (action, ip) -> Void in
             tableView.editing = false
-            var game = Settings.gameManager!.game
             let user = self.eligbleUsers[ip.row]
             
-            game.activeusers.append(user)
-            game.users.remove(user)
-            
-            var vc = self
-            
-            var push = PFPush()
-            push.setChannel("c" + user.objectId!)
-            push.setMessage("Welcome to the game") // the game should be refetched...
-            push.sendPushInBackgroundWithBlock(nil)
-            
-            self.rangedBeacons()
-            Settings.gameManager?.game?.saveInBackgroundWithBlock({ (res, err) -> Void in
-                
-                dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                    self.updatedPlayerList()
-                    return
-                })
+            Settings.gameManager!.addPlayer(user, block: { (res, err) -> Void in
+                self.updatedPlayerList()
             })
         }
         acceptAction.backgroundColor = UIColor.greenColor()
@@ -178,10 +165,16 @@ class PlayersViewController: UIViewController, UITableViewDelegate, UITableViewD
             return nil
         }
         
-        if (indexPath.section == 0) {
-            return [ deleteAction, suspendAction ];
+        // Only allow tweaking of players from the owner?
+        // TODO - or should we allow everyone
+        if (Settings.gameManager!.isOwner) {
+            if (indexPath.section == 0) {
+                return [ deleteAction, suspendAction ];
+            } else {
+                return [ acceptAction ];
+            }
         } else {
-            return [ acceptAction ];
+            return [];
         }
     }
     
@@ -190,6 +183,12 @@ class PlayersViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         let cell = tableView.cellForRowAtIndexPath(indexPath)
+        
+        if (indexPath.section == 0) {
+            var game = Settings.gameManager!.game
+            let user = game.activeusers[indexPath.row]
+            self.performSegueWithIdentifier("SettingsSegue", sender: user)
+        }
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
