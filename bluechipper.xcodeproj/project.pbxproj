@@ -14,6 +14,7 @@
 		AA266C0C1B830366003C77DA /* AddPlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA266C0B1B830366003C77DA /* AddPlayerViewController.swift */; };
 		AA266C0E1B853E62003C77DA /* bridge.js in Resources */ = {isa = PBXBuildFile; fileRef = AA266C0D1B853E62003C77DA /* bridge.js */; };
 		AA266C101B8542AC003C77DA /* MBProgressHUD.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA266C0F1B8542AC003C77DA /* MBProgressHUD.framework */; };
+		AA266C121B8555B9003C77DA /* BTActionSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA266C111B8555B9003C77DA /* BTActionSheet.swift */; };
 		AA6782821B6DCDF30074391D /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA6782811B6DCDF30074391D /* SettingsViewController.swift */; };
 		AA6782841B6DCEDB0074391D /* CurrencyTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA6782831B6DCEDB0074391D /* CurrencyTableViewCell.swift */; };
 		AAA7EACC1B6B2FB200D7F04A /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AAA7EACA1B6B2FB200D7F04A /* Bolts.framework */; };
@@ -91,6 +92,7 @@
 		AA266C0B1B830366003C77DA /* AddPlayerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddPlayerViewController.swift; sourceTree = "<group>"; };
 		AA266C0D1B853E62003C77DA /* bridge.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = bridge.js; path = gameboard/bridge.js; sourceTree = "<group>"; };
 		AA266C0F1B8542AC003C77DA /* MBProgressHUD.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MBProgressHUD.framework; path = "Pods/../build/Debug-iphoneos/MBProgressHUD.framework"; sourceTree = "<group>"; };
+		AA266C111B8555B9003C77DA /* BTActionSheet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BTActionSheet.swift; sourceTree = "<group>"; };
 		AA6782811B6DCDF30074391D /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		AA6782831B6DCEDB0074391D /* CurrencyTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CurrencyTableViewCell.swift; sourceTree = "<group>"; };
 		AAA7EACA1B6B2FB200D7F04A /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Bolts.framework; path = "../../Downloads/parse-library-1.7.5/Bolts.framework"; sourceTree = "<group>"; };
@@ -314,6 +316,7 @@
 				AA6782811B6DCDF30074391D /* SettingsViewController.swift */,
 				AA6782831B6DCEDB0074391D /* CurrencyTableViewCell.swift */,
 				AA266C0B1B830366003C77DA /* AddPlayerViewController.swift */,
+				AA266C111B8555B9003C77DA /* BTActionSheet.swift */,
 			);
 			path = bluechipper;
 			sourceTree = "<group>";
@@ -522,6 +525,7 @@
 				AA6782841B6DCEDB0074391D /* CurrencyTableViewCell.swift in Sources */,
 				E14CA0FB1A88351500D02313 /* Range.swift in Sources */,
 				AA266C0C1B830366003C77DA /* AddPlayerViewController.swift in Sources */,
+				AA266C121B8555B9003C77DA /* BTActionSheet.swift in Sources */,
 				E14CA0FA1A88351500D02313 /* NSDate.swift in Sources */,
 				E14CA0F31A88351500D02313 /* Character.swift in Sources */,
 				E14CA0E11A8827A100D02313 /* GameManager.swift in Sources */,

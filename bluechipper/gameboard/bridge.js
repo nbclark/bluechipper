@@ -14,7 +14,6 @@
 				// function(state, winners) -- state = start, flop, turn, river, end
 				this.handStateChanged = function(hand, state, winners, callback) {
 					if (this.signalHandStateChanged) {
-						alert('handStateChanged')
 						this.signalHandStateChanged(state, winners)
 					} else {
 						if (state === 'end') {

@@ -144,7 +144,6 @@
 					
 					// Fire off a request for the winners of the main + side pots
 					this.bridge.handResultNeeded(this, pots)
-					return
 				} else {
 					this.totalBet = 0
 					this.lastRaise = this.table.bigBlind
@@ -173,9 +172,8 @@
 				}
 			} else {
 				// Do nothing - just keep proceeding around
+				this.proceed()
 			}
-
-			this.proceed()
 		},
 		proceed : function() {
 			// We need to calculate the options given the current player and the state

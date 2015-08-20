@@ -193,11 +193,16 @@ class GameManager: NSObject, BeaconRangedMonitorDelegate, BeaconMonitorDelegate,
             
             // List of menu options (check, fold, raise, call), with their corresponding values
             if (userId == PFUser.currentUser()?.objectId!) {
-                if (obj.objectForKey("call") != nil) {
-                    self.webView?.stringByEvaluatingJavaScriptFromString("table.menu.menuOptionCallback('call')")
-                } else {
-                    self.webView?.stringByEvaluatingJavaScriptFromString("table.menu.menuOptionCallback('check')")
+                var sheet = BTActionSheet(title: "Join Existing Game", cancelButtonTitle: nil, destructiveButtonTitle: nil)
+                
+                for (key, value) in obj {
+                    sheet.addButtonWithTitle(key as! String, handler : { () -> Void in
+                        self.webView?.stringByEvaluatingJavaScriptFromString(String(format: "table.menu.menuOptionCallback('%@')", key as! String))
+                        return
+                    })
                 }
+                
+                sheet.showInView(UIApplication.sharedApplication().keyWindow!)
             } else {
                 // TODO - show some waiting UI
                 // Wait for notification from Parse
@@ -228,7 +233,7 @@ class GameManager: NSObject, BeaconRangedMonitorDelegate, BeaconMonitorDelegate,
     func webViewDidFinishLoad(webView: UIWebView) {
         webView.stringByEvaluatingJavaScriptFromString("bridge.signalPlayerActionNeeded = function(actionStates, playerid) { document.location = 'bc://signalPlayerActionNeeded/' + playerid + '/' + JSON.stringify(actionStates) }")
         
-        webView.stringByEvaluatingJavaScriptFromString("bridge.signalHandStateChanged = function(state, winners) { document.location = 'bc://signalHandStateChanged/' + state + '/' + JSON.stringify(winners) }")
+        //webView.stringByEvaluatingJavaScriptFromString("bridge.signalHandStateChanged = function(state, winners) { document.location = 'bc://signalHandStateChanged/' + state + '/' + JSON.stringify(winners) }")
         
         webView.stringByEvaluatingJavaScriptFromString("bridge.signalHandResultNeeded = function(pots) { document.location = 'bc://signalHandResultNeeded/' + JSON.stringify(pots) }")
     }
