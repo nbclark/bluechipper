@@ -113,6 +113,8 @@
 			startHand: function() {
 				this._hand = new BC.hand(this.bridge, this.activePlayers(), this.buttonIndex, this)
 				this.buttonIndex = (this.buttonIndex + 1) % this.activePlayers().length;
+				
+				this._hand.start()
 			},
 			layoutPlayers: function() {
 				var ratio = this.el.clientHeight / this.el.clientWidth

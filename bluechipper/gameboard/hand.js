@@ -35,7 +35,7 @@
 			this.totalBet = this.lastRaise = this.table.bigBlind // min bet
 
 			// Action is on actionIndex
-			this.proceed()
+			// this.proceed()
 		},
 		getState: function() {
 			return {
@@ -71,7 +71,13 @@
 			this.playerActions = state.playerActions
 			
 			// Let's go
-			this.proceed()
+			this.start()
+		},
+		start: function() {
+			var playersInHand = this.playersInHand()
+			this.bridge.handStateChanged(this, 'start', playersInHand.map(function(player) { return player.id }), function() {
+				this.proceed()
+			}.bind(this))
 		},
 		exchangeSum: function(index, sum) {
 
@@ -117,13 +123,10 @@
 				playersInHand[0].withdraw(-this.totalPot)
 				this.table.pot.el.innerHTML = 0
 				
-				if (this.bridge && this.bridge.handStateChanged) {
-					this.bridge.handStateChanged('end', playersInHand.map(function(player) { return player.id }))
-				} else {
-					alert('finished with ' + playersInHand.length + ' players')
-				}
-				
-				return
+				this.bridge.handStateChanged(this, 'end', playersInHand.map(function(player) { return player.id }), function() {
+					// Start another hand?
+					this.table.startHand()
+				}.bind(this))
 			} else if (roundFinished) {
 				// TODO - change the state around
 				if (this.round == 3) {
@@ -139,15 +142,8 @@
 						}
 					}
 					
-					if (this.bridge && this.bridge.handResultNeeded) {
-						// Fire off a request for the winners of the main + side pots
-						this.bridge.handResultNeeded(pots)
-					} else {
-						// TODO - for now just move to the next hand
-						playersInHand[0].withdraw(-this.totalPot)
-						alert('finished with ' + playersInHand.length + ' players')
-						this.table.startHand()
-					}
+					// Fire off a request for the winners of the main + side pots
+					this.bridge.handResultNeeded(this, pots)
 					return
 				} else {
 					this.totalBet = 0
@@ -163,25 +159,20 @@
 						roundName = 'river'
 					}
 
-					if (this.bridge && this.bridge.handStateChanged) {
-						this.bridge.handStateChanged(roundName, playersInHand.map(function(player) { return player.id }))
-					} else {
-						alert('get ready for the ' + roundName)
-					}
-
-					for (var i = 0; i < this.players.length; ++i) {
-						this.playerActions[i].bet = 0
-						this.players[i].el.style.opacity = '1'
-					}
-
-					this.actionIndex = this.getFirstActivePlayerIndexFrom(this.smallBlindIndex)
-					this.lastRaiserIndex = this.actionIndex
+					this.bridge.handStateChanged(this, roundName, playersInHand.map(function(player) { return player.id }), function() {
+						for (var i = 0; i < this.players.length; ++i) {
+							this.playerActions[i].bet = 0
+							this.players[i].el.style.opacity = '1'
+						}
+	
+						this.actionIndex = this.getFirstActivePlayerIndexFrom(this.smallBlindIndex)
+						this.lastRaiserIndex = this.actionIndex
+						
+						this.proceed()
+					}.bind(this))
 				}
 			} else {
-				if (this.bridge && this.bridge.handStateChanged) {
-					this.bridge.handStateChanged('start', playersInHand.map(function(player) { return player.id }))
-				} else {
-				}
+				// Do nothing - just keep proceeding around
 			}
 
 			this.proceed()
@@ -238,7 +229,7 @@
 			if (this.players[this.actionIndex].isCurrentUser) {
 				// We can act on this device
 				this.table.menu.setOptions(options)
-				this.table.menu.show(function(action, value) {
+				this.table.menu.requestAction(this.players[this.actionIndex].id, function(action, value) {
 					switch (action) {
 						case 'check' : {
 							// continue on

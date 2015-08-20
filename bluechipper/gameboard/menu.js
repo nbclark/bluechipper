@@ -19,14 +19,17 @@
 			menuOptionCallback: function(action) {
 				this.callback(action, this.actionValues[action])
 			},
-			show: function(callback) {
+			requestAction: function(playerId, callback) {
 				this.callback = callback
-				
-				if (this.bridge && this.bridge.playerActionNeeded) {
-					this.bridge.playerActionNeeded(this.actionValues)
-				} else {
-					this.el.style.bottom = 0
-				}
+				this.bridge.playerActionNeeded(this, this.actionValues, playerId)
+				// if (this.bridge && this.bridge.playerActionNeeded) {
+				// 	this.bridge.playerActionNeeded(this.actionValues)
+				// } else {
+				// 	this.el.style.bottom = 0
+				// }
+			},
+			show: function() {
+				this.el.style.bottom = 0
 			},
 			hide: function() {
 				this.el.style.bottom = -this.el.clientHeight

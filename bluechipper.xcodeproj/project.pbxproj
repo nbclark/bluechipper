@@ -12,6 +12,8 @@
 		AA24A62A1B6DD22A00D54C23 /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA24A6291B6DD22A00D54C23 /* Accounts.framework */; };
 		AA266C0A1B6DD5D9003C77DA /* XLForm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA266C091B6DD5D9003C77DA /* XLForm.framework */; };
 		AA266C0C1B830366003C77DA /* AddPlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA266C0B1B830366003C77DA /* AddPlayerViewController.swift */; };
+		AA266C0E1B853E62003C77DA /* bridge.js in Resources */ = {isa = PBXBuildFile; fileRef = AA266C0D1B853E62003C77DA /* bridge.js */; };
+		AA266C101B8542AC003C77DA /* MBProgressHUD.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA266C0F1B8542AC003C77DA /* MBProgressHUD.framework */; };
 		AA6782821B6DCDF30074391D /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA6782811B6DCDF30074391D /* SettingsViewController.swift */; };
 		AA6782841B6DCEDB0074391D /* CurrencyTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA6782831B6DCEDB0074391D /* CurrencyTableViewCell.swift */; };
 		AAA7EACC1B6B2FB200D7F04A /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AAA7EACA1B6B2FB200D7F04A /* Bolts.framework */; };
@@ -87,6 +89,8 @@
 		AA24A6291B6DD22A00D54C23 /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = System/Library/Frameworks/Accounts.framework; sourceTree = SDKROOT; };
 		AA266C091B6DD5D9003C77DA /* XLForm.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XLForm.framework; path = "Pods/../build/Debug-iphoneos/XLForm.framework"; sourceTree = "<group>"; };
 		AA266C0B1B830366003C77DA /* AddPlayerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddPlayerViewController.swift; sourceTree = "<group>"; };
+		AA266C0D1B853E62003C77DA /* bridge.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = bridge.js; path = gameboard/bridge.js; sourceTree = "<group>"; };
+		AA266C0F1B8542AC003C77DA /* MBProgressHUD.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MBProgressHUD.framework; path = "Pods/../build/Debug-iphoneos/MBProgressHUD.framework"; sourceTree = "<group>"; };
 		AA6782811B6DCDF30074391D /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		AA6782831B6DCEDB0074391D /* CurrencyTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CurrencyTableViewCell.swift; sourceTree = "<group>"; };
 		AAA7EACA1B6B2FB200D7F04A /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Bolts.framework; path = "../../Downloads/parse-library-1.7.5/Bolts.framework"; sourceTree = "<group>"; };
@@ -156,6 +160,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AA266C101B8542AC003C77DA /* MBProgressHUD.framework in Frameworks */,
 				AA266C0A1B6DD5D9003C77DA /* XLForm.framework in Frameworks */,
 				AA24A62A1B6DD22A00D54C23 /* Accounts.framework in Frameworks */,
 				AA24A6281B6DD22600D54C23 /* Social.framework in Frameworks */,
@@ -192,6 +197,7 @@
 		152BA070046E99BDF73146F6 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				AA266C0F1B8542AC003C77DA /* MBProgressHUD.framework */,
 				AA266C091B6DD5D9003C77DA /* XLForm.framework */,
 				AA24A6291B6DD22A00D54C23 /* Accounts.framework */,
 				AA24A6271B6DD22600D54C23 /* Social.framework */,
@@ -233,6 +239,7 @@
 		E17D53061A8E072C009274A1 /* gameboard */ = {
 			isa = PBXGroup;
 			children = (
+				AA266C0D1B853E62003C77DA /* bridge.js */,
 				E17D53071A8E0743009274A1 /* hand.js */,
 				E17D53081A8E0743009274A1 /* player.js */,
 				E17D53091A8E0743009274A1 /* menu.js */,
@@ -430,6 +437,7 @@
 			files = (
 				E195F94F1A217832008D8661 /* IMG_1484.jpg in Resources */,
 				E17D53181A8E0743009274A1 /* table.html in Resources */,
+				AA266C0E1B853E62003C77DA /* bridge.js in Resources */,
 				E17D53141A8E0743009274A1 /* table.js in Resources */,
 				E17D53131A8E0743009274A1 /* style.css in Resources */,
 				E17D53111A8E0743009274A1 /* player.js in Resources */,

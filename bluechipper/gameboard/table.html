@@ -10,11 +10,13 @@
   <script type='text/javascript' src='menu.js'></script>
   <script type='text/javascript' src='hand.js'></script>
   <script type='text/javascript' src='pot.js'></script>
+  <script type='text/javascript' src='bridge.js'></script>
   <script type='text/javascript' src='table.js'></script>
 
   <script>
 
-    var table = new BC.table()
+    var bridge = new BC.bridge()
+    var table = new BC.table(bridge)
     document.body.appendChild(table.el)
     
     if(navigator.userAgent.indexOf('Chrome') >= 0) {
@@ -27,6 +29,7 @@
       table.layoutPlayers()
       table.startGame()
       
+      /*
       setTimeout(function() {
         var s = table.getState()
         console.log(s)
@@ -36,6 +39,7 @@
           table.loadState(s)
         }, 1000)
       }, 5000)
+      */
     }
     
     window['table'] = table

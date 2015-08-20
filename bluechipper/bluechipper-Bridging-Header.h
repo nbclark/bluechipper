@@ -7,3 +7,4 @@
 #import <Parse/PFObject+Subclass.h>
 #import <ParseUI/ParseUI.h>
 #import <XLForm/XLForm.h>
+#import <MBProgressHUD/MBProgressHUD.h>

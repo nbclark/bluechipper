@@ -74,7 +74,7 @@ class PlayersViewController: UIViewController, UITableViewDelegate, UITableViewD
     @IBAction func startClicked() {
         // TODO - if we are in a game, let it go
         // Otherwise, start
-        if (!Settings.gameManager!.game.isActive) {
+        if (true || !Settings.gameManager!.game.isActive) {
             Settings.gameManager!.startGame()
         }
         self.dismissViewControllerAnimated(true, completion: nil);
