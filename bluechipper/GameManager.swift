@@ -219,11 +219,19 @@ class GameManager: NSObject, BeaconRangedMonitorDelegate, BeaconMonitorDelegate,
             } else if (state == "start") {
                 self.hud.mode = MBProgressHUDMode.Text
                 self.hud.labelText = "Starting hand..."
-                self.hud.show(true)
+                self.hud.showAnimated(true, whileExecutingBlock: { () -> Void in
+                    sleep(5)
+                }, completionBlock: { () -> Void in
+                    self.webView?.stringByEvaluatingJavaScriptFromString("bridge.handStateChangedCallback()")
+                })
             } else {
                 self.hud.mode = MBProgressHUDMode.Text
                 self.hud.labelText = String(format: "Ready for the %@", state)
-                self.hud.show(true)
+                self.hud.showAnimated(true, whileExecutingBlock: { () -> Void in
+                    sleep(5)
+                    }, completionBlock: { () -> Void in
+                        self.webView?.stringByEvaluatingJavaScriptFromString("bridge.handStateChangedCallback()")
+                })
             }
         } else if (url.host == "signalHandResultNeeded") {
             sleep(0)
@@ -233,7 +241,7 @@ class GameManager: NSObject, BeaconRangedMonitorDelegate, BeaconMonitorDelegate,
     func webViewDidFinishLoad(webView: UIWebView) {
         webView.stringByEvaluatingJavaScriptFromString("bridge.signalPlayerActionNeeded = function(actionStates, playerid) { document.location = 'bc://signalPlayerActionNeeded/' + playerid + '/' + JSON.stringify(actionStates) }")
         
-        //webView.stringByEvaluatingJavaScriptFromString("bridge.signalHandStateChanged = function(state, winners) { document.location = 'bc://signalHandStateChanged/' + state + '/' + JSON.stringify(winners) }")
+        webView.stringByEvaluatingJavaScriptFromString("bridge.signalHandStateChanged = function(state, winners) { document.location = 'bc://signalHandStateChanged/' + state + '/' + JSON.stringify(winners) }")
         
         webView.stringByEvaluatingJavaScriptFromString("bridge.signalHandResultNeeded = function(pots) { document.location = 'bc://signalHandResultNeeded/' + JSON.stringify(pots) }")
     }

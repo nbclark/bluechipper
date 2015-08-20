@@ -13,6 +13,7 @@
 				
 				// function(state, winners) -- state = start, flop, turn, river, end
 				this.handStateChanged = function(hand, state, winners, callback) {
+					this.handStateChangedCallback = callback
 					if (this.signalHandStateChanged) {
 						this.signalHandStateChanged(state, winners)
 					} else {
@@ -29,7 +30,8 @@
 				}
 				
 				// function(pots) -- call some named callback - { sum : [ playerids in pot ] }
-				this.handResultNeeded = function(hand, pots) {
+				this.handResultNeeded = function(hand, pots, callback) {
+					this.handResultNeededCallback = callback
 					alert('handResultNeeded')
 					if (this.signalHandResultNeeded) {
 						this.signalHandResultNeeded(pots)
