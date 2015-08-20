@@ -35,6 +35,7 @@ internal class AppDelegate: UIResponder, UIApplicationDelegate {
         application.registerUserNotificationSettings(settings)
         application.registerForRemoteNotifications()
         
+        PFUser.currentUser()!.save()
         Settings.gameManager = GameManager()
         
         return true

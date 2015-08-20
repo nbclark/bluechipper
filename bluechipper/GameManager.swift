@@ -203,8 +203,9 @@ class GameManager: NSObject, BeaconRangedMonitorDelegate, BeaconMonitorDelegate,
     var playerWaitHandler : ((NSString, NSString, NSNumber)->Void)?
     
     func processCommand(url: NSURL, id: String) {
-        
         if (url.host == "signalPlayerActionNeeded") {
+            self.playerWaitHandler = nil
+            
             var obj : NSDictionary = NSJSONSerialization.JSONObjectWithData(url.lastPathComponent!.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: true)!, options: nil, error: nil) as! NSDictionary
             
             var userId = url.pathComponents![1] as! String
