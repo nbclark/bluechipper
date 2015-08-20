@@ -23,6 +23,7 @@ typealias BCGameResultBlock = (Game?, NSError?) -> Void
 enum GameNotificationActions : String {
     case GameMembersChanged = "gamemembers"
     case GameStateChanged = "gamestate"
+    case GameTurnTaken = "turntaken"
 }
 
 class GameManager: NSObject, BeaconRangedMonitorDelegate, BeaconMonitorDelegate, UIWebViewDelegate {
@@ -115,9 +116,20 @@ class GameManager: NSObject, BeaconRangedMonitorDelegate, BeaconMonitorDelegate,
     }
     
     private func sendGamePush(action : GameNotificationActions) {
+        self.sendGamePush(action, data: [NSObject : AnyObject]())
+    }
+    
+    private func sendGamePush(action : GameNotificationActions, data : [NSObject : AnyObject]!) {
+        var dict = Dictionary<NSObject, AnyObject>()
+        dict["action"] = action.rawValue
+        
+        for (key, value) in data {
+            dict[key] = value
+        }
+        
         var push = PFPush()
         push.setChannel("c" + self.game.objectId!)
-        push.setData([ "action" : action.rawValue ])
+        push.setData(dict)
         push.sendPushInBackgroundWithBlock(nil)
     }
     
@@ -184,6 +196,12 @@ class GameManager: NSObject, BeaconRangedMonitorDelegate, BeaconMonitorDelegate,
         sleep(0)
     }
     
+    func processGameTurnTaken(userId : NSString, action : NSString, value : NSNumber) {
+        self.playerWaitHandler?(userId, action, value)
+    }
+    
+    var playerWaitHandler : ((NSString, NSString, NSNumber)->Void)?
+    
     func processCommand(url: NSURL, id: String) {
         
         if (url.host == "signalPlayerActionNeeded") {
@@ -198,6 +216,7 @@ class GameManager: NSObject, BeaconRangedMonitorDelegate, BeaconMonitorDelegate,
                 for (key, value) in obj {
                     sheet.addButtonWithTitle(key as! String, handler : { () -> Void in
                         self.webView?.stringByEvaluatingJavaScriptFromString(String(format: "table.menu.menuOptionCallback('%@')", key as! String))
+                        self.sendGamePush(GameNotificationActions.GameTurnTaken, data : ["userid" : userId, "actionname" : key, "actionvalue" : value ])
                         return
                     })
                 }
@@ -206,21 +225,31 @@ class GameManager: NSObject, BeaconRangedMonitorDelegate, BeaconMonitorDelegate,
             } else {
                 // TODO - show some waiting UI
                 // Wait for notification from Parse
-                // self.webView?.stringByEvaluatingJavaScriptFromString("table.menu.menuOptionCallback('fold')")
                 self.hud.mode = MBProgressHUDMode.DeterminateHorizontalBar
                 self.hud.progress = 0.5
                 self.hud.labelText = "Waiting on player"
                 self.hud.show(true)
+                
+                // TODO - we need to block on a thread or something until we are notified
+                self.playerWaitHandler = { (userId, action, value) -> Void in
+                    self.webView?.stringByEvaluatingJavaScriptFromString(String(format: "table.menu.menuOptionCallback('%@')", action as! String))
+                }
             }
         } else if (url.host == "signalHandStateChanged") {
             var state = url.pathComponents![1] as! String
             if (state == "end") {
-                //
+                self.hud.mode = MBProgressHUDMode.Text
+                self.hud.labelText = "Hand over..."
+                self.hud.showAnimated(true, whileExecutingBlock: { () -> Void in
+                    sleep(3)
+                    }, completionBlock: { () -> Void in
+                        self.webView?.stringByEvaluatingJavaScriptFromString("bridge.handStateChangedCallback()")
+                })
             } else if (state == "start") {
                 self.hud.mode = MBProgressHUDMode.Text
                 self.hud.labelText = "Starting hand..."
                 self.hud.showAnimated(true, whileExecutingBlock: { () -> Void in
-                    sleep(5)
+                    sleep(3)
                 }, completionBlock: { () -> Void in
                     self.webView?.stringByEvaluatingJavaScriptFromString("bridge.handStateChangedCallback()")
                 })
@@ -228,9 +257,9 @@ class GameManager: NSObject, BeaconRangedMonitorDelegate, BeaconMonitorDelegate,
                 self.hud.mode = MBProgressHUDMode.Text
                 self.hud.labelText = String(format: "Ready for the %@", state)
                 self.hud.showAnimated(true, whileExecutingBlock: { () -> Void in
-                    sleep(5)
+                    sleep(3)
                     }, completionBlock: { () -> Void in
-                        self.webView?.stringByEvaluatingJavaScriptFromString("bridge.handStateChangedCallback()")
+                    self.webView?.stringByEvaluatingJavaScriptFromString("bridge.handStateChangedCallback()")
                 })
             }
         } else if (url.host == "signalHandResultNeeded") {

@@ -66,6 +66,8 @@ internal class AppDelegate: UIResponder, UIApplicationDelegate {
             } else if (msg!.isEqualToString(GameNotificationActions.GameStateChanged.rawValue)) {
                 // TODO
                 Settings.gameManager!.loadState()
+            } else if (msg!.isEqualToString(GameNotificationActions.GameTurnTaken.rawValue)) {
+                Settings.gameManager!.processGameTurnTaken(userInfo["userid"] as! NSString, action: userInfo["actionname"] as! NSString, value: userInfo["actionvalue"] as! NSNumber)
             }
         }
         

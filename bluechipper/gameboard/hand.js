@@ -224,7 +224,9 @@
 				this.lastRaise = 0
 			}
 
-			if (this.players[this.actionIndex].isCurrentUser) {
+			// I think we always want to call out regardless of who the user is
+			// If they aren't the current user, the native app should wait for a push
+			if (true || this.players[this.actionIndex].isCurrentUser) {
 				// We can act on this device
 				this.table.menu.setOptions(options)
 				this.table.menu.requestAction(this.players[this.actionIndex].id, function(action, value) {
