@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import MBProgressHUD
 
 typealias BCLocalGamesResultBlock = (Array<Game>, NSError?) -> Void
 typealias BCGameResultBlock = (Game?, NSError?) -> Void
@@ -32,12 +33,40 @@ class GameManager: NSObject, BeaconRangedMonitorDelegate, BeaconMonitorDelegate,
     var isProcessing : Bool
     var joinGames : Array<Game>
     var delegates : NSMutableArray = NSMutableArray()
+    var _hud : MBProgressHUD! = nil
     
     var isOwner : Bool {
         get {
             return nil != self.game ? self.game.owner == PFUser.currentUser()?.objectId : false
         }
     }
+    
+    var hud : MBProgressHUD {
+        get {
+            if (nil == self._hud) {
+                let window = UIApplication.sharedApplication().keyWindow!
+                self._hud = MBProgressHUD(window: window)
+                self._hud.opacity = 0.25
+                self._hud.animationType = MBProgressHUDAnimation.ZoomIn
+                window.addSubview(self._hud)
+            }
+            return self._hud;
+        }
+    }
+    
+    // GAME STATE CHANGES
+    // Stakes changes (before and during)
+    // Player changes (before and durring) (add / delete / pause)
+    // Player order changes (before and during) (randomization should happen somehwere)
+    // Player rebuys?
+    // Owner changed?
+    //
+    // HAND STATE CHANGES
+    // Hand started
+    // Player acted (followed by player to act)
+    // Round started / ended
+    // Stacks changed
+    // Player busted
     
     override init() {
         self.beaconMonitor = BeaconMonitor()
@@ -112,6 +141,7 @@ class GameManager: NSObject, BeaconRangedMonitorDelegate, BeaconMonitorDelegate,
         }
     }
     
+    // Start game stracking
     func start() {
         self.notifyState(1, message: "intializing beacons...")
         
@@ -146,26 +176,61 @@ class GameManager: NSObject, BeaconRangedMonitorDelegate, BeaconMonitorDelegate,
             return false
         } else {
             self.webView = webView
-            // webView.stringByEvaluatingJavaScriptFromString("alert(table)")
             return true
         }
     }
     
+    func webView(webView: UIWebView, didFailLoadWithError error: NSError) {
+        sleep(0)
+    }
+    
     func processCommand(url: NSURL, id: String) {
-        var obj : NSDictionary = NSJSONSerialization.JSONObjectWithData(url.lastPathComponent!.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: true)!, options: nil, error: nil) as! NSDictionary
         
-        // List of menu options (check, fold, raise, call), with their corresponding values
-        if (id == PFUser.currentUser()?.objectId!) {
-            sleep(0);
-            self.webView?.stringByEvaluatingJavaScriptFromString("table.menu.menuOptionCallback('fold')")
-        } else {
-            // Wait for notification from Parse
-            self.webView?.stringByEvaluatingJavaScriptFromString("table.menu.menuOptionCallback('fold')")
+        if (url.host == "signalPlayerActionNeeded") {
+            var obj : NSDictionary = NSJSONSerialization.JSONObjectWithData(url.lastPathComponent!.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: true)!, options: nil, error: nil) as! NSDictionary
+            
+            var userId = url.pathComponents![1] as! String
+            
+            // List of menu options (check, fold, raise, call), with their corresponding values
+            if (userId == PFUser.currentUser()?.objectId!) {
+                if (obj.objectForKey("call") != nil) {
+                    self.webView?.stringByEvaluatingJavaScriptFromString("table.menu.menuOptionCallback('call')")
+                } else {
+                    self.webView?.stringByEvaluatingJavaScriptFromString("table.menu.menuOptionCallback('check')")
+                }
+            } else {
+                // TODO - show some waiting UI
+                // Wait for notification from Parse
+                // self.webView?.stringByEvaluatingJavaScriptFromString("table.menu.menuOptionCallback('fold')")
+                self.hud.mode = MBProgressHUDMode.DeterminateHorizontalBar
+                self.hud.progress = 0.5
+                self.hud.labelText = "Waiting on player"
+                self.hud.show(true)
+            }
+        } else if (url.host == "signalHandStateChanged") {
+            var state = url.pathComponents![1] as! String
+            if (state == "end") {
+                //
+            } else if (state == "start") {
+                self.hud.mode = MBProgressHUDMode.Text
+                self.hud.labelText = "Starting hand..."
+                self.hud.show(true)
+            } else {
+                self.hud.mode = MBProgressHUDMode.Text
+                self.hud.labelText = String(format: "Ready for the %@", state)
+                self.hud.show(true)
+            }
+        } else if (url.host == "signalHandResultNeeded") {
+            sleep(0)
         }
     }
     
     func webViewDidFinishLoad(webView: UIWebView) {
-        webView.stringByEvaluatingJavaScriptFromString("table.menu.menuHandler = function(actions) { document.location = 'bc://proceed/' + JSON.stringify(actions) }")
+        webView.stringByEvaluatingJavaScriptFromString("bridge.signalPlayerActionNeeded = function(actionStates, playerid) { document.location = 'bc://signalPlayerActionNeeded/' + playerid + '/' + JSON.stringify(actionStates) }")
+        
+        webView.stringByEvaluatingJavaScriptFromString("bridge.signalHandStateChanged = function(state, winners) { document.location = 'bc://signalHandStateChanged/' + state + '/' + JSON.stringify(winners) }")
+        
+        webView.stringByEvaluatingJavaScriptFromString("bridge.signalHandResultNeeded = function(pots) { document.location = 'bc://signalHandResultNeeded/' + JSON.stringify(pots) }")
     }
     
     func addPlayer(player : PFUser, block : PFBooleanResultBlock?) {
@@ -210,9 +275,12 @@ class GameManager: NSObject, BeaconRangedMonitorDelegate, BeaconMonitorDelegate,
     func startGame() {
         assert(self.isOwner, "startGame should only be called by game owner")
         
-        if (!self.game.isActive) {
+        if (true || !self.game.isActive) {
             for user in self.game.activeusers {
                 var name = user.name!.stringByReplacingOccurrencesOfString("'", withString: "_")
+                self.webView?.stringByEvaluatingJavaScriptFromString(String(format: "table.addPlayer('%@', '%@', %d)", user.objectId!, name, 100))
+                self.webView?.stringByEvaluatingJavaScriptFromString(String(format: "table.addPlayer('%@', '%@', %d)", user.objectId!, name, 100))
+                self.webView?.stringByEvaluatingJavaScriptFromString(String(format: "table.addPlayer('%@', '%@', %d)", user.objectId!, name, 100))
                 self.webView?.stringByEvaluatingJavaScriptFromString(String(format: "table.addPlayer('%@', '%@', %d)", user.objectId!, name, 100))
             }
             
