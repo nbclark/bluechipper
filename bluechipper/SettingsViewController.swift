@@ -42,7 +42,7 @@ class SettingsViewController : XLFormViewController {
             
             // TODO - need to communicate this out
             Settings.gameManager!.game.isConfigured = true
-            Settings.gameManager!.save()
+            Settings.gameManager!.save(nil, block:  nil)
         }
     }
     

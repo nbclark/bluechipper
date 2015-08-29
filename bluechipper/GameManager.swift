@@ -11,6 +11,8 @@ import MBProgressHUD
 
 typealias BCLocalGamesResultBlock = (Array<Game>, NSError?) -> Void
 typealias BCGameResultBlock = (Game?, NSError?) -> Void
+typealias BCWaitEvaluationBlock = (NSString, NSDictionary)->Bool
+typealias BCWaitCallbackBlock = (NSString, NSDictionary)->Void
 
 @objc protocol GameManagerDelegate : NSObjectProtocol {
     optional func didEnableAdvertising()
@@ -27,6 +29,7 @@ enum GameNotificationActions : String {
 }
 
 class GameManager: NSObject, BeaconRangedMonitorDelegate, BeaconMonitorDelegate, UIWebViewDelegate {
+    var user : PFUser
     var beaconMonitor : BeaconMonitor
     var gameId : String?
     var webView : UIWebView?
@@ -38,7 +41,7 @@ class GameManager: NSObject, BeaconRangedMonitorDelegate, BeaconMonitorDelegate,
     
     var isOwner : Bool {
         get {
-            return nil != self.game ? self.game.owner == PFUser.currentUser()?.objectId : false
+            return nil != self.game ? self.game.owner == self.user.objectId : false
         }
     }
     
@@ -69,13 +72,14 @@ class GameManager: NSObject, BeaconRangedMonitorDelegate, BeaconMonitorDelegate,
     // Stacks changed
     // Player busted
     
-    override init() {
+    init(user: PFUser) {
         self.beaconMonitor = BeaconMonitor()
         
         // TODO - remove this and let gamemanager centralize ranged users
         Settings.beaconMonitor = self.beaconMonitor
         self.isProcessing = false
         self.joinGames = Array<Game>()
+        self.user = user
         
         super.init()
         
@@ -88,49 +92,6 @@ class GameManager: NSObject, BeaconRangedMonitorDelegate, BeaconMonitorDelegate,
         }
         
         self.beaconMonitor.delegate = self
-        
-        let user = PFUser.currentUser()!
-        user.saveInBackgroundWithBlock { (result, error) -> Void in
-            let userId = user.objectId!;
-            let hashValue = userId.hash & 0x7FFF7FFF
-            user.hashvalue = hashValue
-            user.name = UIDevice.currentDevice().name
-            user.saveInBackgroundWithBlock { (result, error) -> Void in
-                self.start()
-            }
-        }
-    }
-    
-    private func notifyState(state: Int, message: String) {
-        for del in self.delegates {
-            let gameDel = del as! GameManagerDelegate
-            gameDel.didChangeState?(state, message: message)
-        }
-    }
-    
-    private func sendPlayerPush(user : PFUser, message: String) {
-        var push = PFPush()
-        push.setChannel("c" + user.objectId!)
-        push.setMessage(message) // the game should be refetched...
-        push.sendPushInBackgroundWithBlock(nil)
-    }
-    
-    private func sendGamePush(action : GameNotificationActions) {
-        self.sendGamePush(action, data: [NSObject : AnyObject]())
-    }
-    
-    private func sendGamePush(action : GameNotificationActions, data : [NSObject : AnyObject]!) {
-        var dict = Dictionary<NSObject, AnyObject>()
-        dict["action"] = action.rawValue
-        
-        for (key, value) in data {
-            dict[key] = value
-        }
-        
-        var push = PFPush()
-        push.setChannel("c" + self.game.objectId!)
-        push.setData(dict)
-        push.sendPushInBackgroundWithBlock(nil)
     }
     
     func addDelegate(delegate: GameManagerDelegate) {
@@ -181,207 +142,38 @@ class GameManager: NSObject, BeaconRangedMonitorDelegate, BeaconMonitorDelegate,
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "gameMemberChanged:", name: "gameMemberChangedNotification", object: nil)
     }
     
-    func webView(webView: UIWebView, shouldStartLoadWithRequest request: NSURLRequest, navigationType: UIWebViewNavigationType) -> Bool {
-        if request.URL!.scheme! == "bc" {
-            var id = webView.stringByEvaluatingJavaScriptFromString("table.players[table.actionIndex].id")!
-            self.processCommand(request.URL!, id: id)
-            return false
-        } else {
-            self.webView = webView
-            return true
-        }
-    }
+    var waitActionCallbacks : Array<(predicate: BCWaitEvaluationBlock, callback: BCWaitCallbackBlock, persist: Bool)> = []
     
-    func webView(webView: UIWebView, didFailLoadWithError error: NSError) {
-        sleep(0)
-    }
-    
-    func processGameTurnTaken(userId : NSString, action : NSString, value : NSNumber) {
-        self.playerWaitHandler?(userId, action, value)
-    }
-    
-    var playerWaitHandler : ((NSString, NSString, NSNumber)->Void)?
-    
-    func processCommand(url: NSURL, id: String) {
-        if (url.host == "signalPlayerActionNeeded") {
-            self.playerWaitHandler = nil
-            
-            var obj : NSDictionary = NSJSONSerialization.JSONObjectWithData(url.lastPathComponent!.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: true)!, options: nil, error: nil) as! NSDictionary
-            
-            var userId = url.pathComponents![1] as! String
-            
-            // List of menu options (check, fold, raise, call), with their corresponding values
-            if (userId == PFUser.currentUser()?.objectId!) {
-                var sheet = BTActionSheet(title: "Join Existing Game", cancelButtonTitle: nil, destructiveButtonTitle: nil)
+    internal func signalAction(action: NSString, userInfo : NSDictionary) {
+        for (index, callback) in enumerate(waitActionCallbacks) {
+            let res : Bool = callback.predicate(action, userInfo)
+            if (res) {
+                callback.callback(action, userInfo)
                 
-                for (key, value) in obj {
-                    sheet.addButtonWithTitle(key as! String, handler : { () -> Void in
-                        self.webView?.stringByEvaluatingJavaScriptFromString(String(format: "table.menu.menuOptionCallback('%@')", key as! String))
-                        self.sendGamePush(GameNotificationActions.GameTurnTaken, data : ["userid" : userId, "actionname" : key, "actionvalue" : value ])
-                        return
-                    })
+                if (!callback.persist) {
+                    waitActionCallbacks.removeAtIndex(index)
                 }
-                
-                sheet.showInView(UIApplication.sharedApplication().keyWindow!)
-            } else {
-                // TODO - show some waiting UI
-                // Wait for notification from Parse
-                self.hud.mode = MBProgressHUDMode.DeterminateHorizontalBar
-                self.hud.progress = 0.5
-                self.hud.labelText = "Waiting on player"
-                self.hud.show(true)
-                
-                // TODO - we need to block on a thread or something until we are notified
-                self.playerWaitHandler = { (userId, action, value) -> Void in
-                    self.webView?.stringByEvaluatingJavaScriptFromString(String(format: "table.menu.menuOptionCallback('%@')", action as! String))
-                }
+                break;
             }
-        } else if (url.host == "signalHandStateChanged") {
-            var state = url.pathComponents![1] as! String
-            if (state == "end") {
-                self.hud.mode = MBProgressHUDMode.Text
-                self.hud.labelText = "Hand over..."
-                self.hud.showAnimated(true, whileExecutingBlock: { () -> Void in
-                    sleep(3)
-                    }, completionBlock: { () -> Void in
-                        self.webView?.stringByEvaluatingJavaScriptFromString("bridge.handStateChangedCallback()")
-                })
-            } else if (state == "start") {
-                self.hud.mode = MBProgressHUDMode.Text
-                self.hud.labelText = "Starting hand..."
-                self.hud.showAnimated(true, whileExecutingBlock: { () -> Void in
-                    sleep(3)
-                }, completionBlock: { () -> Void in
-                    self.webView?.stringByEvaluatingJavaScriptFromString("bridge.handStateChangedCallback()")
-                })
-            } else {
-                self.hud.mode = MBProgressHUDMode.Text
-                self.hud.labelText = String(format: "Ready for the %@", state)
-                self.hud.showAnimated(true, whileExecutingBlock: { () -> Void in
-                    sleep(3)
-                    }, completionBlock: { () -> Void in
-                    self.webView?.stringByEvaluatingJavaScriptFromString("bridge.handStateChangedCallback()")
-                })
-            }
-        } else if (url.host == "signalHandResultNeeded") {
-            sleep(0)
         }
     }
     
-    func webViewDidFinishLoad(webView: UIWebView) {
-        webView.stringByEvaluatingJavaScriptFromString("bridge.signalPlayerActionNeeded = function(actionStates, playerid) { document.location = 'bc://signalPlayerActionNeeded/' + playerid + '/' + JSON.stringify(actionStates) }")
+    internal func registerWaitForActionWithHUD(predicate : BCWaitEvaluationBlock, callback : BCWaitCallbackBlock, message : String) {
+        self.hud.mode = MBProgressHUDMode.DeterminateHorizontalBar
+        self.hud.progress = 0.5
+        self.hud.labelText = message
         
-        webView.stringByEvaluatingJavaScriptFromString("bridge.signalHandStateChanged = function(state, winners) { document.location = 'bc://signalHandStateChanged/' + state + '/' + JSON.stringify(winners) }")
-        
-        webView.stringByEvaluatingJavaScriptFromString("bridge.signalHandResultNeeded = function(pots) { document.location = 'bc://signalHandResultNeeded/' + JSON.stringify(pots) }")
+        self.registerWaitForAction(predicate, callback: callback, persist: false)
     }
     
-    func addPlayer(player : PFUser, block : PFBooleanResultBlock?) {
-        let user = player
-        
-        self.game.activeusers.append(user)
-        self.game.users.remove(user)
-        
-        self.sendPlayerPush(user, message: "Welcome to the game")
-
-        Settings.gameManager?.game?.saveInBackgroundWithBlock({ (res, err) -> Void in
-            self.sendGamePush(GameNotificationActions.GameMembersChanged)
-            block?(res, err)
-        })
-    }
-    
-    func removePlayer(player : PFUser, block : PFBooleanResultBlock?) {
-        let user = player
-        
-        self.game.activeusers.remove(user)
-        
-        self.sendPlayerPush(user, message: "Sorry to see you go")
-        
-        Settings.gameManager?.game?.saveInBackgroundWithBlock({ (res, err) -> Void in
-            self.sendGamePush(GameNotificationActions.GameMembersChanged)
-            block?(res, err)
-        })
-    }
-    
-    func loadState() {
-        if (!self.isOwner) {
-            assert(!self.isOwner, "startGame should only be called by non-game owners")
-            // TODO
-            self.fetchGame(self.gameId!, block: { (game, error) -> Void in
-                // TODO
-                self.webView?.stringByEvaluatingJavaScriptFromString(String(format: "table.loadState('%@')", game!.gameState!))
-                return
-            })
-        }
-    }
-    
-    func startGame() {
-        assert(self.isOwner, "startGame should only be called by game owner")
-        
-        if (true || !self.game.isActive) {
-            for user in self.game.activeusers {
-                var name = user.name!.stringByReplacingOccurrencesOfString("'", withString: "_")
-                self.webView?.stringByEvaluatingJavaScriptFromString(String(format: "table.addPlayer('%@', '%@', %d)", user.objectId!, name, 100))
-                self.webView?.stringByEvaluatingJavaScriptFromString(String(format: "table.addPlayer('%@', '%@', %d)", user.objectId!, name, 100))
-                self.webView?.stringByEvaluatingJavaScriptFromString(String(format: "table.addPlayer('%@', '%@', %d)", user.objectId!, name, 100))
-                self.webView?.stringByEvaluatingJavaScriptFromString(String(format: "table.addPlayer('%@', '%@', %d)", user.objectId!, name, 100))
-            }
-            
-            self.webView?.stringByEvaluatingJavaScriptFromString("table.randomizePlayers()")
-            self.webView?.stringByEvaluatingJavaScriptFromString("table.layoutPlayers()")
-            self.webView?.stringByEvaluatingJavaScriptFromString("table.startGame()")
-            
-            self.game.isActive = true
-            
-            // Fetch the serialized state
-            let state = self.webView?.stringByEvaluatingJavaScriptFromString("table.getState()")
-            
-            // Save off the state and notify
-            self.game.gameState = state
-            self.game.saveInBackgroundWithBlock { (res, err) -> Void in
-                // Communicate out that our game state has changed
-                // The clients should take the notice and call loadState on their clients
-                // TODO
-                self.sendGamePush(GameNotificationActions.GameStateChanged)
-            }
-        } else {
-            // TODO
-            // We really need to figure out how to handle new player additions / removals
-        }
-    }
-    
-    func gameMembersChanged() {
-        if (self.game != nil) {
-            self.reload()
-        }
+    internal func registerWaitForAction(predicate : BCWaitEvaluationBlock, callback : BCWaitCallbackBlock, persist: Bool) {
+        waitActionCallbacks.push((predicate: predicate, callback: callback, persist: persist))
     }
     
     func rangedBeacons() {
         // We have new users around us...
         if (nil == self.game) {
             self.processRange()
-        }
-    }
-    
-    func gameMemberChanged(notification: NSNotification) {
-        let user = notification.object as! PFUser
-        
-        // we have an updated user here - replace the one in our dictionary
-        var index = game.activeusers.indexOf({ (u) -> Bool in user.objectId == u.objectId })
-        
-        if (nil != index) {
-            game.activeusers[index!] = user
-        } else {
-            index = game.users.indexOf({ (u) -> Bool in user.objectId == u.objectId })
-            
-            if (nil != index)
-            {
-                game.users[index!] = user
-            }
-        }
-        
-        if (nil != index) {
-            NSNotificationCenter.defaultCenter().postNotificationName("gameStateChangedNotification", object: self.game)
         }
     }
     
@@ -392,6 +184,10 @@ class GameManager: NSObject, BeaconRangedMonitorDelegate, BeaconMonitorDelegate,
         query.findObjectsInBackgroundWithBlock { (results, error) -> Void in
             if (nil != error) {
                 block?(nil, error)
+                return
+            } else if (results?.count != 1) {
+                self.game = nil
+                block?(nil, NSError(domain: "Not found", code: 0, userInfo: nil))
                 return
             }
             
@@ -410,8 +206,17 @@ class GameManager: NSObject, BeaconRangedMonitorDelegate, BeaconMonitorDelegate,
         }
     }
     
-    func save() {
+    func save(triggeringAction : GameNotificationActions?, block : PFBooleanResultBlock?) {
+        // Some state has changed with the game, we should set that here...
+        self.game.lastAction = NSUUID().UUIDString
+        
         self.game.saveInBackgroundWithBlock { (res, error) -> Void in
+            block?(res, error)
+            
+            if let action = triggeringAction {
+                self.sendGamePush(action) 
+            }
+            
             NSNotificationCenter.defaultCenter().postNotificationName("gameStateChangedNotification", object: self.game)
         }
     }
@@ -443,7 +248,7 @@ class GameManager: NSObject, BeaconRangedMonitorDelegate, BeaconMonitorDelegate,
     }
     
     func createGame() {
-        var game = PFObject(className: "game", dictionary: ["name" : UIDevice.currentDevice().name, "users" : [], "activeusers" : [PFUser.currentUser()!], "owner" : PFUser.currentUser()!.objectId!])
+        var game = PFObject(className: "game", dictionary: ["name" : UIDevice.currentDevice().name, "users" : [], "activeusers" : [self.user], "owner" : self.user.objectId!])
         
         game.saveInBackgroundWithBlock({ (res, error) -> Void in
             self.processGame(game as! Game)
@@ -475,15 +280,15 @@ class GameManager: NSObject, BeaconRangedMonitorDelegate, BeaconMonitorDelegate,
         self.joinGames.removeAll(keepCapacity: true)
         let dict = self.beaconMonitor.rangedUsers
         var existingGameId : String = ""
-        var userList : Array<PFUser> = Array()
-        var searchUserList : Array<PFUser> = Array()
+        var userList : Array<AnyObject> = Array()
+        var searchUserList : Array<AnyObject> = Array()
         
         for (hashValue, user) in dict {
             userList.append(user)
             searchUserList.append(user)
         }
         
-        searchUserList.append(PFUser.currentUser()!)
+        searchUserList.append(self.user)
         
         var usersQuery = PFQuery(className: "game")
         var activeUsersQuery = PFQuery(className: "game")
@@ -552,23 +357,24 @@ class GameManager: NSObject, BeaconRangedMonitorDelegate, BeaconMonitorDelegate,
         var existingUserList = game["users"] as! [PFUser]
         var activeUserList = game["activeusers"] as! [PFUser]
         
-        var index = activeUserList.indexOf({ (u) -> Bool in u.objectId == PFUser.currentUser()!.objectId })
+        var index = activeUserList.indexOf({ (u) -> Bool in u.objectId == self.user.objectId })
         if (index != nil) {
             activeUserList.removeAtIndex(index!)
         }
         
-        index = existingUserList.indexOf({ (u) -> Bool in u.objectId == PFUser.currentUser()!.objectId })
+        index = existingUserList.indexOf({ (u) -> Bool in u.objectId == self.user.objectId })
         if (index != nil) {
             existingUserList.removeAtIndex(index!)
         }
         
-        if (game["owner"] as! String? == PFUser.currentUser()?.objectId!) {
+        if (game["owner"] as! String? == self.user.objectId!) {
             game["disabled"] = true
         }
         
         game.saveInBackgroundWithBlock { (res, err) -> Void in
-            self.sendGamePush(GameNotificationActions.GameMembersChanged)
-            self.start()
+            // TODO - send a message that the game was deleted
+            // self.sendGamePush(GameNotificationActions.GameMembersChanged)
+            // self.start()
         }
     }
     
@@ -576,8 +382,8 @@ class GameManager: NSObject, BeaconRangedMonitorDelegate, BeaconMonitorDelegate,
         var existingUserList = game["users"] as! [PFUser]
         var activeUserList = game["activeusers"] as! [PFUser]
         
-        if (activeUserList.indexOf({ (u) -> Bool in u.objectId == PFUser.currentUser()!.objectId }) == nil) {
-            game["users"] = existingUserList.union([PFUser.currentUser()!]).uniqueBy { (u) -> NSString in
+        if (activeUserList.indexOf({ (u) -> Bool in u.objectId == self.user.objectId }) == nil) {
+            game["users"] = existingUserList.union([self.user]).uniqueBy { (u) -> String in
                 u.objectId!
             }
         }

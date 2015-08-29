@@ -43,7 +43,7 @@ class PlayersViewController: UIViewController, UITableViewDelegate, UITableViewD
         self.tableView!.reloadData()
         self.startButton!.enabled = true
         
-        if (Settings.gameManager!.game.owner == PFUser.currentUser()?.objectId!) {
+        if (Settings.gameManager!.game.owner == Settings.gameManager!.user.objectId!) {
             if (!Settings.gameManager!.game.isConfigured) {
                 self.performSegueWithIdentifier("SettingsSegue", sender: nil)
             }
@@ -154,6 +154,7 @@ class PlayersViewController: UIViewController, UITableViewDelegate, UITableViewD
         var acceptAction = UITableViewRowAction(style: .Default, title: "Accept") { (action, ip) -> Void in
             tableView.editing = false
             let user = self.eligbleUsers[ip.row]
+            self.eligbleUsers.removeAtIndex(ip.row)
             
             Settings.gameManager!.addPlayer(user, block: { (res, err) -> Void in
                 self.updatedPlayerList()
@@ -161,7 +162,7 @@ class PlayersViewController: UIViewController, UITableViewDelegate, UITableViewD
         }
         acceptAction.backgroundColor = UIColor.greenColor()
         var game = Settings.gameManager!.game
-        let objectId : NSString = PFUser.currentUser()!.objectId!
+        let objectId : NSString = Settings.gameManager!.user.objectId!
         let objectId2: NSString = game.activeusers[indexPath.row].objectId!
         let result = (objectId == objectId2);
         

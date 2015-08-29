@@ -36,7 +36,18 @@ internal class AppDelegate: UIResponder, UIApplicationDelegate {
         application.registerForRemoteNotifications()
         
         PFUser.currentUser()!.save()
-        Settings.gameManager = GameManager()
+        
+        let user = PFUser.currentUser()!
+        Settings.gameManager = GameManager(user: user)
+        user.saveInBackgroundWithBlock { (result, error) -> Void in
+            let userId = user.objectId!;
+            let hashValue = userId.hash & 0x7FFF7FFF
+            user.hashvalue = hashValue
+            user.name = UIDevice.currentDevice().name
+            user.saveInBackgroundWithBlock { (result, error) -> Void in
+                Settings.gameManager!.start()
+            }
+        }
         
         return true
     }
@@ -59,16 +70,18 @@ internal class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject], fetchCompletionHandler completionHandler: (UIBackgroundFetchResult) -> Void) {
-        var msg = userInfo["action"] as! NSString?
-        
-        if (nil != msg) {
-            if (msg!.isEqualToString(GameNotificationActions.GameMembersChanged.rawValue)) {
-                NSNotificationCenter.defaultCenter().postNotificationName("gameMembersChangedNotification", object: nil)
-            } else if (msg!.isEqualToString(GameNotificationActions.GameStateChanged.rawValue)) {
-                // TODO
-                Settings.gameManager!.loadState()
-            } else if (msg!.isEqualToString(GameNotificationActions.GameTurnTaken.rawValue)) {
-                Settings.gameManager!.processGameTurnTaken(userInfo["userid"] as! NSString, action: userInfo["actionname"] as! NSString, value: userInfo["actionvalue"] as! NSNumber)
+        if let msg = userInfo["action"] as! NSString? {
+            let userId = userInfo["userid"] as! NSString
+            
+            if (userId != PFUser.currentUser()?.objectId) {
+                if (msg.isEqualToString(GameNotificationActions.GameMembersChanged.rawValue)) {
+                    NSNotificationCenter.defaultCenter().postNotificationName("gameMembersChangedNotification", object: nil)
+                } else if (msg.isEqualToString(GameNotificationActions.GameStateChanged.rawValue)) {
+                    // TODO
+                    Settings.gameManager!.fetchAndLoadState()
+                } else {
+                    Settings.gameManager!.signalAction(msg, userInfo: userInfo)
+                }
             }
         }
         

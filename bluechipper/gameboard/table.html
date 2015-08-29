@@ -14,7 +14,10 @@
   <script type='text/javascript' src='table.js'></script>
 
   <script>
-
+    window.onerror = function (errorMsg, url, lineNumber) {
+        alert('Error: ' + errorMsg + ' Script: ' + url + ' Line: ' + lineNumber);
+    }
+    
     var bridge = new BC.bridge()
     var table = new BC.table(bridge)
     document.body.appendChild(table.el)

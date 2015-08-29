@@ -8,7 +8,7 @@
 
 import Foundation
 
-class BTActionSheet : UIActionSheet, UIActionSheetDelegate
+class BCActionSheet : UIActionSheet, UIActionSheetDelegate
 {
     private var _userButtonHandlers : Dictionary<NSNumber, (()->Void)> = Dictionary<NSNumber, (()->Void)>()
     

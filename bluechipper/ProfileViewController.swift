@@ -30,8 +30,8 @@ class ProfileViewController : UIViewController, UIImagePickerControllerDelegate,
     self.imageView.image = image
     file.saveInBackgroundWithBlock { (result, error) -> Void in
       if (result) {
-        PFUser.currentUser()!.image = file
-        PFUser.currentUser()!.saveInBackgroundWithBlock({ (result, error) -> Void in
+        Settings.gameManager!.user.image = file
+        Settings.gameManager!.user.saveInBackgroundWithBlock({ (result, error) -> Void in
           NSNotificationCenter.defaultCenter().postNotificationName("gameMemberChangedNotification", object: PFUser.currentUser())
           return
         })

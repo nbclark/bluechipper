@@ -64,7 +64,13 @@ class LoadingViewController: UIViewController, GameManagerDelegate, UIActionShee
                 self.joinGameButton.hidden = false
                 self.activitySpinner.hidden = true
                 self.loadingLabel.hidden = true
+                self.joinGameButton?.setTitle(String(format: "Join Game (%d)", Settings.gameManager!.joinGames.count), forState: UIControlState.Normal)
+                self.joinGameButton?.layoutSubviews()
             }
+        } else {
+            self.joinGameButton.hidden = true
+            self.activitySpinner.hidden = false
+            self.loadingLabel.hidden = false
         }
     }
     func foundExistingGame(game: Game) {

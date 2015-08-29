@@ -8,19 +8,52 @@
 
 /* Begin PBXBuildFile section */
 		6ADB74B579114D3E84EDFA60 /* Pods_bluechipper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B41800FEE97DA8FADBD6402 /* Pods_bluechipper.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		AA1891571B9102CA0057A359 /* GameManager.Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1891541B9102CA0057A359 /* GameManager.Game.swift */; };
+		AA1891581B9102CA0057A359 /* GameManager.Messaging.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1891551B9102CA0057A359 /* GameManager.Messaging.swift */; };
+		AA1891591B9102CA0057A359 /* GameManager.Players.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1891561B9102CA0057A359 /* GameManager.Players.swift */; };
 		AA24A6281B6DD22600D54C23 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA24A6271B6DD22600D54C23 /* Social.framework */; };
 		AA24A62A1B6DD22A00D54C23 /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA24A6291B6DD22A00D54C23 /* Accounts.framework */; };
 		AA266C0A1B6DD5D9003C77DA /* XLForm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA266C091B6DD5D9003C77DA /* XLForm.framework */; };
 		AA266C0C1B830366003C77DA /* AddPlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA266C0B1B830366003C77DA /* AddPlayerViewController.swift */; };
 		AA266C0E1B853E62003C77DA /* bridge.js in Resources */ = {isa = PBXBuildFile; fileRef = AA266C0D1B853E62003C77DA /* bridge.js */; };
 		AA266C101B8542AC003C77DA /* MBProgressHUD.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA266C0F1B8542AC003C77DA /* MBProgressHUD.framework */; };
-		AA266C121B8555B9003C77DA /* BTActionSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA266C111B8555B9003C77DA /* BTActionSheet.swift */; };
+		AA266C121B8555B9003C77DA /* BCActionSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA266C111B8555B9003C77DA /* BCActionSheet.swift */; };
 		AA6782821B6DCDF30074391D /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA6782811B6DCDF30074391D /* SettingsViewController.swift */; };
 		AA6782841B6DCEDB0074391D /* CurrencyTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA6782831B6DCEDB0074391D /* CurrencyTableViewCell.swift */; };
 		AAA7EACC1B6B2FB200D7F04A /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AAA7EACA1B6B2FB200D7F04A /* Bolts.framework */; };
 		AAA7EACD1B6B2FB200D7F04A /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AAA7EACB1B6B2FB200D7F04A /* Parse.framework */; };
 		AAA7EACF1B6B303F00D7F04A /* ParseUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AAA7EACE1B6B303F00D7F04A /* ParseUI.framework */; };
 		AAA7EAD11B6BCE2100D7F04A /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = AAA7EAD01B6BCE2100D7F04A /* libsqlite3.dylib */; };
+		AABA039E1B9230F300CB0E92 /* Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = E195F9501A2181DB008D8661 /* Game.swift */; };
+		AABA039F1B92310E00CB0E92 /* Bridge.m in Sources */ = {isa = PBXBuildFile; fileRef = E1CC120019E79E85006EA27D /* Bridge.m */; };
+		AABA03A01B92313600CB0E92 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1CC11C319E0930C006EA27D /* AppDelegate.swift */; };
+		AABA03A11B92313800CB0E92 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1CC11C519E0930C006EA27D /* ViewController.swift */; };
+		AABA03A21B92313D00CB0E92 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E1CC11C719E0930C006EA27D /* Main.storyboard */; };
+		AABA03A31B92314100CB0E92 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = E1CC11CC19E0930C006EA27D /* LaunchScreen.xib */; };
+		AABA03A41B9231F300CB0E92 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AAA7EACB1B6B2FB200D7F04A /* Parse.framework */; };
+		AABA03A51B92321300CB0E92 /* GameManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E14CA0E01A8827A100D02313 /* GameManager.swift */; };
+		AABA03A61B92321500CB0E92 /* LoadingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E113014C1A881F2900A63C9D /* LoadingViewController.swift */; };
+		AABA03A71B92321700CB0E92 /* BeaconMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = E174F5FE1A7DA0A900C58B48 /* BeaconMonitor.swift */; };
+		AABA03A81B92321900CB0E92 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E14CA0FE1A8888D000D02313 /* ProfileViewController.swift */; };
+		AABA03A91B92323600CB0E92 /* GameManager.Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1891541B9102CA0057A359 /* GameManager.Game.swift */; };
+		AABA03AA1B92323800CB0E92 /* GameManager.Messaging.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1891551B9102CA0057A359 /* GameManager.Messaging.swift */; };
+		AABA03AB1B92323A00CB0E92 /* GameManager.Players.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1891561B9102CA0057A359 /* GameManager.Players.swift */; };
+		AABA03AC1B92323E00CB0E92 /* Array.swift in Sources */ = {isa = PBXBuildFile; fileRef = E14CA0E51A88351500D02313 /* Array.swift */; };
+		AABA03AD1B92324800CB0E92 /* BCActionSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA266C111B8555B9003C77DA /* BCActionSheet.swift */; };
+		AABA03AE1B92324A00CB0E92 /* AddPlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA266C0B1B830366003C77DA /* AddPlayerViewController.swift */; };
+		AABA03AF1B92324C00CB0E92 /* CurrencyTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA6782831B6DCEDB0074391D /* CurrencyTableViewCell.swift */; };
+		AABA03B01B92324F00CB0E92 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA6782811B6DCDF30074391D /* SettingsViewController.swift */; };
+		AABA03B11B92326100CB0E92 /* Character.swift in Sources */ = {isa = PBXBuildFile; fileRef = E14CA0E61A88351500D02313 /* Character.swift */; };
+		AABA03B21B92326A00CB0E92 /* Dictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = E14CA0E71A88351500D02313 /* Dictionary.swift */; };
+		AABA03B31B92326C00CB0E92 /* Double.swift in Sources */ = {isa = PBXBuildFile; fileRef = E14CA0E81A88351500D02313 /* Double.swift */; };
+		AABA03B41B92327100CB0E92 /* ExSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = E14CA0EA1A88351500D02313 /* ExSwift.swift */; };
+		AABA03B51B92327400CB0E92 /* Float.swift in Sources */ = {isa = PBXBuildFile; fileRef = E14CA0EB1A88351500D02313 /* Float.swift */; };
+		AABA03B61B92327400CB0E92 /* Int.swift in Sources */ = {isa = PBXBuildFile; fileRef = E14CA0EC1A88351500D02313 /* Int.swift */; };
+		AABA03B71B92327400CB0E92 /* NSArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = E14CA0ED1A88351500D02313 /* NSArray.swift */; };
+		AABA03B81B92327400CB0E92 /* NSDate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E14CA0EE1A88351500D02313 /* NSDate.swift */; };
+		AABA03B91B92327400CB0E92 /* Range.swift in Sources */ = {isa = PBXBuildFile; fileRef = E14CA0EF1A88351500D02313 /* Range.swift */; };
+		AABA03BA1B92327400CB0E92 /* Sequence.swift in Sources */ = {isa = PBXBuildFile; fileRef = E14CA0F01A88351500D02313 /* Sequence.swift */; };
+		AABA03BB1B92327400CB0E92 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = E14CA0F11A88351500D02313 /* String.swift */; };
 		E113014D1A881F2900A63C9D /* LoadingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E113014C1A881F2900A63C9D /* LoadingViewController.swift */; };
 		E14CA0E11A8827A100D02313 /* GameManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E14CA0E01A8827A100D02313 /* GameManager.swift */; };
 		E14CA0F21A88351500D02313 /* Array.swift in Sources */ = {isa = PBXBuildFile; fileRef = E14CA0E51A88351500D02313 /* Array.swift */; };
@@ -85,6 +118,9 @@
 /* Begin PBXFileReference section */
 		2B41800FEE97DA8FADBD6402 /* Pods_bluechipper.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_bluechipper.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		87B05BACB587659F35C624F3 /* Pods-bluechipper.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-bluechipper.debug.xcconfig"; path = "Pods/Target Support Files/Pods-bluechipper/Pods-bluechipper.debug.xcconfig"; sourceTree = "<group>"; };
+		AA1891541B9102CA0057A359 /* GameManager.Game.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameManager.Game.swift; sourceTree = "<group>"; };
+		AA1891551B9102CA0057A359 /* GameManager.Messaging.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameManager.Messaging.swift; sourceTree = "<group>"; };
+		AA1891561B9102CA0057A359 /* GameManager.Players.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameManager.Players.swift; sourceTree = "<group>"; };
 		AA24A6251B6DD1EB00D54C23 /* Twitter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Twitter.framework; path = System/Library/Frameworks/Twitter.framework; sourceTree = SDKROOT; };
 		AA24A6271B6DD22600D54C23 /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
 		AA24A6291B6DD22A00D54C23 /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = System/Library/Frameworks/Accounts.framework; sourceTree = SDKROOT; };
@@ -92,7 +128,7 @@
 		AA266C0B1B830366003C77DA /* AddPlayerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddPlayerViewController.swift; sourceTree = "<group>"; };
 		AA266C0D1B853E62003C77DA /* bridge.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = bridge.js; path = gameboard/bridge.js; sourceTree = "<group>"; };
 		AA266C0F1B8542AC003C77DA /* MBProgressHUD.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MBProgressHUD.framework; path = "Pods/../build/Debug-iphoneos/MBProgressHUD.framework"; sourceTree = "<group>"; };
-		AA266C111B8555B9003C77DA /* BTActionSheet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BTActionSheet.swift; sourceTree = "<group>"; };
+		AA266C111B8555B9003C77DA /* BCActionSheet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BCActionSheet.swift; sourceTree = "<group>"; };
 		AA6782811B6DCDF30074391D /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		AA6782831B6DCEDB0074391D /* CurrencyTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CurrencyTableViewCell.swift; sourceTree = "<group>"; };
 		AAA7EACA1B6B2FB200D7F04A /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Bolts.framework; path = "../../Downloads/parse-library-1.7.5/Bolts.framework"; sourceTree = "<group>"; };
@@ -190,6 +226,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AABA03A41B9231F300CB0E92 /* Parse.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -294,6 +331,9 @@
 		E1CC11C019E0930C006EA27D /* bluechipper */ = {
 			isa = PBXGroup;
 			children = (
+				AA1891541B9102CA0057A359 /* GameManager.Game.swift */,
+				AA1891551B9102CA0057A359 /* GameManager.Messaging.swift */,
+				AA1891561B9102CA0057A359 /* GameManager.Players.swift */,
 				E17D53061A8E072C009274A1 /* gameboard */,
 				E14CA1001A88944F00D02313 /* no-face.png */,
 				E14CA0E21A8834AA00D02313 /* ExSwift */,
@@ -316,7 +356,7 @@
 				AA6782811B6DCDF30074391D /* SettingsViewController.swift */,
 				AA6782831B6DCEDB0074391D /* CurrencyTableViewCell.swift */,
 				AA266C0B1B830366003C77DA /* AddPlayerViewController.swift */,
-				AA266C111B8555B9003C77DA /* BTActionSheet.swift */,
+				AA266C111B8555B9003C77DA /* BCActionSheet.swift */,
 			);
 			path = bluechipper;
 			sourceTree = "<group>";
@@ -460,6 +500,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AABA03A31B92314100CB0E92 /* LaunchScreen.xib in Resources */,
+				AABA03A21B92313D00CB0E92 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -525,10 +567,11 @@
 				AA6782841B6DCEDB0074391D /* CurrencyTableViewCell.swift in Sources */,
 				E14CA0FB1A88351500D02313 /* Range.swift in Sources */,
 				AA266C0C1B830366003C77DA /* AddPlayerViewController.swift in Sources */,
-				AA266C121B8555B9003C77DA /* BTActionSheet.swift in Sources */,
+				AA266C121B8555B9003C77DA /* BCActionSheet.swift in Sources */,
 				E14CA0FA1A88351500D02313 /* NSDate.swift in Sources */,
 				E14CA0F31A88351500D02313 /* Character.swift in Sources */,
 				E14CA0E11A8827A100D02313 /* GameManager.swift in Sources */,
+				AA1891581B9102CA0057A359 /* GameManager.Messaging.swift in Sources */,
 				E14CA0F51A88351500D02313 /* Double.swift in Sources */,
 				E195F9511A2181DB008D8661 /* Game.swift in Sources */,
 				E14CA0F41A88351500D02313 /* Dictionary.swift in Sources */,
@@ -537,7 +580,9 @@
 				E14CA0FF1A8888D000D02313 /* ProfileViewController.swift in Sources */,
 				E1E8AEAA1A216B7B008097A9 /* PlayerTableViewCell.swift in Sources */,
 				AA6782821B6DCDF30074391D /* SettingsViewController.swift in Sources */,
+				AA1891591B9102CA0057A359 /* GameManager.Players.swift in Sources */,
 				E14CA0F71A88351500D02313 /* Float.swift in Sources */,
+				AA1891571B9102CA0057A359 /* GameManager.Game.swift in Sources */,
 				E1CC120119E79E85006EA27D /* Bridge.m in Sources */,
 				E1CC11C419E0930C006EA27D /* AppDelegate.swift in Sources */,
 				E174F5FF1A7DA0A900C58B48 /* BeaconMonitor.swift in Sources */,
@@ -551,7 +596,34 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AABA03B71B92327400CB0E92 /* NSArray.swift in Sources */,
+				AABA03B51B92327400CB0E92 /* Float.swift in Sources */,
+				AABA03AD1B92324800CB0E92 /* BCActionSheet.swift in Sources */,
+				AABA03AE1B92324A00CB0E92 /* AddPlayerViewController.swift in Sources */,
+				AABA03B41B92327100CB0E92 /* ExSwift.swift in Sources */,
+				AABA03B21B92326A00CB0E92 /* Dictionary.swift in Sources */,
+				AABA03A61B92321500CB0E92 /* LoadingViewController.swift in Sources */,
+				AABA03A11B92313800CB0E92 /* ViewController.swift in Sources */,
+				AABA03AF1B92324C00CB0E92 /* CurrencyTableViewCell.swift in Sources */,
+				AABA03A51B92321300CB0E92 /* GameManager.swift in Sources */,
+				AABA03A01B92313600CB0E92 /* AppDelegate.swift in Sources */,
+				AABA03BA1B92327400CB0E92 /* Sequence.swift in Sources */,
+				AABA03AA1B92323800CB0E92 /* GameManager.Messaging.swift in Sources */,
+				AABA03A91B92323600CB0E92 /* GameManager.Game.swift in Sources */,
+				AABA03B11B92326100CB0E92 /* Character.swift in Sources */,
+				AABA03B81B92327400CB0E92 /* NSDate.swift in Sources */,
+				AABA03B91B92327400CB0E92 /* Range.swift in Sources */,
+				AABA039E1B9230F300CB0E92 /* Game.swift in Sources */,
+				AABA03BB1B92327400CB0E92 /* String.swift in Sources */,
+				AABA039F1B92310E00CB0E92 /* Bridge.m in Sources */,
+				AABA03A81B92321900CB0E92 /* ProfileViewController.swift in Sources */,
+				AABA03B01B92324F00CB0E92 /* SettingsViewController.swift in Sources */,
+				AABA03AC1B92323E00CB0E92 /* Array.swift in Sources */,
+				AABA03B61B92327400CB0E92 /* Int.swift in Sources */,
+				AABA03A71B92321700CB0E92 /* BeaconMonitor.swift in Sources */,
 				E1CC11DA19E0930C006EA27D /* bluechipperTests.swift in Sources */,
+				AABA03B31B92326C00CB0E92 /* Double.swift in Sources */,
+				AABA03AB1B92323A00CB0E92 /* GameManager.Players.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -719,6 +791,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
+					"/Users/nicholasclark/Downloads/parse-library-1.7.5",
 				);
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -727,6 +800,7 @@
 				INFOPLIST_FILE = bluechipperTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "bluechipper/bluechipper-Bridging-Header.h";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/bluechipper.app/bluechipper";
 			};
 			name = Debug;
@@ -738,10 +812,12 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
+					"/Users/nicholasclark/Downloads/parse-library-1.7.5",
 				);
 				INFOPLIST_FILE = bluechipperTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "bluechipper/bluechipper-Bridging-Header.h";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/bluechipper.app/bluechipper";
 			};
 			name = Release;

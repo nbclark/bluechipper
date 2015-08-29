@@ -112,6 +112,15 @@ public class Game : PFObject, PFSubclassing {
             self["gamestate"] = value
         }
     }
+    
+    var lastAction : NSString? {
+        get {
+            return (self["lastaction"] != nil) ? (self["lastaction"] as! NSString) : nil
+        }
+        set(value) {
+            self["lastaction"] = value
+        }
+    }
 }
 
 extension PFUser {
@@ -168,5 +177,4 @@ extension PFUser {
             self["purse"] = value
         }
     }
-    
 }
