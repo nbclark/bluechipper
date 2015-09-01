@@ -28,6 +28,11 @@ class AddPlayerViewController : XLFormViewController {
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         self.initializeForm()
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        
         self.saveButton.enabled = Settings.gameManager!.isOwner
     }
     

@@ -38,9 +38,11 @@ extension GameManager {
             dict[key] = value
         }
         
-        var push = PFPush()
-        push.setChannel("c" + self.game.objectId!)
-        push.setData(dict)
-        push.sendPushInBackgroundWithBlock(nil)
+        if (nil != self.game) {
+            var push = PFPush()
+            push.setChannel("c" + self.game.objectId!)
+            push.setData(dict)
+            push.sendPushInBackgroundWithBlock(nil)
+        }
     }
 }

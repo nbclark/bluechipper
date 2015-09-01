@@ -147,11 +147,11 @@
 					this.players[elemIndex].setPosition(((horizSpace + cellSize) * (i+1)) - cellSize - margin, 0)
 				}
 				// Right
-				for (var i = 0; i < sidePlayersPerSide; i++, elemIndex++) {
+				for (var i = 0; i < sidePlayersPerSide && elemIndex < this.players.length; i++, elemIndex++) {
 					this.players[elemIndex].setPosition(null, ((vertSpace + cellSize) * (i+1)) - cellSize - margin, 0, null)
 				}
 				// Bottom
-				for (var i = 0; i < topPlayersPerSide; i++, elemIndex++) {
+				for (var i = 0; i < topPlayersPerSide && elemIndex < this.players.length; i++, elemIndex++) {
 					this.players[elemIndex].setPosition(null, null, ((horizSpace + cellSize) * (i+1)) - cellSize - margin, 0)
 				}
 				// Left -- recalculate spacing since we might not have equal amounts per side, so the spacing is off

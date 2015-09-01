@@ -40,9 +40,9 @@ class LoadingViewController: UIViewController, GameManagerDelegate, UIActionShee
         var sheet = UIActionSheet(title: "Join Existing Game", delegate: self, cancelButtonTitle: "Cancel", destructiveButtonTitle: nil)
         sheet.tag = 0
         
-        self.joinGames = Array<Game>(Settings.gameManager!.joinGames)
+        self.joinGames = Array<Game>(Settings.gameManager!.joinableGames)
         
-        for game in Settings.gameManager!.joinGames {
+        for game in Settings.gameManager!.joinableGames {
             let name = String(game.name!)
             let index = sheet.addButtonWithTitle(name)
         }
@@ -64,7 +64,7 @@ class LoadingViewController: UIViewController, GameManagerDelegate, UIActionShee
                 self.joinGameButton.hidden = false
                 self.activitySpinner.hidden = true
                 self.loadingLabel.hidden = true
-                self.joinGameButton?.setTitle(String(format: "Join Game (%d)", Settings.gameManager!.joinGames.count), forState: UIControlState.Normal)
+                self.joinGameButton?.setTitle(String(format: "Join Game (%d)", Settings.gameManager!.joinableGames.count), forState: UIControlState.Normal)
                 self.joinGameButton?.layoutSubviews()
             }
         } else {

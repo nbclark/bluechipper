@@ -8,7 +8,7 @@
 
 import UIKit
 import CoreBluetooth
-
+import MBProgressHUD
 
 class PlayersViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, BeaconRangedMonitorDelegate {
     @IBOutlet var tableView : UITableView?
@@ -74,10 +74,14 @@ class PlayersViewController: UIViewController, UITableViewDelegate, UITableViewD
     @IBAction func startClicked() {
         // TODO - if we are in a game, let it go
         // Otherwise, start
-        if (true || !Settings.gameManager!.game.isActive) {
-            Settings.gameManager!.startGame()
-        }
-        self.dismissViewControllerAnimated(true, completion: nil);
+        Settings.gameManager!.hud.mode = MBProgressHUDMode.Indeterminate
+        Settings.gameManager!.hud.show(true)
+        
+        self.dismissViewControllerAnimated(true, completion: { () -> Void in
+            Settings.gameManager!.startGame({ () -> Void in
+                Settings.gameManager!.hud.hide(true)
+            })
+        })
     }
     
     func updatedPlayerList() {

@@ -13,8 +13,8 @@ extension GameManager {
     
     func webView(webView: UIWebView, shouldStartLoadWithRequest request: NSURLRequest, navigationType: UIWebViewNavigationType) -> Bool {
         if request.URL!.scheme! == "bc" {
-            var id = webView.stringByEvaluatingJavaScriptFromString("table.players[table.actionIndex].id")!
-            self.processCommand(request.URL!, id: id)
+            //var id = webView.stringByEvaluatingJavaScriptFromString("table.players[table.actionIndex].id")!
+            self.processCommand(request.URL!)
             return false
         } else {
             self.webView = webView
@@ -27,7 +27,7 @@ extension GameManager {
         self.save(nil, block: nil)
     }
     
-    func processCommand(url: NSURL, id: String) {
+    func processCommand(url: NSURL) {
         if (url.host == "signalPlayerActionNeeded") {
             var obj : NSDictionary = NSJSONSerialization.JSONObjectWithData(url.lastPathComponent!.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: true)!, options: nil, error: nil) as! NSDictionary
             
@@ -37,6 +37,11 @@ extension GameManager {
             if ((userId == PFUser.currentUser()?.objectId!)) {
                 var sheet = BCActionSheet(title: "Join Existing Game", cancelButtonTitle: nil, destructiveButtonTitle: nil)
                 
+                // TODO - for the owner, give an option to pause the game
+                // Perhaps tapping on players will pause it too...
+                // We should also drop in new players after hands are over
+                // Perhaps we pause the player settings while a hand is in progress
+                // and bring it back after a hand is over
                 for (key, value) in obj {
                     sheet.addButtonWithTitle(key as! String, handler : { () -> Void in
                         self.webView?.stringByEvaluatingJavaScriptFromString(String(format: "table.menu.menuOptionCallback('%@')", key as! String))
@@ -59,6 +64,8 @@ extension GameManager {
         } else if (url.host == "signalHandStateChanged") {
             var state = url.pathComponents![1] as! String
             if (state == "end") {
+                // TODO - if owner, prompt for changes here or start next hand
+                // For the others, wait for update from owner
                 self.hud.mode = MBProgressHUDMode.Text
                 self.hud.labelText = "Hand over..."
                 self.hud.showAnimated(true, whileExecutingBlock: { () -> Void in
@@ -96,10 +103,11 @@ extension GameManager {
         webView.stringByEvaluatingJavaScriptFromString("bridge.signalHandResultNeeded = function(pots) { document.location = 'bc://signalHandResultNeeded/' + JSON.stringify(pots) }")
     }
     
-    func fetchAndLoadState() {
+    func fetchAndLoadState(gameStartedCallback : BCVoidBlock?) {
         self.fetchGame(self.gameId!, block: { (game, error) -> Void in
             self.game = game
             self.loadState()
+            gameStartedCallback?()
         })
     }
     
@@ -107,7 +115,7 @@ extension GameManager {
         self.webView?.stringByEvaluatingJavaScriptFromString(String(format: "table.loadState(%@)", game!.gameState!))
     }
     
-    func startGame() {
+    func startGame(gameStartedCallback : BCVoidBlock?) {
         if (self.isOwner) {
             assert(self.isOwner, "startGame should only be called by game owner")
             
@@ -130,13 +138,15 @@ extension GameManager {
                 // Save off the state and notify
                 self.game.gameState = state
                 self.save(GameNotificationActions.GameStateChanged, block: nil)
+                gameStartedCallback?()
             } else {
                 // TODO
                 // We really need to figure out how to handle new player additions / removals
                 self.loadState()
+                gameStartedCallback?()
             }
         } else {
-            self.fetchAndLoadState()
+            self.fetchAndLoadState(gameStartedCallback)
         }
     }
 }

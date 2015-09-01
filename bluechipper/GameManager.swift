@@ -10,6 +10,7 @@ import Foundation
 import MBProgressHUD
 
 typealias BCLocalGamesResultBlock = (Array<Game>, NSError?) -> Void
+typealias BCVoidBlock = () -> Void
 typealias BCGameResultBlock = (Game?, NSError?) -> Void
 typealias BCWaitEvaluationBlock = (NSString, NSDictionary)->Bool
 typealias BCWaitCallbackBlock = (NSString, NSDictionary)->Void
@@ -35,8 +36,9 @@ class GameManager: NSObject, BeaconRangedMonitorDelegate, BeaconMonitorDelegate,
     var webView : UIWebView?
     var game : Game!
     var isProcessing : Bool
-    var joinGames : Array<Game>
+    var joinableGames : Array<Game> = Array<Game>()
     var delegates : NSMutableArray = NSMutableArray()
+    var waitActionCallbacks : Array<(predicate: BCWaitEvaluationBlock, callback: BCWaitCallbackBlock, persist: Bool)> = []
     var _hud : MBProgressHUD! = nil
     
     var isOwner : Bool {
@@ -78,7 +80,6 @@ class GameManager: NSObject, BeaconRangedMonitorDelegate, BeaconMonitorDelegate,
         // TODO - remove this and let gamemanager centralize ranged users
         Settings.beaconMonitor = self.beaconMonitor
         self.isProcessing = false
-        self.joinGames = Array<Game>()
         self.user = user
         
         super.init()
@@ -92,6 +93,20 @@ class GameManager: NSObject, BeaconRangedMonitorDelegate, BeaconMonitorDelegate,
         }
         
         self.beaconMonitor.delegate = self
+        
+        // Notify of game members changing
+        self.registerWaitForAction({ (action, userInfo) -> Bool in
+            return action == GameNotificationActions.GameMembersChanged.rawValue
+            }, callback: { (action, userInfo) -> Void in
+                NSNotificationCenter.defaultCenter().postNotificationName("gameMembersChangedNotification", object: nil)
+            }, persist: true)
+        
+        // Notify of game state changing
+        self.registerWaitForAction({ (action, userInfo) -> Bool in
+            return action == GameNotificationActions.GameStateChanged.rawValue
+            }, callback: { (action, userInfo) -> Void in
+                self.fetchAndLoadState(nil)
+            }, persist: true)
     }
     
     func addDelegate(delegate: GameManagerDelegate) {
@@ -114,10 +129,11 @@ class GameManager: NSObject, BeaconRangedMonitorDelegate, BeaconMonitorDelegate,
         }
     }
     
-    // Start game stracking
+    // Start game tracking
     func start() {
         self.notifyState(1, message: "intializing beacons...")
         
+        // Check for previously loading game
         if (nil != self.gameId) {
             // We have an existing game -- try to find it
             self.fetchGame(self.gameId!, block: { (game, error) -> Void in
@@ -141,8 +157,6 @@ class GameManager: NSObject, BeaconRangedMonitorDelegate, BeaconMonitorDelegate,
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "gameMembersChanged", name: UIApplicationDidBecomeActiveNotification, object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "gameMemberChanged:", name: "gameMemberChangedNotification", object: nil)
     }
-    
-    var waitActionCallbacks : Array<(predicate: BCWaitEvaluationBlock, callback: BCWaitCallbackBlock, persist: Bool)> = []
     
     internal func signalAction(action: NSString, userInfo : NSDictionary) {
         for (index, callback) in enumerate(waitActionCallbacks) {
@@ -170,7 +184,7 @@ class GameManager: NSObject, BeaconRangedMonitorDelegate, BeaconMonitorDelegate,
         waitActionCallbacks.push((predicate: predicate, callback: callback, persist: persist))
     }
     
-    func rangedBeacons() {
+    internal func rangedBeacons() {
         // We have new users around us...
         if (nil == self.game) {
             self.processRange()
@@ -244,9 +258,10 @@ class GameManager: NSObject, BeaconRangedMonitorDelegate, BeaconMonitorDelegate,
         
         // At this point, we know the games...
         // We should prompt to join, or to create a new game
-        self.joinExistingGame()
+        self.searchForExistingGames()
     }
     
+    // Create a new game
     func createGame() {
         var game = PFObject(className: "game", dictionary: ["name" : UIDevice.currentDevice().name, "users" : [], "activeusers" : [self.user], "owner" : self.user.objectId!])
         
@@ -255,6 +270,7 @@ class GameManager: NSObject, BeaconRangedMonitorDelegate, BeaconMonitorDelegate,
         })
     }
     
+    // Process the joining of a game
     func processGame(game : Game) {
         self.game = game
         self.gameId = self.game.objectId
@@ -274,10 +290,10 @@ class GameManager: NSObject, BeaconRangedMonitorDelegate, BeaconMonitorDelegate,
         }
     }
     
-    func joinExistingGame() {
+    func searchForExistingGames() {
         self.notifyState(3, message: String(format: "searching for games (%d)...", self.beaconMonitor.rangedUsers.count))
         
-        self.joinGames.removeAll(keepCapacity: true)
+        self.joinableGames.removeAll(keepCapacity: true)
         let dict = self.beaconMonitor.rangedUsers
         var existingGameId : String = ""
         var userList : Array<AnyObject> = Array()
@@ -312,8 +328,8 @@ class GameManager: NSObject, BeaconRangedMonitorDelegate, BeaconMonitorDelegate,
             // We should prompt to join, or to create a new game
             if (mgames!.count > 0) {
                 let game = mgames?.first as! Game
-                var activeUserList = game["activeusers"] as! [PFUser]
-                var name = game["name"] as! String?
+                var activeUserList = game.activeusers
+                var name = game.name
                 
                 if (nil == name && activeUserList.count > 0) {
                     let owner : PFUser = activeUserList[0]
@@ -325,17 +341,17 @@ class GameManager: NSObject, BeaconRangedMonitorDelegate, BeaconMonitorDelegate,
                 }
                 
                 if (nil != name) {
-                    self.joinGames.push(game)
+                    self.joinableGames.push(game)
                 }
             }
             
-            self.notifyState(4, message: String(format: "found existing games (%d)...", self.joinGames.count))
+            self.notifyState(4, message: String(format: "found existing games (%d)...", self.joinableGames.count))
             self.isProcessing = false
         }
     }
     
     func joinGameId(gameId : String) {
-        let game = self.joinGames.find({ (t) -> Bool in
+        let game = self.joinableGames.find({ (t) -> Bool in
             if (t.objectId == gameId) {
                 return true
             }
@@ -347,8 +363,6 @@ class GameManager: NSObject, BeaconRangedMonitorDelegate, BeaconMonitorDelegate,
     }
     
     func exitGame(game : Game) {
-        self.gameId = nil
-        self.game = nil
         
         let userDefaults = NSUserDefaults.standardUserDefaults()
         userDefaults.removeObjectForKey("gameid")
@@ -373,8 +387,12 @@ class GameManager: NSObject, BeaconRangedMonitorDelegate, BeaconMonitorDelegate,
         
         game.saveInBackgroundWithBlock { (res, err) -> Void in
             // TODO - send a message that the game was deleted
-            // self.sendGamePush(GameNotificationActions.GameMembersChanged)
-            // self.start()
+            self.sendGamePush(GameNotificationActions.GameMembersChanged)
+            
+            self.gameId = nil
+            self.game = nil
+            
+            self.start()
         }
     }
     
