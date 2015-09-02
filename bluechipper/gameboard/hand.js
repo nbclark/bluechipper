@@ -104,7 +104,7 @@
 			var handFinished = false
 			var playersInHand = this.playersInHand()
 			// If we have called around, we are finished
-			if (playersInHand.length == 1) {
+			if (playersInHand.length <= 1) {
 				handFinished = true
 			} else if (this.actionIndex === this.lastRaiserIndex) {
 				roundFinished = true
@@ -178,7 +178,13 @@
 		proceed : function() {
 			// We need to calculate the options given the current player and the state
 			//
-			this.players[this.actionIndex].layoutButton(this.table.actionButton)
+			try
+			{
+				this.players[this.actionIndex].layoutButton(this.table.actionButton)
+			} catch(e) {
+				alert(new Error().stack)
+				alert(this.actionIndex)
+			}
 
 			var player = this.players[this.actionIndex]
 			var playerAction = this.playerActions[this.actionIndex]
@@ -283,7 +289,13 @@
 
 			for (var i = 0; i < this.players.length; ++i) {
 				var idx = (startIndex + i) % this.players.length
-				if (this.players[idx].isInHand) return idx
+				try
+				{
+					if (this.players[idx].isInHand) return idx
+				} catch(e) {
+					alert(idx)
+					alert(JSON.stringify(this.players))
+				}
 			}
 
 			return -1

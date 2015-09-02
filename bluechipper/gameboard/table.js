@@ -29,7 +29,7 @@
 					isActive: this.isActive,
 					buttonIndex: this.buttonIndex,
 					players : this.players.map(function (p) { return p.getState() }),
-					hand : this._hand ? this._hand.getState() : {}
+					hand : this._hand ? this._hand.getState() : null
 				}
 			},
 			loadState: function(state) {
@@ -63,13 +63,15 @@
 				
 				// We are active now
 				this.isActive = state.isActive
-				
+
 				if (state.hand) {
 					// Load the hand (only create if new)
 					if (!this._hand || this._hand.dealerButtonIndex != state.hand.dealerButtonIndex) {
 						this._hand = new BC.hand(this.bridge, this.activePlayers(), state.hand.dealerButtonIndex, this)
 					}
 					this._hand.loadState(state.hand, this.activePlayers())
+				} else {
+					this.startHand()
 				}
 			},
 			addPlayer: function(id, name, value) {
@@ -105,12 +107,23 @@
 				// Our button is set
 				// We will now communicate back to the native app (TBD)
 				// We will then show the action sheet if we are the host player, and the action is on us
-				this.startHand()
+				this.startHand(true)
 			},
 			activePlayers: function() {
 				return this.players.filter(function(p) { return p.isActive })
 			},
-			startHand: function() {
+			startHand: function(force) {
+				this._hand = null
+				
+				if (force) {
+					this._startHand()
+				} else {
+					this.bridge.handStartNeeded(this, function() {
+						this._startHand()
+					}.bind(this))
+				}
+			},
+			_startHand : function() {
 				this._hand = new BC.hand(this.bridge, this.activePlayers(), this.buttonIndex, this)
 				this.buttonIndex = (this.buttonIndex + 1) % this.activePlayers().length;
 				

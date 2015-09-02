@@ -2,6 +2,7 @@
 (function() {
 	var bridge = {
 			constructor: function() {
+				this.handStartNeededCallback = function() { table._startHand() }
 				// function(actionStates, playerid) -- { call : double, fold: double, raise: double, check : double}
 				this.playerActionNeeded = function(menu, actionStates, playerid) {
 					if (this.signalPlayerActionNeeded) {
@@ -21,10 +22,20 @@
 							alert('finished with ' + winners.length + ' players')
 						} else if (state == 'start') {
 							// Do nothing for now
-							alert('start')
+							// alert('start')
 						} else {
 							alert('get ready for the ' + state)
 						}
+						callback()
+					}
+				}
+				
+				this.handStartNeeded = function(table, callback) {
+					this.handStartNeededCallback = callback
+					if (this.signalHandStartNeeded) {
+						this.signalHandStartNeeded()
+					} else {
+						alert('click to start new hand')
 						callback()
 					}
 				}
@@ -44,7 +55,8 @@
 			},
 			signalPlayerActionNeeded : null,
 			signalHandStateChanged : null,
-			signalHandResultNeeded : null
+			signalHandResultNeeded : null,
+			signalHandStartNeeded : null
 		}
 
 	BC.mapToObj(window.BC, 'bridge', bridge)

@@ -13,7 +13,6 @@ extension GameManager {
     
     func webView(webView: UIWebView, shouldStartLoadWithRequest request: NSURLRequest, navigationType: UIWebViewNavigationType) -> Bool {
         if request.URL!.scheme! == "bc" {
-            //var id = webView.stringByEvaluatingJavaScriptFromString("table.players[table.actionIndex].id")!
             self.processCommand(request.URL!)
             return false
         } else {
@@ -34,7 +33,7 @@ extension GameManager {
             var userId = url.pathComponents![1] as! String
             
             // List of menu options (check, fold, raise, call), with their corresponding values
-            if ((userId == PFUser.currentUser()?.objectId!)) {
+            if ((userId == self.user.objectId)) {
                 var sheet = BCActionSheet(title: "Join Existing Game", cancelButtonTitle: nil, destructiveButtonTitle: nil)
                 
                 // TODO - for the owner, give an option to pause the game
@@ -54,9 +53,9 @@ extension GameManager {
             } else {
                 // TODO - we need to block on a thread or something until we are notified
                 // We also should only process the message from players we are waiting on
-                self.registerWaitForActionWithHUD({ (action, data) -> Bool in
-                    return action.isEqualToString(GameNotificationActions.GameTurnTaken.rawValue)
-                    }, callback: { (action, data) -> Void in
+                self.registerWaitForActionWithHUD({ (userId, action, data) -> Bool in
+                    return userId != self.user.objectId && action.isEqualToString(GameNotificationActions.GameTurnTaken.rawValue)
+                    }, callback: { (userId, action, data) -> Void in
                         self.webView?.stringByEvaluatingJavaScriptFromString(String(format: "table.menu.menuOptionCallback('%@')", action))
                 }, message: "Waiting on player")
             }
@@ -91,7 +90,44 @@ extension GameManager {
                 })
             }
         } else if (url.host == "signalHandResultNeeded") {
-            sleep(0)
+            if (self.isOwner) {
+                // Check for the winners
+                // TODO - give a callback to be fired when we have our users
+                self.chooseWinners()
+            } else {
+                self.registerWaitForActionWithHUD({ (userId, action, data) -> Bool in
+                    return action.isEqualToString(GameNotificationActions.GameHandWinnersChosen.rawValue)
+                    }, callback: { (userId, action, data) -> Void in
+                        self.webView?.stringByEvaluatingJavaScriptFromString("bridge.handResultNeededCallback()")
+                    }, message: "Waiting for winners...")
+            }
+        } else if (url.host == "signalHandStartNeeded") {
+            if (self.isOwner) {
+                // Pause the game, and then when start is click again, start next hand
+                // TODO - give callback for unpausing
+                self.pauseGame()
+                /*
+                var sheet = BCActionSheet(title: "Ready for next hand?", cancelButtonTitle: "Make changes...", destructiveButtonTitle: nil)
+                sheet.addButtonWithTitle("Start next hand...", handler: { () -> Void in
+                    self.webView?.stringByEvaluatingJavaScriptFromString("table.startHand()")
+                    self.save(nil, block: nil)
+                })
+                sheet.cancelButtonHandler = { () -> Void in
+                    // TODO - we need to dismiss here, and then show the players view or something
+                    // When they come back after, we need to start the hand
+                    // Set a bool that startGame will fire the start hand message?
+                    self.pauseGame()
+                }
+                
+                sheet.showInView(UIApplication.sharedApplication().keyWindow!)
+                */
+            } else {
+                self.registerWaitForActionWithHUD({ (userId, action, data) -> Bool in
+                    return action.isEqualToString(GameNotificationActions.GameHandStarted.rawValue)
+                    }, callback: { (userId, action, data) -> Void in
+                        self.webView?.stringByEvaluatingJavaScriptFromString("bridge.handStartNeededCallback()")
+                    }, message: "Waiting for next hand...")
+            }
         }
     }
     
@@ -101,6 +137,8 @@ extension GameManager {
         webView.stringByEvaluatingJavaScriptFromString("bridge.signalHandStateChanged = function(state, winners) { document.location = 'bc://signalHandStateChanged/' + state + '/' + JSON.stringify(winners) }")
         
         webView.stringByEvaluatingJavaScriptFromString("bridge.signalHandResultNeeded = function(pots) { document.location = 'bc://signalHandResultNeeded/' + JSON.stringify(pots) }")
+        
+        webView.stringByEvaluatingJavaScriptFromString("bridge.signalHandStartNeeded = function() { document.location = 'bc://signalHandStartNeeded/' }")
     }
     
     func fetchAndLoadState(gameStartedCallback : BCVoidBlock?) {
@@ -137,16 +175,34 @@ extension GameManager {
                 
                 // Save off the state and notify
                 self.game.gameState = state
-                self.save(GameNotificationActions.GameStateChanged, block: nil)
+                self.save(GameNotificationActions.GameHandStarted, block: nil)
                 gameStartedCallback?()
             } else {
                 // TODO
                 // We really need to figure out how to handle new player additions / removals
-                self.loadState()
-                gameStartedCallback?()
+                // If we are in a hand, we should just reload I guess - if not, we should start a hand
+                self.sendGamePush(GameNotificationActions.GameHandStarted)
+                self.webView?.stringByEvaluatingJavaScriptFromString("bridge.handStartNeededCallback()")
+//                self.loadState()
+//                gameStartedCallback?()
             }
         } else {
+            // TODO - here we need to figure out
             self.fetchAndLoadState(gameStartedCallback)
+        }
+    }
+    
+    func chooseWinners() {
+        for del in self.delegates {
+            let gameDel = del as! GameManagerDelegate
+            gameDel.chooseWinners?()
+        }
+    }
+    
+    func pauseGame() {
+        for del in self.delegates {
+            let gameDel = del as! GameManagerDelegate
+            gameDel.pauseGame?()
         }
     }
 }

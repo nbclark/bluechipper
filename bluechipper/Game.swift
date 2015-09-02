@@ -7,11 +7,35 @@
 //
 
 public class Game : PFObject, PFSubclassing {
-    @NSManaged var activeusers : Array<PFUser>
-    @NSManaged var users : Array<PFUser>
-    
+
     public class func parseClassName() -> String {
         return "game"
+    }
+    
+    var activeusers : Array<PFUser> {
+        get {
+            if (self["activeusers"] == nil) {
+                self["activeusers"] = Array<PFUser>()
+            }
+            
+            return self["activeusers"] as! Array<PFUser>
+        }
+        set(value) {
+            self["activeusers"] = value
+        }
+    }
+    
+    var users : Array<PFUser> {
+        get {
+            if (self["users"] == nil) {
+                self["users"] = Array<PFUser>()
+            }
+            
+            return self["users"] as! Array<PFUser>
+        }
+        set(value) {
+            self["users"] = value
+        }
     }
     
     var name : NSString? {

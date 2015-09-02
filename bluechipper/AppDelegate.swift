@@ -35,13 +35,11 @@ internal class AppDelegate: UIResponder, UIApplicationDelegate {
         application.registerForRemoteNotifications()
         
         let user = PFUser.currentUser()!
-        
-        if (user.isNew) {
-            user.save()
-        }
-        
-        Settings.gameManager = GameManager(user: user)
-        user.saveInBackgroundWithBlock { (result, error) -> Void in
+
+        let block = { () -> Void in
+            Settings.gameManager = GameManager(user: user)
+            NSNotificationCenter.defaultCenter().postNotificationName("gameManagerLoadedNotification", object: nil)
+            
             let userId = user.objectId!;
             let hashValue = userId.hash & 0x7FFF7FFF
             user.hashvalue = hashValue
@@ -51,6 +49,14 @@ internal class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         }
         
+        if (user.isNew || !user.isDataAvailable() || nil == user.objectId) {
+            user.saveInBackgroundWithBlock({ (res, err) -> Void in
+                block()
+            })
+        } else {
+            block()
+        }
+        
         return true
     }
     
@@ -58,11 +64,23 @@ internal class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func application(application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: NSData) {
-        var installation = PFInstallation.currentInstallation()
-        installation.setDeviceTokenFromData(deviceToken)
-        installation.addUniqueObject("c" + PFUser.currentUser()!.objectId!, forKey: "channels")
-        installation.saveInBackgroundWithBlock { (res, error) -> Void in
-            return
+        if let user = PFUser.currentUser() {
+            let block = { () -> Void in
+                var installation = PFInstallation.currentInstallation()
+                installation.setDeviceTokenFromData(deviceToken)
+                installation.addUniqueObject("c" + user.objectId!, forKey: "channels")
+                installation.saveInBackgroundWithBlock { (res, error) -> Void in
+                    return
+                }
+            }
+            
+            if (user.isNew || !user.isDataAvailable() || nil == user.objectId) {
+                user.saveInBackgroundWithBlock({ (res, err) -> Void in
+                    block()
+                })
+            } else {
+                block()
+            }
         }
     }
     
@@ -72,11 +90,9 @@ internal class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject], fetchCompletionHandler completionHandler: (UIBackgroundFetchResult) -> Void) {
         
-        if let msg = userInfo["action"] as! NSString? {
-            let userId = userInfo["userid"] as! NSString
-            
-            if (userId != Settings.gameManager!.user.objectId) {
-                Settings.gameManager!.signalAction(msg, userInfo: userInfo)
+        if let msg = userInfo["action"] as? NSString {
+            if let userId = userInfo["userid"] as? NSString {
+                Settings.gameManager!.signalAction(userId, action: msg, userInfo: userInfo)
             }
         }
         

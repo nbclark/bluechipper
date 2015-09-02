@@ -12,8 +12,10 @@ import MBProgressHUD
 typealias BCLocalGamesResultBlock = (Array<Game>, NSError?) -> Void
 typealias BCVoidBlock = () -> Void
 typealias BCGameResultBlock = (Game?, NSError?) -> Void
-typealias BCWaitEvaluationBlock = (NSString, NSDictionary)->Bool
-typealias BCWaitCallbackBlock = (NSString, NSDictionary)->Void
+typealias BCWaitEvaluationBlock = (NSString, NSString, NSDictionary)->Bool
+typealias BCWaitCallbackBlock = (NSString, NSString, NSDictionary)->Void
+typealias BCChooseWinnersBlock = (NSDictionary)->Void
+typealias BCUnpauseGameBlock = ()->Void
 
 @objc protocol GameManagerDelegate : NSObjectProtocol {
     optional func didEnableAdvertising()
@@ -21,12 +23,16 @@ typealias BCWaitCallbackBlock = (NSString, NSDictionary)->Void
     optional func didChangeState(state: Int, message: String)
     optional func foundExistingGame(game: Game)
     optional func joinedGame(game: Game)
+    optional func pauseGame()
+    optional func chooseWinners()
 }
 
 enum GameNotificationActions : String {
     case GameMembersChanged = "gamemembers"
     case GameStateChanged = "gamestate"
     case GameTurnTaken = "turntaken"
+    case GameHandStarted = "handstarted"
+    case GameHandWinnersChosen = "handwinnerschosen"
 }
 
 class GameManager: NSObject, BeaconRangedMonitorDelegate, BeaconMonitorDelegate, UIWebViewDelegate {
@@ -95,16 +101,16 @@ class GameManager: NSObject, BeaconRangedMonitorDelegate, BeaconMonitorDelegate,
         self.beaconMonitor.delegate = self
         
         // Notify of game members changing
-        self.registerWaitForAction({ (action, userInfo) -> Bool in
-            return action == GameNotificationActions.GameMembersChanged.rawValue
-            }, callback: { (action, userInfo) -> Void in
+        self.registerWaitForAction({ (userId, action, userInfo) -> Bool in
+                return userId != self.user.objectId && action == GameNotificationActions.GameMembersChanged.rawValue
+            }, callback: { (userId, action, userInfo) -> Void in
                 NSNotificationCenter.defaultCenter().postNotificationName("gameMembersChangedNotification", object: nil)
             }, persist: true)
         
         // Notify of game state changing
-        self.registerWaitForAction({ (action, userInfo) -> Bool in
-            return action == GameNotificationActions.GameStateChanged.rawValue
-            }, callback: { (action, userInfo) -> Void in
+        self.registerWaitForAction({ (userId, action, userInfo) -> Bool in
+            return userId != self.user.objectId && action == GameNotificationActions.GameStateChanged.rawValue
+            }, callback: { (userId, action, userInfo) -> Void in
                 self.fetchAndLoadState(nil)
             }, persist: true)
     }
@@ -158,11 +164,11 @@ class GameManager: NSObject, BeaconRangedMonitorDelegate, BeaconMonitorDelegate,
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "gameMemberChanged:", name: "gameMemberChangedNotification", object: nil)
     }
     
-    internal func signalAction(action: NSString, userInfo : NSDictionary) {
+    internal func signalAction(userId: NSString, action: NSString, userInfo : NSDictionary) {
         for (index, callback) in enumerate(waitActionCallbacks) {
-            let res : Bool = callback.predicate(action, userInfo)
+            let res : Bool = callback.predicate(userId, action, userInfo)
             if (res) {
-                callback.callback(action, userInfo)
+                callback.callback(userId, action, userInfo)
                 
                 if (!callback.persist) {
                     waitActionCallbacks.removeAtIndex(index)
@@ -281,7 +287,7 @@ class GameManager: NSObject, BeaconRangedMonitorDelegate, BeaconMonitorDelegate,
         // Send a push that people should update the game
         PFInstallation.currentInstallation().addUniqueObject("c" + game.objectId!, forKey: "channels")
         PFInstallation.currentInstallation().saveInBackgroundWithBlock({ (res, error) -> Void in
-            self.sendGamePush(GameNotificationActions.GameMembersChanged)
+            // nothing to do here
         })
         
         for del in self.delegates {
@@ -368,8 +374,8 @@ class GameManager: NSObject, BeaconRangedMonitorDelegate, BeaconMonitorDelegate,
         userDefaults.removeObjectForKey("gameid")
         userDefaults.synchronize()
         
-        var existingUserList = game["users"] as! [PFUser]
-        var activeUserList = game["activeusers"] as! [PFUser]
+        var existingUserList = game.users
+        var activeUserList = game.activeusers
         
         var index = activeUserList.indexOf({ (u) -> Bool in u.objectId == self.user.objectId })
         if (index != nil) {
@@ -397,19 +403,18 @@ class GameManager: NSObject, BeaconRangedMonitorDelegate, BeaconMonitorDelegate,
     }
     
     func joinGame(game : Game) {
-        var existingUserList = game["users"] as! [PFUser]
-        var activeUserList = game["activeusers"] as! [PFUser]
+        var existingUserList = game.users
+        var activeUserList = game.activeusers
         
         if (activeUserList.indexOf({ (u) -> Bool in u.objectId == self.user.objectId }) == nil) {
-            game["users"] = existingUserList.union([self.user]).uniqueBy { (u) -> String in
+            game.users = existingUserList.union([self.user]).uniqueBy { (u) -> String in
                 u.objectId!
             }
         }
 
         PFObject.fetchAllIfNeededInBackground(existingUserList.union(activeUserList), block: { (res, error) -> Void in
-            
-            game.saveInBackgroundWithBlock({ (res, error) -> Void in
-                // Show the players UI
+            self.game = game
+            self.save(GameNotificationActions.GameMembersChanged, block: { (res, err) -> Void in
                 self.processGame(game)
             })
             

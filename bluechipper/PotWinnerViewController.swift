@@ -1,16 +1,16 @@
 //
-//  PlayersViewController.swift
+//  PotWinnerViewController.swift
 //  bluechipper
 //
-//  Created by Nicholas Clark on 11/22/14.
-//  Copyright (c) 2014 Nicholas Clark. All rights reserved.
+//  Created by Nicholas Clark on 9/1/15.
+//  Copyright (c) 2015 Nicholas Clark. All rights reserved.
 //
 
 import UIKit
 import CoreBluetooth
 import MBProgressHUD
 
-class PlayersViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, BeaconRangedMonitorDelegate {
+class PotWinnerViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, BeaconRangedMonitorDelegate {
     @IBOutlet var tableView : UITableView?
     @IBOutlet var addPlayerButton : UIBarButtonItem?
     @IBOutlet var settingsButton : UIBarButtonItem?
@@ -26,7 +26,7 @@ class PlayersViewController: UIViewController, UITableViewDelegate, UITableViewD
     override func viewDidLoad() {
         super.viewDidLoad()
         Settings.beaconMonitor?.addRangeDelegate(self)
-                
+        
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "gameStateChanged", name: "gameStateChangedNotification", object: nil)
         
         self.startButton.enabled = false
@@ -78,13 +78,13 @@ class PlayersViewController: UIViewController, UITableViewDelegate, UITableViewD
         Settings.gameManager!.hud.mode = MBProgressHUDMode.Indeterminate
         Settings.gameManager!.hud.show(true)
         
-//        if let layer = self.navigationController?.view.layer {
-//            var transition = CATransition()
-//            transition.duration = 0.3
-//            transition.type = kCATransitionFade
-//            transition.subtype = kCATransitionFromTop
-//            layer.addAnimation(transition, forKey: kCATransition)
-//        }
+        //        if let layer = self.navigationController?.view.layer {
+        //            var transition = CATransition()
+        //            transition.duration = 0.3
+        //            transition.type = kCATransitionFade
+        //            transition.subtype = kCATransitionFromTop
+        //            layer.addAnimation(transition, forKey: kCATransition)
+        //        }
         
         self.dismissViewControllerAnimated(true, completion: { () -> Void in
             Settings.gameManager!.startGame({ () -> Void in

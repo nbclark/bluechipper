@@ -25,6 +25,19 @@ class LoadingViewController: UIViewController, GameManagerDelegate, UIActionShee
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        if let gm = Settings.gameManager {
+            gm.addDelegate(self)
+        } else {
+            NSNotificationCenter.defaultCenter().addObserver(self, selector: "gameManagerLoaded", name: "gameManagerLoadedNotification", object: nil)
+        }
+    }
+    
+    override func viewDidDisappear(animated: Bool) {
+        super.viewDidDisappear(animated)
+        NSNotificationCenter.defaultCenter().removeObserver(self)
+    }
+    
+    internal func gameManagerLoaded() {
         Settings.gameManager!.addDelegate(self)
     }
     

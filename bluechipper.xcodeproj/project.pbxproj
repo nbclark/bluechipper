@@ -20,6 +20,7 @@
 		AA266C121B8555B9003C77DA /* BCActionSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA266C111B8555B9003C77DA /* BCActionSheet.swift */; };
 		AA6782821B6DCDF30074391D /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA6782811B6DCDF30074391D /* SettingsViewController.swift */; };
 		AA6782841B6DCEDB0074391D /* CurrencyTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA6782831B6DCEDB0074391D /* CurrencyTableViewCell.swift */; };
+		AA9BF6B91B96CA1C00314737 /* PotWinnerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA9BF6B81B96CA1C00314737 /* PotWinnerViewController.swift */; };
 		AAA7EACC1B6B2FB200D7F04A /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AAA7EACA1B6B2FB200D7F04A /* Bolts.framework */; };
 		AAA7EACD1B6B2FB200D7F04A /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AAA7EACB1B6B2FB200D7F04A /* Parse.framework */; };
 		AAA7EACF1B6B303F00D7F04A /* ParseUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AAA7EACE1B6B303F00D7F04A /* ParseUI.framework */; };
@@ -131,6 +132,7 @@
 		AA266C111B8555B9003C77DA /* BCActionSheet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BCActionSheet.swift; sourceTree = "<group>"; };
 		AA6782811B6DCDF30074391D /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		AA6782831B6DCEDB0074391D /* CurrencyTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CurrencyTableViewCell.swift; sourceTree = "<group>"; };
+		AA9BF6B81B96CA1C00314737 /* PotWinnerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PotWinnerViewController.swift; sourceTree = "<group>"; };
 		AAA7EACA1B6B2FB200D7F04A /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Bolts.framework; path = "../../Downloads/parse-library-1.7.5/Bolts.framework"; sourceTree = "<group>"; };
 		AAA7EACB1B6B2FB200D7F04A /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Parse.framework; path = "../../Downloads/parse-library-1.7.5/Parse.framework"; sourceTree = "<group>"; };
 		AAA7EACE1B6B303F00D7F04A /* ParseUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ParseUI.framework; path = "../../Downloads/parse-library-1.7.5/ParseUI.framework"; sourceTree = "<group>"; };
@@ -357,6 +359,7 @@
 				E1CC11CC19E0930C006EA27D /* LaunchScreen.xib */,
 				E1CC11C719E0930C006EA27D /* Main.storyboard */,
 				E1CC11C119E0930C006EA27D /* Supporting Files */,
+				AA9BF6B81B96CA1C00314737 /* PotWinnerViewController.swift */,
 			);
 			path = bluechipper;
 			sourceTree = "<group>";
@@ -563,6 +566,7 @@
 				E14CA0F91A88351500D02313 /* NSArray.swift in Sources */,
 				E1CC11C619E0930C006EA27D /* ViewController.swift in Sources */,
 				E14CA0F21A88351500D02313 /* Array.swift in Sources */,
+				AA9BF6B91B96CA1C00314737 /* PotWinnerViewController.swift in Sources */,
 				E14CA0F61A88351500D02313 /* ExSwift.swift in Sources */,
 				AA6782841B6DCEDB0074391D /* CurrencyTableViewCell.swift in Sources */,
 				E14CA0FB1A88351500D02313 /* Range.swift in Sources */,

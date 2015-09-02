@@ -10,7 +10,7 @@ import UIKit
 import MultipeerConnectivity
 import CoreBluetooth
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, GameManagerDelegate {
     
     @IBOutlet var webView : UIWebView!
     var firstLoad : Bool
@@ -36,9 +36,23 @@ class ViewController: UIViewController {
         super.viewWillAppear(animated)
         
         if (self.firstLoad) {
-            self.performSegueWithIdentifier("PlayersSegue", sender: self)
+            self.pauseGame()
         }
         
         self.firstLoad = false
+        Settings.gameManager?.addDelegate(self)
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+        Settings.gameManager?.removeDelegate(self)
+        super.viewWillDisappear(animated)
+    }
+    
+    func chooseWinners() {
+        self.performSegueWithIdentifier("ChooseWinnersSegue", sender: self)
+    }
+    
+    func pauseGame() {
+        self.performSegueWithIdentifier("PlayersSegue", sender: self)
     }
 }

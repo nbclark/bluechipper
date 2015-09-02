@@ -25,19 +25,19 @@
     if(navigator.userAgent.indexOf('Chrome') >= 0) {
       var state = {"isActive":true,"buttonIndex":0,"players":[{"id":"nVIYXnHnbt","name":"iPhone Simulator","isActive":true,"isPaused":false,"isInHand":true,"isCurrentUser":true,"purse":97}],"hand":{"dealerButtonIndex":0,"smallBlindIndex":0,"bigBlindIndex":0,"actionIndex":0,"totalBet":2,"totalPot":3,"lastRaise":2,"lastRaiserIndex":0,"round":0,"players":[{"id":"nVIYXnHnbt","name":"iPhone Simulator","isActive":true,"isPaused":false,"isInHand":true,"isCurrentUser":true,"purse":97}],"playerActions":{"0":{"bet":3,"totalBet":3}}}}
       
-      table.loadState(state)
+      // table.loadState(state)
 
-      // for (var i = 0; i < 6; ++i) {
-      //   table.addPlayer(i, i+1, 100, '../no-face.png')
-      // }
+      for (var i = 0; i < 6; ++i) {
+        table.addPlayer(i, i+1, 100, '../no-face.png')
+      }
       
       // This one can be super optional
-      // table.randomizePlayers()
-      // table.layoutPlayers()
-      // table.startGame()
-      setTimeout(function() {
-        table.loadState(state)
-      }, 1000)
+      table.randomizePlayers()
+      table.layoutPlayers()
+      table.startGame()
+      // setTimeout(function() {
+      //   table.loadState(state)
+      // }, 1000)
       /*
       setTimeout(function() {
         var s = table.getState()
