@@ -91,9 +91,13 @@ extension GameManager {
             }
         } else if (url.host == "signalHandResultNeeded") {
             if (self.isOwner) {
+                var pots : NSDictionary = NSJSONSerialization.JSONObjectWithData(url.lastPathComponent!.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: true)!, options: nil, error: nil) as! NSDictionary
                 // Check for the winners
                 // TODO - give a callback to be fired when we have our users
-                self.chooseWinners()
+                self.chooseWinners(pots, block: { (pots) -> Void in
+                    sleep(0)
+                    // TODO - send the result back
+                })
             } else {
                 self.registerWaitForActionWithHUD({ (userId, action, data) -> Bool in
                     return action.isEqualToString(GameNotificationActions.GameHandWinnersChosen.rawValue)
@@ -105,7 +109,10 @@ extension GameManager {
             if (self.isOwner) {
                 // Pause the game, and then when start is click again, start next hand
                 // TODO - give callback for unpausing
-                self.pauseGame()
+                self.pauseGame({ () -> Void in
+                    sleep(0)
+                    // TODO - unpause the game?
+                })
                 /*
                 var sheet = BCActionSheet(title: "Ready for next hand?", cancelButtonTitle: "Make changes...", destructiveButtonTitle: nil)
                 sheet.addButtonWithTitle("Start next hand...", handler: { () -> Void in
@@ -192,17 +199,17 @@ extension GameManager {
         }
     }
     
-    func chooseWinners() {
+    func chooseWinners(pots: NSDictionary, block: BCChooseWinnersBlock) {
         for del in self.delegates {
             let gameDel = del as! GameManagerDelegate
-            gameDel.chooseWinners?()
+            gameDel.chooseWinners?(pots, block: block)
         }
     }
     
-    func pauseGame() {
+    func pauseGame(block: BCUnpauseGameBlock) {
         for del in self.delegates {
             let gameDel = del as! GameManagerDelegate
-            gameDel.pauseGame?()
+            gameDel.pauseGame?(block)
         }
     }
 }

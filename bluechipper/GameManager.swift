@@ -23,8 +23,8 @@ typealias BCUnpauseGameBlock = ()->Void
     optional func didChangeState(state: Int, message: String)
     optional func foundExistingGame(game: Game)
     optional func joinedGame(game: Game)
-    optional func pauseGame()
-    optional func chooseWinners()
+    optional func pauseGame(block: BCUnpauseGameBlock)
+    optional func chooseWinners(pots: NSDictionary, block: BCChooseWinnersBlock)
 }
 
 enum GameNotificationActions : String {

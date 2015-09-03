@@ -36,7 +36,9 @@ class ViewController: UIViewController, GameManagerDelegate {
         super.viewWillAppear(animated)
         
         if (self.firstLoad) {
-            self.pauseGame()
+            self.pauseGame({ () -> Void in
+                // TODO
+            })
         }
         
         self.firstLoad = false
@@ -48,11 +50,26 @@ class ViewController: UIViewController, GameManagerDelegate {
         super.viewWillDisappear(animated)
     }
     
-    func chooseWinners() {
+    var winnersChosenBlock : BCChooseWinnersBlock?
+    var pots : NSDictionary?
+    
+    func chooseWinners(pots: NSDictionary, block: BCChooseWinnersBlock) {
+        self.pots = pots
+        self.winnersChosenBlock = block
         self.performSegueWithIdentifier("ChooseWinnersSegue", sender: self)
     }
     
-    func pauseGame() {
+    func pauseGame(block: BCUnpauseGameBlock) {
         self.performSegueWithIdentifier("PlayersSegue", sender: self)
+    }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        super.prepareForSegue(segue, sender: sender);
+        
+        if let navVC = segue.destinationViewController as? UINavigationController {
+            if let winnersVC = navVC.topViewController as? PotWinnerViewController {
+                winnersVC.pots = self.pots
+            }
+        }
     }
 }

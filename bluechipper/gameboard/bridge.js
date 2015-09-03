@@ -43,7 +43,7 @@
 				// function(pots) -- call some named callback - { sum : [ playerids in pot ] }
 				this.handResultNeeded = function(hand, pots, callback) {
 					this.handResultNeededCallback = callback
-					alert('handResultNeeded')
+
 					if (this.signalHandResultNeeded) {
 						this.signalHandResultNeeded(pots)
 					} else {

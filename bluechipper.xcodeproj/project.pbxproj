@@ -21,6 +21,10 @@
 		AA6782821B6DCDF30074391D /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA6782811B6DCDF30074391D /* SettingsViewController.swift */; };
 		AA6782841B6DCEDB0074391D /* CurrencyTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA6782831B6DCEDB0074391D /* CurrencyTableViewCell.swift */; };
 		AA9BF6B91B96CA1C00314737 /* PotWinnerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA9BF6B81B96CA1C00314737 /* PotWinnerViewController.swift */; };
+		AA9BF6BA1B97E96C00314737 /* PotWinnerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA9BF6B81B96CA1C00314737 /* PotWinnerViewController.swift */; };
+		AA9BF6BB1B97E97500314737 /* PlayerTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1E8AEA91A216B7B008097A9 /* PlayerTableViewCell.swift */; };
+		AA9BF6BD1B97EAF800314737 /* Pot.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA9BF6BC1B97EAF800314737 /* Pot.swift */; };
+		AA9BF6BE1B97EAFB00314737 /* Pot.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA9BF6BC1B97EAF800314737 /* Pot.swift */; };
 		AAA7EACC1B6B2FB200D7F04A /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AAA7EACA1B6B2FB200D7F04A /* Bolts.framework */; };
 		AAA7EACD1B6B2FB200D7F04A /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AAA7EACB1B6B2FB200D7F04A /* Parse.framework */; };
 		AAA7EACF1B6B303F00D7F04A /* ParseUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AAA7EACE1B6B303F00D7F04A /* ParseUI.framework */; };
@@ -133,6 +137,7 @@
 		AA6782811B6DCDF30074391D /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		AA6782831B6DCEDB0074391D /* CurrencyTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CurrencyTableViewCell.swift; sourceTree = "<group>"; };
 		AA9BF6B81B96CA1C00314737 /* PotWinnerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PotWinnerViewController.swift; sourceTree = "<group>"; };
+		AA9BF6BC1B97EAF800314737 /* Pot.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Pot.swift; sourceTree = "<group>"; };
 		AAA7EACA1B6B2FB200D7F04A /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Bolts.framework; path = "../../Downloads/parse-library-1.7.5/Bolts.framework"; sourceTree = "<group>"; };
 		AAA7EACB1B6B2FB200D7F04A /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Parse.framework; path = "../../Downloads/parse-library-1.7.5/Parse.framework"; sourceTree = "<group>"; };
 		AAA7EACE1B6B303F00D7F04A /* ParseUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ParseUI.framework; path = "../../Downloads/parse-library-1.7.5/ParseUI.framework"; sourceTree = "<group>"; };
@@ -360,6 +365,7 @@
 				E1CC11C719E0930C006EA27D /* Main.storyboard */,
 				E1CC11C119E0930C006EA27D /* Supporting Files */,
 				AA9BF6B81B96CA1C00314737 /* PotWinnerViewController.swift */,
+				AA9BF6BC1B97EAF800314737 /* Pot.swift */,
 			);
 			path = bluechipper;
 			sourceTree = "<group>";
@@ -579,6 +585,7 @@
 				E14CA0F51A88351500D02313 /* Double.swift in Sources */,
 				E195F9511A2181DB008D8661 /* Game.swift in Sources */,
 				E14CA0F41A88351500D02313 /* Dictionary.swift in Sources */,
+				AA9BF6BD1B97EAF800314737 /* Pot.swift in Sources */,
 				E1E8AEA81A216869008097A9 /* PlayersViewController.swift in Sources */,
 				E113014D1A881F2900A63C9D /* LoadingViewController.swift in Sources */,
 				E14CA0FF1A8888D000D02313 /* ProfileViewController.swift in Sources */,
@@ -602,6 +609,7 @@
 			files = (
 				AABA03B71B92327400CB0E92 /* NSArray.swift in Sources */,
 				AABA03B51B92327400CB0E92 /* Float.swift in Sources */,
+				AA9BF6BA1B97E96C00314737 /* PotWinnerViewController.swift in Sources */,
 				AABA03AD1B92324800CB0E92 /* BCActionSheet.swift in Sources */,
 				AABA03AE1B92324A00CB0E92 /* AddPlayerViewController.swift in Sources */,
 				AABA03B41B92327100CB0E92 /* ExSwift.swift in Sources */,
@@ -611,9 +619,11 @@
 				AABA03AF1B92324C00CB0E92 /* CurrencyTableViewCell.swift in Sources */,
 				AABA03A51B92321300CB0E92 /* GameManager.swift in Sources */,
 				AABA03A01B92313600CB0E92 /* AppDelegate.swift in Sources */,
+				AA9BF6BB1B97E97500314737 /* PlayerTableViewCell.swift in Sources */,
 				AABA03BA1B92327400CB0E92 /* Sequence.swift in Sources */,
 				AABA03AA1B92323800CB0E92 /* GameManager.Messaging.swift in Sources */,
 				AABA03A91B92323600CB0E92 /* GameManager.Game.swift in Sources */,
+				AA9BF6BE1B97EAFB00314737 /* Pot.swift in Sources */,
 				AABA03B11B92326100CB0E92 /* Character.swift in Sources */,
 				AABA03B81B92327400CB0E92 /* NSDate.swift in Sources */,
 				AABA03B91B92327400CB0E92 /* Range.swift in Sources */,
