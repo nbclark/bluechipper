@@ -51,9 +51,9 @@ class ViewController: UIViewController, GameManagerDelegate {
     }
     
     var winnersChosenBlock : BCChooseWinnersBlock?
-    var pots : NSDictionary?
+    var pots : [Pot] = []
     
-    func chooseWinners(pots: NSDictionary, block: BCChooseWinnersBlock) {
+    func chooseWinners(pots: [Pot], block: BCChooseWinnersBlock) {
         self.pots = pots
         self.winnersChosenBlock = block
         self.performSegueWithIdentifier("ChooseWinnersSegue", sender: self)

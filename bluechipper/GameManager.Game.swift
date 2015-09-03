@@ -91,7 +91,29 @@ extension GameManager {
             }
         } else if (url.host == "signalHandResultNeeded") {
             if (self.isOwner) {
-                var pots : NSDictionary = NSJSONSerialization.JSONObjectWithData(url.lastPathComponent!.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: true)!, options: nil, error: nil) as! NSDictionary
+                var potData : NSDictionary = NSJSONSerialization.JSONObjectWithData(url.lastPathComponent!.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: true)!, options: nil, error: nil) as! NSDictionary
+                
+                var pots = [Pot]()
+                
+                for (key, value) in potData {
+                    var pot = Pot()
+                    var potValue = key as! NSString
+                    var playerIds = value as! [String]
+                    pot.size = potValue.doubleValue
+                    
+                    let game = Settings.gameManager!.game
+                    
+                    for playerId in playerIds {
+                        var player = game.activeusers.find({ (p) -> Bool in
+                            return p.objectId == playerId
+                        })
+                        assert(nil != player, "Player should not be nil")
+                        pot.players.push(player!)
+                    }
+                    
+                    pots.push(pot)
+                }
+                
                 // Check for the winners
                 // TODO - give a callback to be fired when we have our users
                 self.chooseWinners(pots, block: { (pots) -> Void in
@@ -199,7 +221,7 @@ extension GameManager {
         }
     }
     
-    func chooseWinners(pots: NSDictionary, block: BCChooseWinnersBlock) {
+    func chooseWinners(pots: [Pot], block: BCChooseWinnersBlock) {
         for del in self.delegates {
             let gameDel = del as! GameManagerDelegate
             gameDel.chooseWinners?(pots, block: block)

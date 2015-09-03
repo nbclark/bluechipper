@@ -11,9 +11,10 @@ import CoreBluetooth
 import MBProgressHUD
 
 class PotWinnerViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
-    @IBOutlet var tableView : UITableView?
-    var pots : NSDictionary?
-    var potData : [Pot] = []
+    @IBOutlet var tableView : UITableView!
+    @IBOutlet var doneButton : UIBarButtonItem!
+    
+    var pots : [Pot] = []
     
     required init(coder aDecoder: NSCoder)
     {
@@ -32,21 +33,21 @@ class PotWinnerViewController: UIViewController, UITableViewDelegate, UITableVie
     }
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return self.potData.count
+        return self.pots.count
     }
     
     func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        var pot = self.potData[section]
+        var pot = self.pots[section]
         
         if (section == 0) {
-            return String(format: "Main Pot (%d)", pot.size)
+            return String(format: "Main Pot (%.02f)", pot.size)
         } else {
-            return String(format: "Side Pot (%d)", pot.size)
+            return String(format: "Side Pot (%.02f)", pot.size)
         }
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        var pot = self.potData[section]
+        var pot = self.pots[section]
         return pot.players.count
     }
     
@@ -61,12 +62,44 @@ class PotWinnerViewController: UIViewController, UITableViewDelegate, UITableVie
         // TODO
         // select the row
         // when each section has at least one row selected, move on
+        let cell = tableView.cellForRowAtIndexPath(indexPath) as! PlayerTableViewCell
+        //cell.selected = true
+        
+        var pot = self.pots[indexPath.section]
+        var user = pot.players[indexPath.row]
+        
+        if (pot.winners.indexOf({ (p) -> Bool in p.objectId == user.objectId }) == nil) {
+            pot.winners.push(user)
+        }
+        
+        self.checkComplete()
+    }
+    
+    func tableView(tableView: UITableView, didDeselectRowAtIndexPath indexPath: NSIndexPath) {
+        var pot = self.pots[indexPath.section]
+        var user = pot.players[indexPath.row]
+        
+        pot.winners.remove(user)
+        self.checkComplete()
+    }
+    
+    func checkComplete() {
+        var complete = true
+        
+        for pot in self.pots {
+            if (pot.winners.count == 0) {
+                complete = false
+                break
+            }
+        }
+        
+        self.doneButton.enabled = complete
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("cell") as! PlayerTableViewCell
         
-        var pot = self.potData[indexPath.section]
+        var pot = self.pots[indexPath.section]
         var user = pot.players[indexPath.row]
         
         cell.accessoryType = UITableViewCellAccessoryType.None

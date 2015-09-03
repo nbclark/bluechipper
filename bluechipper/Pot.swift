@@ -11,4 +11,5 @@ import Foundation
 class Pot {
     var size : Double = 0
     var players : [PFUser] = []
+    var winners : [PFUser] = []
 }
