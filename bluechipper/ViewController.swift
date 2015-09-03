@@ -14,6 +14,8 @@ class ViewController: UIViewController, GameManagerDelegate {
     
     @IBOutlet var webView : UIWebView!
     var firstLoad : Bool
+    var winnersChosenBlock : BCChooseWinnersBlock?
+    var pots : [Pot] = []
     
     required init(coder aDecoder: NSCoder)
     {
@@ -50,9 +52,6 @@ class ViewController: UIViewController, GameManagerDelegate {
         super.viewWillDisappear(animated)
     }
     
-    var winnersChosenBlock : BCChooseWinnersBlock?
-    var pots : [Pot] = []
-    
     func chooseWinners(pots: [Pot], block: BCChooseWinnersBlock) {
         self.pots = pots
         self.winnersChosenBlock = block
@@ -69,6 +68,7 @@ class ViewController: UIViewController, GameManagerDelegate {
         if let navVC = segue.destinationViewController as? UINavigationController {
             if let winnersVC = navVC.topViewController as? PotWinnerViewController {
                 winnersVC.pots = self.pots
+                winnersVC.winnersChosenBlock = self.winnersChosenBlock
             }
         }
     }

@@ -14,7 +14,7 @@ typealias BCVoidBlock = () -> Void
 typealias BCGameResultBlock = (Game?, NSError?) -> Void
 typealias BCWaitEvaluationBlock = (NSString, NSString, NSDictionary)->Bool
 typealias BCWaitCallbackBlock = (NSString, NSString, NSDictionary)->Void
-typealias BCChooseWinnersBlock = (NSDictionary)->Void
+typealias BCChooseWinnersBlock = ([Pot])->Void
 typealias BCUnpauseGameBlock = ()->Void
 
 @objc protocol GameManagerDelegate : NSObjectProtocol {

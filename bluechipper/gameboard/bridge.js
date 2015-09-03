@@ -47,9 +47,12 @@
 					if (this.signalHandResultNeeded) {
 						this.signalHandResultNeeded(pots)
 					} else {
-						hand.playersInHand[0].withdraw(-hand.totalPot)
+						for (var i = 0; i < pots.length; ++i) {
+							pots[i].winners = [pots[i].players[0]]
+						}
 						alert('finished with ' + hand.playersInHand.length + ' players')
-						hand.table.startHand()
+						callback(pots)
+						// hand.table.startHand()
 					}
 				}
 			},

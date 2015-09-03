@@ -15,6 +15,7 @@ class PotWinnerViewController: UIViewController, UITableViewDelegate, UITableVie
     @IBOutlet var doneButton : UIBarButtonItem!
     
     var pots : [Pot] = []
+    var winnersChosenBlock : BCChooseWinnersBlock?
     
     required init(coder aDecoder: NSCoder)
     {
@@ -30,6 +31,11 @@ class PotWinnerViewController: UIViewController, UITableViewDelegate, UITableVie
     
     override func viewDidDisappear(animated: Bool) {
         super.viewDidDisappear(animated)
+    }
+    
+    @IBAction func doneClicked() {
+        self.winnersChosenBlock?(self.pots)
+        self.dismissViewControllerAnimated(true, completion: nil)
     }
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {

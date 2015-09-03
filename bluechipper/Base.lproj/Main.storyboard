@@ -927,7 +927,11 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Choose Pot Winners" id="qFY-It-2Mg">
-                        <barButtonItem key="rightBarButtonItem" enabled="NO" style="done" systemItem="done" id="Lcv-aH-n3I"/>
+                        <barButtonItem key="rightBarButtonItem" enabled="NO" style="done" systemItem="done" id="Lcv-aH-n3I">
+                            <connections>
+                                <action selector="doneClicked" destination="3Iw-dP-DWV" id="h3m-in-5eE"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <connections>
                         <outlet property="doneButton" destination="Lcv-aH-n3I" id="sbY-wk-qHx"/>

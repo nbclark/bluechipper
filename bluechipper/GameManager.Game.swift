@@ -31,9 +31,10 @@ extension GameManager {
             var obj : NSDictionary = NSJSONSerialization.JSONObjectWithData(url.lastPathComponent!.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: true)!, options: nil, error: nil) as! NSDictionary
             
             var userId = url.pathComponents![1] as! String
+            var user = self.game.activeusers.find({ (p) -> Bool in p.objectId == userId })
             
             // List of menu options (check, fold, raise, call), with their corresponding values
-            if ((userId == self.user.objectId)) {
+            if ((userId == self.user.objectId) || (user?.hashvalue == nil)) {
                 var sheet = BCActionSheet(title: "Join Existing Game", cancelButtonTitle: nil, destructiveButtonTitle: nil)
                 
                 // TODO - for the owner, give an option to pause the game
@@ -91,15 +92,15 @@ extension GameManager {
             }
         } else if (url.host == "signalHandResultNeeded") {
             if (self.isOwner) {
-                var potData : NSDictionary = NSJSONSerialization.JSONObjectWithData(url.lastPathComponent!.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: true)!, options: nil, error: nil) as! NSDictionary
+                var potData : NSArray = NSJSONSerialization.JSONObjectWithData(url.lastPathComponent!.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: true)!, options: nil, error: nil) as! NSArray
                 
                 var pots = [Pot]()
                 
-                for (key, value) in potData {
+                for obj in potData {
+                    var subPot = obj as! NSDictionary
                     var pot = Pot()
-                    var potValue = key as! NSString
-                    var playerIds = value as! [String]
-                    pot.size = potValue.doubleValue
+                    var playerIds = subPot["players"] as! [String]
+                    pot.size = subPot["potSize"] as! Double
                     
                     let game = Settings.gameManager!.game
                     
@@ -117,14 +118,26 @@ extension GameManager {
                 // Check for the winners
                 // TODO - give a callback to be fired when we have our users
                 self.chooseWinners(pots, block: { (pots) -> Void in
-                    sleep(0)
                     // TODO - send the result back
+                    var potData : [NSDictionary] = []
+                    for pot in pots {
+                        var data = ["potSize" : pot.size, "winners" : pot.winners.map({ (p) -> String in p.objectId! })]
+                        potData.push(data)
+                    }
+                    
+                    var err : NSError?
+                    var data = NSJSONSerialization.dataWithJSONObject(potData, options: NSJSONWritingOptions.PrettyPrinted, error: &err)
+                    var encoded = NSString(data: data!, encoding: NSUTF8StringEncoding)
+                    sleep(0)
+                    self.webView?.stringByEvaluatingJavaScriptFromString(String(format: "bridge.handResultNeededCallback(%@)", encoded!))
+                    self.sendGamePush(GameNotificationActions.GameHandWinnersChosen, data: ["potData" : encoded!])
                 })
             } else {
                 self.registerWaitForActionWithHUD({ (userId, action, data) -> Bool in
                     return action.isEqualToString(GameNotificationActions.GameHandWinnersChosen.rawValue)
                     }, callback: { (userId, action, data) -> Void in
-                        self.webView?.stringByEvaluatingJavaScriptFromString("bridge.handResultNeededCallback()")
+                        var encodedPots = data["potData"] as! String
+                        self.webView?.stringByEvaluatingJavaScriptFromString(String(format: "bridge.handResultNeededCallback(%@)", encodedPots))
                     }, message: "Waiting for winners...")
             }
         } else if (url.host == "signalHandStartNeeded") {
@@ -185,7 +198,7 @@ extension GameManager {
     func startGame(gameStartedCallback : BCVoidBlock?) {
         if (self.isOwner) {
             assert(self.isOwner, "startGame should only be called by game owner")
-            
+            self.game.gameState = ""
             if (!self.game.isActive || nil == self.game.gameState || self.game.gameState?.length == 0) {
                 for user in self.game.activeusers {
                     // JSON encoding - this will likely still break

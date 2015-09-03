@@ -27,8 +27,12 @@
       
       // table.loadState(state)
 
+      var stack = 6
       for (var i = 0; i < 6; ++i) {
-        table.addPlayer(i, i+1, 100, '../no-face.png')
+        table.addPlayer(i, i+1, stack, '../no-face.png')
+        if (i % 2 == 1) {
+          stack -= 2
+        }
       }
       
       // This one can be super optional
