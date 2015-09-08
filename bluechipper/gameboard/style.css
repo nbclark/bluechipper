@@ -99,6 +99,16 @@
 	div#menu > a:hover, a:active {
 		background-color: rgba(255,255,255,0.5);
 	}
+	
+	#loading {
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background: -webkit-gradient(linear, left top, right bottom, color-stop(0%,#e0f3fa), color-stop(50%,#d8f0fc), color-stop(51%,#b8e2f6), color-stop(100%,#b6dffd));
+		z-index: 9;
+	}
 
   body {
     margin:0;

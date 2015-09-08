@@ -1,0 +1,115 @@
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0">
+  <link rel="stylesheet" type="text/css" href="style.css" />
+</head>
+<body>
+  <script type='text/javascript' src='bluechipper.js'></script>
+  <script type='text/javascript' src='player.js'></script>
+  <script type='text/javascript' src='button.js'></script>
+  <script type='text/javascript' src='menu.js'></script>
+  <script type='text/javascript' src='hand.js'></script>
+  <script type='text/javascript' src='pot.js'></script>
+  <script type='text/javascript' src='bridge.js'></script>
+  <script type='text/javascript' src='table.js'></script>
+
+  <script>
+    var tests = ['testSingleWinner', 'testSplitWinnerSinglePot']
+    var log = false
+    
+    function init(playerCount, stack) {
+      var bridge = new BC.bridge()
+      var table = new BC.table(bridge)
+      
+        for (var i = 0; i < playerCount; ++i) {
+          table.addPlayer(i, i+1, stack, '../no-face.png')
+        }
+        
+        // This one can be super optional
+        table.layoutPlayers()
+        
+        return table
+    }
+    
+    function autoCheck(table) {
+      table.bridge.signalPlayerActionNeeded = function(actionStates, playerid) {
+        if (log) console.log('signalPlayerActionNeeded: ' + JSON.stringify(actionStates))
+        if (undefined !== actionStates['check']) {
+          table.menu.menuOptionCallback('check')
+        } else if (undefined !== actionStates['call']) {
+          table.menu.menuOptionCallback('call')
+        } else {
+          alert(1)
+        }
+      }
+      table.bridge.signalHandStateChanged = function(state, winners) {
+        if (log) console.log('signalHandStateChanged: ' + state)
+        table.bridge.handStateChangedCallback()
+      }
+      table.bridge.signalHandStartNeeded = function() {
+        if (log) console.log('signalHandStartNeeded')
+      }
+    }
+    
+    function testSingleWinner() {
+      var table = init(6, 10)
+      autoCheck(table)
+      table.bridge.signalHandResultNeeded = function(pots) {
+        if (log) console.log('signalHandResultNeeded: ' + JSON.stringify(pots))
+        pots[0].winners = [0]
+        table.bridge.handResultNeededCallback(pots)
+      }
+      
+      table.startGame()
+      var p = table.players.filter(function(p) { return p.id == 0 })[0]
+      return p.purse == 20
+    }
+    
+    function testSplitWinnerSinglePot() {
+      var table = init(6, 10)
+      autoCheck(table)
+      table.bridge.signalHandResultNeeded = function(pots) {
+        if (log) console.log('signalHandResultNeeded: ' + JSON.stringify(pots))
+        pots[0].winners = [0,1]
+        table.bridge.handResultNeededCallback(pots)
+      }
+      
+      table.startGame()
+      var p0 = table.players.filter(function(p) { return p.id == 0 })[0]
+      var p1 = table.players.filter(function(p) { return p.id == 1 })[0]
+      return p0.purse == 14 && p1.purse == 14
+    }
+    
+    function testSplitWinnerMultiPot() {
+      var table = init(6, 10)
+      autoCheck(table)
+      table.bridge.signalHandResultNeeded = function(pots) {
+        console.log('signalHandResultNeeded: ' + JSON.stringify(pots))
+        pots[0].winners = [0,1]
+        table.bridge.handResultNeededCallback(pots)
+      }
+      table.bridge.signalPlayerActionNeeded = function(actionStates, playerid) {
+        if (log) console.log('signalPlayerActionNeeded: ' + JSON.stringify(actionStates))
+        if (undefined !== actionStates['check']) {
+          table.menu.menuOptionCallback('check')
+        } else if (undefined !== actionStates['call']) {
+          table.menu.menuOptionCallback('call')
+        }
+      }
+      
+      table.startGame()
+      var p0 = table.players.filter(function(p) { return p.id == 0 })[0]
+      var p1 = table.players.filter(function(p) { return p.id == 1 })[0]
+      return p0.purse == 14 && p1.purse == 14
+    }
+    
+    for (var i = 0; i < tests.length; ++i) {
+      var test = tests[i]
+      console.log('running ' + test)
+      var result = window[test]()
+      console.log('finished ' + test + ': ' + result)
+    }
+      
+  </script>
+</body>
+</html>

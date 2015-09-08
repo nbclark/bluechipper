@@ -22,11 +22,6 @@
 			requestAction: function(playerId, callback) {
 				this.callback = callback
 				this.bridge.playerActionNeeded(this, this.actionValues, playerId)
-				// if (this.bridge && this.bridge.playerActionNeeded) {
-				// 	this.bridge.playerActionNeeded(this.actionValues)
-				// } else {
-				// 	this.el.style.bottom = 0
-				// }
 			},
 			show: function() {
 				this.el.style.bottom = 0

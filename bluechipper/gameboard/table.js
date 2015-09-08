@@ -10,13 +10,16 @@
 			constructor: function (bridge) {
 				this.bridge = bridge
 				this.el = ce('div', { id: 'container' })
+				this.loadingEl = ce('div', { id: 'loading' })
 				this.pot = new BC.pot()
 				this.smallBlindButton = new BC.button('sb')
 				this.bigBlindButton = new BC.button('bb')
 				this.dealerButton = new BC.button('db')
 				this.actionButton = new BC.button('ab')
 				this.menu = new BC.menu(bridge)
+				this.players = []
 
+				ac(this.el, this.loadingEl)
 				ac(this.el, this.pot.el)
 				ac(this.el, this.smallBlindButton.el)
 				ac(this.el, this.bigBlindButton.el)
@@ -103,6 +106,7 @@
 			},
 			startGame: function() {
 				this.isActive = true
+				this.loadingEl.style.display = 'none'
 
 				// Our button is set
 				// We will now communicate back to the native app (TBD)

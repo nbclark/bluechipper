@@ -115,6 +115,13 @@
 					this.lastRaiserIndex = this.actionIndex
 				}
 			}
+			
+			// TODO - remove this - just for testing
+			if (handFinished) {
+				this.round = 3
+				handFinished = false
+				roundFinished = true
+			}
 
 			if (handFinished) {
 				// TODO assign chips here
@@ -131,19 +138,74 @@
 				// TODO - change the state around
 				if (this.round == 3) {
 					// We are at the river
-					var pots = {}
-					for (var i = 0; i < this.players.length; ++i) {
-						if (this.players[i].isInHand) {
-							var total = this.playerActions[i].totalBet;
-							if (!pots[total]) {
-								pots[total] = [];
-							}
-							pots[total].push(this.players[i].id)
+					var subPots = {}
+					
+					var activePlayers = this.players
+						.map(function(p, index) { return { i: index, id: p.id, isInHand: p.isInHand, totalBet: this.playerActions[index].totalBet } }.bind(this))
+						.filter(function(p) { return p.totalBet > 0 })
+					
+					// Sort the players by investment, and create subgroups
+					activePlayers.sort(function(a, b) { return a.totalBet > b.totalBet })
+					activePlayers.forEach(function(p) {
+						if (!subPots[p.totalBet]) subPots[p.totalBet] = []
+						subPots[p.totalBet].push(p) 
+					})
+					
+					var outPlayers = []
+					var potSizes = Object.keys(subPots)
+					var pots = []
+					var lastPotSize = 0
+				
+					// Walk through all different bet amounts and choose the players
+					// who contributed to particular sub-pots
+					// TODO, we will likely have some pots that have the same set of
+					// active players, especially if some bet amounts have all folded players
+					for (var i = 0; i < potSizes.length; ++i) {
+						var potSize = parseFloat(potSizes[i])
+						var subPot = subPots[potSize]
+						var players = activePlayers.filter(function(p) {
+							return outPlayers.indexOf(p) < 0
+						})
+						
+						var prevPot = pots.length > 0 ? pots[pots.length-1] : null
+						
+						var pot = {
+							potSize: ((potSize - lastPotSize) * players.length),
+							players: players.filter(function(p) { return p.isInHand }).map(function(p) { return p.id })
 						}
+						
+						// Same set of people
+						if (prevPot && prevPot.players.length == pot.players.length) {
+							prevPot.potSize += pot.potSize
+						} else {
+							pots.push(pot)
+						}
+						
+						lastPotSize = potSize
+						outPlayers = outPlayers.concat(subPot)
 					}
 					
 					// Fire off a request for the winners of the main + side pots
-					this.bridge.handResultNeeded(this, pots)
+					this.bridge.handResultNeeded(this, pots, function(pots) {
+						// We should have [ { potSize: xxx, winners: [id1, id2]}]
+						for (var i = 0; i < pots.length; ++i) {
+							var pot = pots[i]
+							var potSize = pot.potSize
+							// Calculate winning amounts to nearest cent
+							var perPlayerValue = Math.floor(100 * potSize / pot.winners.length) / 100 
+							for (var x = 0; x < pot.winners.length; ++x) {
+								var player = this.players.filter(function(p) { return p.id == pot.winners[x] })[0]
+								if (x == pot.winners.length - 1) {
+									player.withdraw(-potSize)
+								} else {
+									player.withdraw(-perPlayerValue)
+									potSize -= perPlayerValue
+								}
+							}
+						}
+						
+						this.table.startHand()
+					}.bind(this))
 				} else {
 					this.totalBet = 0
 					this.lastRaise = this.table.bigBlind
@@ -161,7 +223,9 @@
 					this.bridge.handStateChanged(this, roundName, playersInHand.map(function(player) { return player.id }), function() {
 						for (var i = 0; i < this.players.length; ++i) {
 							this.playerActions[i].bet = 0
-							this.players[i].el.style.opacity = '1'
+							if (roundName == 'end') {
+								this.players[i].el.style.opacity = '1'
+							}
 						}
 	
 						this.actionIndex = this.getFirstActivePlayerIndexFrom(this.smallBlindIndex)
@@ -229,6 +293,9 @@
 				// If we have the option to check, that means we are all square, right?
 				this.lastRaise = 0
 			}
+			
+			// TODO - our options have the total amount needed - also need to send player investment
+			// thus far, plus their total stack
 
 			// I think we always want to call out regardless of who the user is
 			// If they aren't the current user, the native app should wait for a push
@@ -289,13 +356,7 @@
 
 			for (var i = 0; i < this.players.length; ++i) {
 				var idx = (startIndex + i) % this.players.length
-				try
-				{
-					if (this.players[idx].isInHand) return idx
-				} catch(e) {
-					alert(idx)
-					alert(JSON.stringify(this.players))
-				}
+				if (this.players[idx].isInHand) return idx
 			}
 
 			return -1
