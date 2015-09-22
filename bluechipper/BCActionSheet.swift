@@ -21,7 +21,7 @@ class BCActionSheet : UIActionSheet, UIActionSheetDelegate
         self.delegate = self
     }
     override init(frame: CGRect) { super.init(frame: frame) }
-    required init(coder: NSCoder)
+    required init?(coder: NSCoder)
     {
         super.init(coder: coder)
     }

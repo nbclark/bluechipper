@@ -9,6 +9,7 @@
 import Foundation
 
 // LoadedSegue
+@available(iOS 8.0, *)
 class LoadingViewController: UIViewController, GameManagerDelegate, UIActionSheetDelegate {
     @IBOutlet var loadingLabel : UILabel!
     @IBOutlet var activitySpinner : UIActivityIndicatorView!
@@ -19,7 +20,7 @@ class LoadingViewController: UIViewController, GameManagerDelegate, UIActionShee
     var joinGames : Array<Game> = Array<Game>()
     var existingGame : Game?
     
-    required init(coder: NSCoder) {
+    required init?(coder: NSCoder) {
         super.init(coder: coder)
     }
     
@@ -50,15 +51,10 @@ class LoadingViewController: UIViewController, GameManagerDelegate, UIActionShee
     }
     
     @IBAction func joinClicked() {
-        var sheet = UIActionSheet(title: "Join Existing Game", delegate: self, cancelButtonTitle: "Cancel", destructiveButtonTitle: nil)
+        let sheet = UIActionSheet(title: "Join Existing Game", delegate: self, cancelButtonTitle: "Cancel", destructiveButtonTitle: nil)
         sheet.tag = 0
         
         self.joinGames = Array<Game>(Settings.gameManager!.joinableGames)
-        
-        for game in Settings.gameManager!.joinableGames {
-            let name = String(game.name!)
-            let index = sheet.addButtonWithTitle(name)
-        }
         
         sheet.showInView(self.view)
     }
@@ -88,7 +84,7 @@ class LoadingViewController: UIViewController, GameManagerDelegate, UIActionShee
     }
     func foundExistingGame(game: Game) {
         // We found an existing game
-        var sheet = UIActionSheet(title: "Re-join Existing Game", delegate: self, cancelButtonTitle: "Cancel", destructiveButtonTitle: "Delete Game")
+        let sheet = UIActionSheet(title: "Re-join Existing Game", delegate: self, cancelButtonTitle: "Cancel", destructiveButtonTitle: "Delete Game")
         sheet.tag = 1
         sheet.addButtonWithTitle(String(format: "Join '%@'", game.name!))
         sheet.showInView(self.view)
@@ -107,7 +103,7 @@ class LoadingViewController: UIViewController, GameManagerDelegate, UIActionShee
                 // We are cancelling now
                 return
             } else {
-                var game = self.joinGames[buttonIndex - 1]
+                let game = self.joinGames[buttonIndex - 1]
                 Settings.gameManager!.joinGame(game)
             }
         } else if (actionSheet.tag == 1) {

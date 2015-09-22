@@ -9,13 +9,14 @@
 import Foundation
 import MBProgressHUD
 
+@available(iOS 8.0, *)
 extension GameManager {
     
     func addPlayer(player : PFUser, block : PFBooleanResultBlock?) {
         let user = player
         
         self.game.activeusers.append(user)
-        self.game.users.remove(user)
+        self.game.users.removeObject(user)
         
         self.sendPlayerPush(user, message: "Welcome to the game")
         self.save(GameNotificationActions.GameMembersChanged, block : block)
@@ -24,7 +25,7 @@ extension GameManager {
     func removePlayer(player : PFUser, block : PFBooleanResultBlock?) {
         let user = player
         
-        self.game.activeusers.remove(user)
+        self.game.activeusers.removeObject(user)
         
         self.sendPlayerPush(user, message: "Sorry to see you go")
         self.save(GameNotificationActions.GameMembersChanged, block : block)

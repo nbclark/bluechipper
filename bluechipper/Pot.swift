@@ -8,7 +8,7 @@
 
 import Foundation
 
-class Pot {
+class Pot : NSObject {
     var size : Double = 0
     var players : [PFUser] = []
     var winners : [PFUser] = []

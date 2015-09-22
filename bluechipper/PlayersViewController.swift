@@ -10,6 +10,7 @@ import UIKit
 import CoreBluetooth
 import MBProgressHUD
 
+@available(iOS 8.0, *)
 class PlayersViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, BeaconRangedMonitorDelegate {
     @IBOutlet var tableView : UITableView?
     @IBOutlet var addPlayerButton : UIBarButtonItem?
@@ -18,7 +19,7 @@ class PlayersViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     var eligbleUsers : Array<PFUser> = Array()
     
-    required init(coder aDecoder: NSCoder)
+    required init?(coder aDecoder: NSCoder)
     {
         super.init(coder: aDecoder)
     }
@@ -105,9 +106,14 @@ class PlayersViewController: UIViewController, UITableViewDelegate, UITableViewD
         self.eligbleUsers = Array()
         let game = Settings.gameManager!.game
         
-        let beaconUsers = (Settings.beaconMonitor!.rangedUsers.values.array as Array<PFUser>?)!
+        let beaconUsers = Array<PFUser>(Settings.beaconMonitor!.rangedUsers.values)
         
-        for user in game.users.union(beaconUsers).uniqueBy({ (u) -> NSString in u.objectId! }) {
+        for user in beaconUsers {
+            if (game.activeusers.indexOf( { (u) -> Bool in u.objectId == user.objectId }) == nil) {
+                self.eligbleUsers.append(user)
+            }
+        }
+        for user in game.users {
             if (game.activeusers.indexOf( { (u) -> Bool in u.objectId == user.objectId }) == nil) {
                 self.eligbleUsers.append(user)
             }
@@ -144,17 +150,17 @@ class PlayersViewController: UIViewController, UITableViewDelegate, UITableViewD
         return true;
     }
     
-    func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [AnyObject]? {
+    func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [UITableViewRowAction]? {
         // New players are accept/reject
         // Active players are rebuy/pause/quit
         // Empty players are rebuy/remove
-        var suspendAction = UITableViewRowAction(style: .Default, title: "Pause") { (action, indexPath) -> Void in
+        let suspendAction = UITableViewRowAction(style: .Default, title: "Pause") { (action, indexPath) -> Void in
             tableView.editing = false
         }
         suspendAction.backgroundColor = UIColor.blueColor()
         
-        var deleteAction = UITableViewRowAction(style: .Default, title: "Reject") { (action, indexPath) -> Void in
-            var game = Settings.gameManager!.game
+        let deleteAction = UITableViewRowAction(style: .Default, title: "Reject") { (action, indexPath) -> Void in
+            let game = Settings.gameManager!.game
             let user = game.activeusers[indexPath.row] as PFUser
             
             Settings.gameManager!.removePlayer(user, block: { (res, err) -> Void in
@@ -164,7 +170,7 @@ class PlayersViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         deleteAction.backgroundColor = UIColor.redColor()
         
-        var acceptAction = UITableViewRowAction(style: .Default, title: "Accept") { (action, ip) -> Void in
+        let acceptAction = UITableViewRowAction(style: .Default, title: "Accept") { (action, ip) -> Void in
             tableView.editing = false
             let user = self.eligbleUsers[ip.row]
             self.eligbleUsers.removeAtIndex(ip.row)
@@ -174,7 +180,7 @@ class PlayersViewController: UIViewController, UITableViewDelegate, UITableViewD
             })
         }
         acceptAction.backgroundColor = UIColor.greenColor()
-        var game = Settings.gameManager!.game
+        let game = Settings.gameManager!.game
         let objectId : NSString = Settings.gameManager!.user.objectId!
         let objectId2: NSString = game.activeusers[indexPath.row].objectId!
         let result = (objectId == objectId2);
@@ -203,7 +209,7 @@ class PlayersViewController: UIViewController, UITableViewDelegate, UITableViewD
         let cell = tableView.cellForRowAtIndexPath(indexPath)
         
         if (indexPath.section == 0) {
-            var game = Settings.gameManager!.game
+            let game = Settings.gameManager!.game
             let user = game.activeusers[indexPath.row]
             self.performSegueWithIdentifier("SettingsSegue", sender: user)
         }
@@ -214,7 +220,7 @@ class PlayersViewController: UIViewController, UITableViewDelegate, UITableViewD
         var user : PFUser!
         
         if (indexPath.section == 0) {
-            var game = Settings.gameManager!.game
+            let game = Settings.gameManager!.game
             user = game.activeusers[indexPath.row]
             cell.accessoryType = UITableViewCellAccessoryType.None
             cell.orderLabel.hidden = false

@@ -20,14 +20,18 @@
 		AA266C121B8555B9003C77DA /* BCActionSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA266C111B8555B9003C77DA /* BCActionSheet.swift */; };
 		AA6782821B6DCDF30074391D /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA6782811B6DCDF30074391D /* SettingsViewController.swift */; };
 		AA6782841B6DCEDB0074391D /* CurrencyTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA6782831B6DCEDB0074391D /* CurrencyTableViewCell.swift */; };
+		AA801B961BADF675000BC084 /* Array.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA801B951BADF675000BC084 /* Array.swift */; settings = {ASSET_TAGS = (); }; };
+		AA801B991BB0F8E7000BC084 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA801B971BB0F8E7000BC084 /* Parse.framework */; settings = {ASSET_TAGS = (); }; };
+		AA801B9A1BB0F8E7000BC084 /* ParseUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA801B981BB0F8E7000BC084 /* ParseUI.framework */; settings = {ASSET_TAGS = (); }; };
+		AA801B9C1BB0F8F4000BC084 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA801B9B1BB0F8F4000BC084 /* Bolts.framework */; settings = {ASSET_TAGS = (); }; };
+		AA801B9D1BB0F988000BC084 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA801B9B1BB0F8F4000BC084 /* Bolts.framework */; settings = {ASSET_TAGS = (); }; };
+		AA801B9E1BB0F988000BC084 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA801B971BB0F8E7000BC084 /* Parse.framework */; settings = {ASSET_TAGS = (); }; };
+		AA801B9F1BB0F9A0000BC084 /* Array.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA801B951BADF675000BC084 /* Array.swift */; settings = {ASSET_TAGS = (); }; };
 		AA9BF6B91B96CA1C00314737 /* PotWinnerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA9BF6B81B96CA1C00314737 /* PotWinnerViewController.swift */; };
 		AA9BF6BA1B97E96C00314737 /* PotWinnerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA9BF6B81B96CA1C00314737 /* PotWinnerViewController.swift */; };
 		AA9BF6BB1B97E97500314737 /* PlayerTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1E8AEA91A216B7B008097A9 /* PlayerTableViewCell.swift */; };
 		AA9BF6BD1B97EAF800314737 /* Pot.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA9BF6BC1B97EAF800314737 /* Pot.swift */; };
 		AA9BF6BE1B97EAFB00314737 /* Pot.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA9BF6BC1B97EAF800314737 /* Pot.swift */; };
-		AAA7EACC1B6B2FB200D7F04A /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AAA7EACA1B6B2FB200D7F04A /* Bolts.framework */; };
-		AAA7EACD1B6B2FB200D7F04A /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AAA7EACB1B6B2FB200D7F04A /* Parse.framework */; };
-		AAA7EACF1B6B303F00D7F04A /* ParseUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AAA7EACE1B6B303F00D7F04A /* ParseUI.framework */; };
 		AAA7EAD11B6BCE2100D7F04A /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = AAA7EAD01B6BCE2100D7F04A /* libsqlite3.dylib */; };
 		AABA039E1B9230F300CB0E92 /* Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = E195F9501A2181DB008D8661 /* Game.swift */; };
 		AABA039F1B92310E00CB0E92 /* Bridge.m in Sources */ = {isa = PBXBuildFile; fileRef = E1CC120019E79E85006EA27D /* Bridge.m */; };
@@ -35,7 +39,6 @@
 		AABA03A11B92313800CB0E92 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1CC11C519E0930C006EA27D /* ViewController.swift */; };
 		AABA03A21B92313D00CB0E92 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E1CC11C719E0930C006EA27D /* Main.storyboard */; };
 		AABA03A31B92314100CB0E92 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = E1CC11CC19E0930C006EA27D /* LaunchScreen.xib */; };
-		AABA03A41B9231F300CB0E92 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AAA7EACB1B6B2FB200D7F04A /* Parse.framework */; };
 		AABA03A51B92321300CB0E92 /* GameManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E14CA0E01A8827A100D02313 /* GameManager.swift */; };
 		AABA03A61B92321500CB0E92 /* LoadingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E113014C1A881F2900A63C9D /* LoadingViewController.swift */; };
 		AABA03A71B92321700CB0E92 /* BeaconMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = E174F5FE1A7DA0A900C58B48 /* BeaconMonitor.swift */; };
@@ -43,36 +46,12 @@
 		AABA03A91B92323600CB0E92 /* GameManager.Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1891541B9102CA0057A359 /* GameManager.Game.swift */; };
 		AABA03AA1B92323800CB0E92 /* GameManager.Messaging.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1891551B9102CA0057A359 /* GameManager.Messaging.swift */; };
 		AABA03AB1B92323A00CB0E92 /* GameManager.Players.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1891561B9102CA0057A359 /* GameManager.Players.swift */; };
-		AABA03AC1B92323E00CB0E92 /* Array.swift in Sources */ = {isa = PBXBuildFile; fileRef = E14CA0E51A88351500D02313 /* Array.swift */; };
 		AABA03AD1B92324800CB0E92 /* BCActionSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA266C111B8555B9003C77DA /* BCActionSheet.swift */; };
 		AABA03AE1B92324A00CB0E92 /* AddPlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA266C0B1B830366003C77DA /* AddPlayerViewController.swift */; };
 		AABA03AF1B92324C00CB0E92 /* CurrencyTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA6782831B6DCEDB0074391D /* CurrencyTableViewCell.swift */; };
 		AABA03B01B92324F00CB0E92 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA6782811B6DCDF30074391D /* SettingsViewController.swift */; };
-		AABA03B11B92326100CB0E92 /* Character.swift in Sources */ = {isa = PBXBuildFile; fileRef = E14CA0E61A88351500D02313 /* Character.swift */; };
-		AABA03B21B92326A00CB0E92 /* Dictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = E14CA0E71A88351500D02313 /* Dictionary.swift */; };
-		AABA03B31B92326C00CB0E92 /* Double.swift in Sources */ = {isa = PBXBuildFile; fileRef = E14CA0E81A88351500D02313 /* Double.swift */; };
-		AABA03B41B92327100CB0E92 /* ExSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = E14CA0EA1A88351500D02313 /* ExSwift.swift */; };
-		AABA03B51B92327400CB0E92 /* Float.swift in Sources */ = {isa = PBXBuildFile; fileRef = E14CA0EB1A88351500D02313 /* Float.swift */; };
-		AABA03B61B92327400CB0E92 /* Int.swift in Sources */ = {isa = PBXBuildFile; fileRef = E14CA0EC1A88351500D02313 /* Int.swift */; };
-		AABA03B71B92327400CB0E92 /* NSArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = E14CA0ED1A88351500D02313 /* NSArray.swift */; };
-		AABA03B81B92327400CB0E92 /* NSDate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E14CA0EE1A88351500D02313 /* NSDate.swift */; };
-		AABA03B91B92327400CB0E92 /* Range.swift in Sources */ = {isa = PBXBuildFile; fileRef = E14CA0EF1A88351500D02313 /* Range.swift */; };
-		AABA03BA1B92327400CB0E92 /* Sequence.swift in Sources */ = {isa = PBXBuildFile; fileRef = E14CA0F01A88351500D02313 /* Sequence.swift */; };
-		AABA03BB1B92327400CB0E92 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = E14CA0F11A88351500D02313 /* String.swift */; };
 		E113014D1A881F2900A63C9D /* LoadingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E113014C1A881F2900A63C9D /* LoadingViewController.swift */; };
 		E14CA0E11A8827A100D02313 /* GameManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E14CA0E01A8827A100D02313 /* GameManager.swift */; };
-		E14CA0F21A88351500D02313 /* Array.swift in Sources */ = {isa = PBXBuildFile; fileRef = E14CA0E51A88351500D02313 /* Array.swift */; };
-		E14CA0F31A88351500D02313 /* Character.swift in Sources */ = {isa = PBXBuildFile; fileRef = E14CA0E61A88351500D02313 /* Character.swift */; };
-		E14CA0F41A88351500D02313 /* Dictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = E14CA0E71A88351500D02313 /* Dictionary.swift */; };
-		E14CA0F51A88351500D02313 /* Double.swift in Sources */ = {isa = PBXBuildFile; fileRef = E14CA0E81A88351500D02313 /* Double.swift */; };
-		E14CA0F61A88351500D02313 /* ExSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = E14CA0EA1A88351500D02313 /* ExSwift.swift */; };
-		E14CA0F71A88351500D02313 /* Float.swift in Sources */ = {isa = PBXBuildFile; fileRef = E14CA0EB1A88351500D02313 /* Float.swift */; };
-		E14CA0F81A88351500D02313 /* Int.swift in Sources */ = {isa = PBXBuildFile; fileRef = E14CA0EC1A88351500D02313 /* Int.swift */; };
-		E14CA0F91A88351500D02313 /* NSArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = E14CA0ED1A88351500D02313 /* NSArray.swift */; };
-		E14CA0FA1A88351500D02313 /* NSDate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E14CA0EE1A88351500D02313 /* NSDate.swift */; };
-		E14CA0FB1A88351500D02313 /* Range.swift in Sources */ = {isa = PBXBuildFile; fileRef = E14CA0EF1A88351500D02313 /* Range.swift */; };
-		E14CA0FC1A88351500D02313 /* Sequence.swift in Sources */ = {isa = PBXBuildFile; fileRef = E14CA0F01A88351500D02313 /* Sequence.swift */; };
-		E14CA0FD1A88351500D02313 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = E14CA0F11A88351500D02313 /* String.swift */; };
 		E14CA0FF1A8888D000D02313 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E14CA0FE1A8888D000D02313 /* ProfileViewController.swift */; };
 		E14CA1011A88944F00D02313 /* no-face.png in Resources */ = {isa = PBXBuildFile; fileRef = E14CA1001A88944F00D02313 /* no-face.png */; };
 		E174F5FF1A7DA0A900C58B48 /* BeaconMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = E174F5FE1A7DA0A900C58B48 /* BeaconMonitor.swift */; };
@@ -136,27 +115,15 @@
 		AA266C111B8555B9003C77DA /* BCActionSheet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BCActionSheet.swift; sourceTree = "<group>"; };
 		AA6782811B6DCDF30074391D /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		AA6782831B6DCEDB0074391D /* CurrencyTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CurrencyTableViewCell.swift; sourceTree = "<group>"; };
+		AA801B951BADF675000BC084 /* Array.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Array.swift; sourceTree = "<group>"; };
+		AA801B971BB0F8E7000BC084 /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Parse.framework; sourceTree = "<group>"; };
+		AA801B981BB0F8E7000BC084 /* ParseUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ParseUI.framework; sourceTree = "<group>"; };
+		AA801B9B1BB0F8F4000BC084 /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Bolts.framework; sourceTree = "<group>"; };
 		AA9BF6B81B96CA1C00314737 /* PotWinnerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PotWinnerViewController.swift; sourceTree = "<group>"; };
 		AA9BF6BC1B97EAF800314737 /* Pot.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Pot.swift; sourceTree = "<group>"; };
-		AAA7EACA1B6B2FB200D7F04A /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Bolts.framework; path = "../../Downloads/parse-library-1.7.5/Bolts.framework"; sourceTree = "<group>"; };
-		AAA7EACB1B6B2FB200D7F04A /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Parse.framework; path = "../../Downloads/parse-library-1.7.5/Parse.framework"; sourceTree = "<group>"; };
-		AAA7EACE1B6B303F00D7F04A /* ParseUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ParseUI.framework; path = "../../Downloads/parse-library-1.7.5/ParseUI.framework"; sourceTree = "<group>"; };
 		AAA7EAD01B6BCE2100D7F04A /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 		E113014C1A881F2900A63C9D /* LoadingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoadingViewController.swift; sourceTree = "<group>"; };
 		E14CA0E01A8827A100D02313 /* GameManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameManager.swift; sourceTree = "<group>"; };
-		E14CA0E51A88351500D02313 /* Array.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Array.swift; path = ExSwift/Array.swift; sourceTree = "<group>"; };
-		E14CA0E61A88351500D02313 /* Character.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Character.swift; path = ExSwift/Character.swift; sourceTree = "<group>"; };
-		E14CA0E71A88351500D02313 /* Dictionary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Dictionary.swift; path = ExSwift/Dictionary.swift; sourceTree = "<group>"; };
-		E14CA0E81A88351500D02313 /* Double.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Double.swift; path = ExSwift/Double.swift; sourceTree = "<group>"; };
-		E14CA0E91A88351500D02313 /* ExSwift.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ExSwift.h; path = ExSwift/ExSwift.h; sourceTree = "<group>"; };
-		E14CA0EA1A88351500D02313 /* ExSwift.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ExSwift.swift; path = ExSwift/ExSwift.swift; sourceTree = "<group>"; };
-		E14CA0EB1A88351500D02313 /* Float.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Float.swift; path = ExSwift/Float.swift; sourceTree = "<group>"; };
-		E14CA0EC1A88351500D02313 /* Int.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Int.swift; path = ExSwift/Int.swift; sourceTree = "<group>"; };
-		E14CA0ED1A88351500D02313 /* NSArray.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NSArray.swift; path = ExSwift/NSArray.swift; sourceTree = "<group>"; };
-		E14CA0EE1A88351500D02313 /* NSDate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NSDate.swift; path = ExSwift/NSDate.swift; sourceTree = "<group>"; };
-		E14CA0EF1A88351500D02313 /* Range.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Range.swift; path = ExSwift/Range.swift; sourceTree = "<group>"; };
-		E14CA0F01A88351500D02313 /* Sequence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Sequence.swift; path = ExSwift/Sequence.swift; sourceTree = "<group>"; };
-		E14CA0F11A88351500D02313 /* String.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = String.swift; path = ExSwift/String.swift; sourceTree = "<group>"; };
 		E14CA0FE1A8888D000D02313 /* ProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		E14CA1001A88944F00D02313 /* no-face.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "no-face.png"; sourceTree = "<group>"; };
 		E174F5FE1A7DA0A900C58B48 /* BeaconMonitor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BeaconMonitor.swift; sourceTree = "<group>"; };
@@ -210,19 +177,19 @@
 				AA24A62A1B6DD22A00D54C23 /* Accounts.framework in Frameworks */,
 				AA24A6281B6DD22600D54C23 /* Social.framework in Frameworks */,
 				AAA7EAD11B6BCE2100D7F04A /* libsqlite3.dylib in Frameworks */,
-				AAA7EACC1B6B2FB200D7F04A /* Bolts.framework in Frameworks */,
 				E1CC11FE19E79E35006EA27D /* SystemConfiguration.framework in Frameworks */,
+				AA801B9C1BB0F8F4000BC084 /* Bolts.framework in Frameworks */,
 				E1CC11FC19E79E2D006EA27D /* Security.framework in Frameworks */,
 				E1CC11FA19E79E27006EA27D /* QuartzCore.framework in Frameworks */,
+				AA801B9A1BB0F8E7000BC084 /* ParseUI.framework in Frameworks */,
 				E1CC11F819E79E23006EA27D /* MobileCoreServices.framework in Frameworks */,
 				E1CC11F619E79E1C006EA27D /* libz.dylib in Frameworks */,
-				AAA7EACD1B6B2FB200D7F04A /* Parse.framework in Frameworks */,
 				E1CC11F419E79E17006EA27D /* CoreLocation.framework in Frameworks */,
 				E1CC11F219E79E13006EA27D /* CoreGraphics.framework in Frameworks */,
 				E1CC11F019E79E0C006EA27D /* CFNetwork.framework in Frameworks */,
+				AA801B991BB0F8E7000BC084 /* Parse.framework in Frameworks */,
 				E1CC11EE19E79E04006EA27D /* AudioToolbox.framework in Frameworks */,
 				E1CC11E819E094CB006EA27D /* MultipeerConnectivity.framework in Frameworks */,
-				AAA7EACF1B6B303F00D7F04A /* ParseUI.framework in Frameworks */,
 				E1CC11E619E0946E006EA27D /* CoreBluetooth.framework in Frameworks */,
 				E1CC11E419E09431006EA27D /* StoreKit.framework in Frameworks */,
 				6ADB74B579114D3E84EDFA60 /* Pods_bluechipper.framework in Frameworks */,
@@ -233,7 +200,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AABA03A41B9231F300CB0E92 /* Parse.framework in Frameworks */,
+				AA801B9E1BB0F988000BC084 /* Parse.framework in Frameworks */,
+				AA801B9D1BB0F988000BC084 /* Bolts.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -262,26 +230,6 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
-		E14CA0E21A8834AA00D02313 /* ExSwift */ = {
-			isa = PBXGroup;
-			children = (
-				E14CA0E51A88351500D02313 /* Array.swift */,
-				E14CA0E61A88351500D02313 /* Character.swift */,
-				E14CA0E71A88351500D02313 /* Dictionary.swift */,
-				E14CA0E81A88351500D02313 /* Double.swift */,
-				E14CA0E91A88351500D02313 /* ExSwift.h */,
-				E14CA0EA1A88351500D02313 /* ExSwift.swift */,
-				E14CA0EB1A88351500D02313 /* Float.swift */,
-				E14CA0EC1A88351500D02313 /* Int.swift */,
-				E14CA0ED1A88351500D02313 /* NSArray.swift */,
-				E14CA0EE1A88351500D02313 /* NSDate.swift */,
-				E14CA0EF1A88351500D02313 /* Range.swift */,
-				E14CA0F01A88351500D02313 /* Sequence.swift */,
-				E14CA0F11A88351500D02313 /* String.swift */,
-			);
-			name = ExSwift;
-			sourceTree = "<group>";
-		};
 		E17D53061A8E072C009274A1 /* gameboard */ = {
 			isa = PBXGroup;
 			children = (
@@ -302,8 +250,10 @@
 		E1CC11B519E0930C006EA27D = {
 			isa = PBXGroup;
 			children = (
+				AA801B9B1BB0F8F4000BC084 /* Bolts.framework */,
+				AA801B971BB0F8E7000BC084 /* Parse.framework */,
+				AA801B981BB0F8E7000BC084 /* ParseUI.framework */,
 				AAA7EAD01B6BCE2100D7F04A /* libsqlite3.dylib */,
-				AAA7EACE1B6B303F00D7F04A /* ParseUI.framework */,
 				E1CC11FD19E79E35006EA27D /* SystemConfiguration.framework */,
 				E1CC11FB19E79E2D006EA27D /* Security.framework */,
 				E1CC11F919E79E27006EA27D /* QuartzCore.framework */,
@@ -313,8 +263,6 @@
 				E1CC11F119E79E13006EA27D /* CoreGraphics.framework */,
 				E1CC11EF19E79E0C006EA27D /* CFNetwork.framework */,
 				E1CC11ED19E79E04006EA27D /* AudioToolbox.framework */,
-				AAA7EACA1B6B2FB200D7F04A /* Bolts.framework */,
-				AAA7EACB1B6B2FB200D7F04A /* Parse.framework */,
 				E1CC11E719E094CB006EA27D /* MultipeerConnectivity.framework */,
 				E1CC11E519E0946E006EA27D /* CoreBluetooth.framework */,
 				E1CC11E319E09431006EA27D /* StoreKit.framework */,
@@ -359,13 +307,13 @@
 				AA6782811B6DCDF30074391D /* SettingsViewController.swift */,
 				E1CC11C519E0930C006EA27D /* ViewController.swift */,
 				E1CC11CA19E0930C006EA27D /* Images.xcassets */,
-				E14CA0E21A8834AA00D02313 /* ExSwift */,
 				E17D53061A8E072C009274A1 /* gameboard */,
 				E1CC11CC19E0930C006EA27D /* LaunchScreen.xib */,
 				E1CC11C719E0930C006EA27D /* Main.storyboard */,
 				E1CC11C119E0930C006EA27D /* Supporting Files */,
 				AA9BF6B81B96CA1C00314737 /* PotWinnerViewController.swift */,
 				AA9BF6BC1B97EAF800314737 /* Pot.swift */,
+				AA801B951BADF675000BC084 /* Array.swift */,
 			);
 			path = bluechipper;
 			sourceTree = "<group>";
@@ -442,6 +390,8 @@
 		E1CC11B619E0930C006EA27D /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftMigration = 0700;
+				LastSwiftUpdateCheck = 0700;
 				LastUpgradeCheck = 0600;
 				ORGANIZATIONNAME = "Nicholas Clark";
 				TargetAttributes = {
@@ -569,22 +519,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E14CA0F91A88351500D02313 /* NSArray.swift in Sources */,
 				E1CC11C619E0930C006EA27D /* ViewController.swift in Sources */,
-				E14CA0F21A88351500D02313 /* Array.swift in Sources */,
+				AA801B961BADF675000BC084 /* Array.swift in Sources */,
 				AA9BF6B91B96CA1C00314737 /* PotWinnerViewController.swift in Sources */,
-				E14CA0F61A88351500D02313 /* ExSwift.swift in Sources */,
 				AA6782841B6DCEDB0074391D /* CurrencyTableViewCell.swift in Sources */,
-				E14CA0FB1A88351500D02313 /* Range.swift in Sources */,
 				AA266C0C1B830366003C77DA /* AddPlayerViewController.swift in Sources */,
 				AA266C121B8555B9003C77DA /* BCActionSheet.swift in Sources */,
-				E14CA0FA1A88351500D02313 /* NSDate.swift in Sources */,
-				E14CA0F31A88351500D02313 /* Character.swift in Sources */,
 				E14CA0E11A8827A100D02313 /* GameManager.swift in Sources */,
 				AA1891581B9102CA0057A359 /* GameManager.Messaging.swift in Sources */,
-				E14CA0F51A88351500D02313 /* Double.swift in Sources */,
 				E195F9511A2181DB008D8661 /* Game.swift in Sources */,
-				E14CA0F41A88351500D02313 /* Dictionary.swift in Sources */,
 				AA9BF6BD1B97EAF800314737 /* Pot.swift in Sources */,
 				E1E8AEA81A216869008097A9 /* PlayersViewController.swift in Sources */,
 				E113014D1A881F2900A63C9D /* LoadingViewController.swift in Sources */,
@@ -592,14 +535,10 @@
 				E1E8AEAA1A216B7B008097A9 /* PlayerTableViewCell.swift in Sources */,
 				AA6782821B6DCDF30074391D /* SettingsViewController.swift in Sources */,
 				AA1891591B9102CA0057A359 /* GameManager.Players.swift in Sources */,
-				E14CA0F71A88351500D02313 /* Float.swift in Sources */,
 				AA1891571B9102CA0057A359 /* GameManager.Game.swift in Sources */,
 				E1CC120119E79E85006EA27D /* Bridge.m in Sources */,
 				E1CC11C419E0930C006EA27D /* AppDelegate.swift in Sources */,
 				E174F5FF1A7DA0A900C58B48 /* BeaconMonitor.swift in Sources */,
-				E14CA0FD1A88351500D02313 /* String.swift in Sources */,
-				E14CA0FC1A88351500D02313 /* Sequence.swift in Sources */,
-				E14CA0F81A88351500D02313 /* Int.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -607,36 +546,25 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AABA03B71B92327400CB0E92 /* NSArray.swift in Sources */,
-				AABA03B51B92327400CB0E92 /* Float.swift in Sources */,
 				AA9BF6BA1B97E96C00314737 /* PotWinnerViewController.swift in Sources */,
+				AA801B9F1BB0F9A0000BC084 /* Array.swift in Sources */,
 				AABA03AD1B92324800CB0E92 /* BCActionSheet.swift in Sources */,
 				AABA03AE1B92324A00CB0E92 /* AddPlayerViewController.swift in Sources */,
-				AABA03B41B92327100CB0E92 /* ExSwift.swift in Sources */,
-				AABA03B21B92326A00CB0E92 /* Dictionary.swift in Sources */,
 				AABA03A61B92321500CB0E92 /* LoadingViewController.swift in Sources */,
 				AABA03A11B92313800CB0E92 /* ViewController.swift in Sources */,
 				AABA03AF1B92324C00CB0E92 /* CurrencyTableViewCell.swift in Sources */,
 				AABA03A51B92321300CB0E92 /* GameManager.swift in Sources */,
 				AABA03A01B92313600CB0E92 /* AppDelegate.swift in Sources */,
 				AA9BF6BB1B97E97500314737 /* PlayerTableViewCell.swift in Sources */,
-				AABA03BA1B92327400CB0E92 /* Sequence.swift in Sources */,
 				AABA03AA1B92323800CB0E92 /* GameManager.Messaging.swift in Sources */,
 				AABA03A91B92323600CB0E92 /* GameManager.Game.swift in Sources */,
 				AA9BF6BE1B97EAFB00314737 /* Pot.swift in Sources */,
-				AABA03B11B92326100CB0E92 /* Character.swift in Sources */,
-				AABA03B81B92327400CB0E92 /* NSDate.swift in Sources */,
-				AABA03B91B92327400CB0E92 /* Range.swift in Sources */,
 				AABA039E1B9230F300CB0E92 /* Game.swift in Sources */,
-				AABA03BB1B92327400CB0E92 /* String.swift in Sources */,
 				AABA039F1B92310E00CB0E92 /* Bridge.m in Sources */,
 				AABA03A81B92321900CB0E92 /* ProfileViewController.swift in Sources */,
 				AABA03B01B92324F00CB0E92 /* SettingsViewController.swift in Sources */,
-				AABA03AC1B92323E00CB0E92 /* Array.swift in Sources */,
-				AABA03B61B92327400CB0E92 /* Int.swift in Sources */,
 				AABA03A71B92321700CB0E92 /* BeaconMonitor.swift in Sources */,
 				E1CC11DA19E0930C006EA27D /* bluechipperTests.swift in Sources */,
-				AABA03B31B92326C00CB0E92 /* Double.swift in Sources */,
 				AABA03AB1B92323A00CB0E92 /* GameManager.Players.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -763,9 +691,10 @@
 					"$(LOCAL_LIBRARY_DIR)/Frameworks",
 					"/Users/nicholasclark/Downloads/parse-library-1.7.5",
 					"$(PROJECT_DIR)/build/Debug-iphoneos",
+					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = bluechipper/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
@@ -787,9 +716,10 @@
 					"$(LOCAL_LIBRARY_DIR)/Frameworks",
 					"/Users/nicholasclark/Downloads/parse-library-1.7.5",
 					"$(PROJECT_DIR)/build/Debug-iphoneos",
+					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = bluechipper/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
@@ -806,6 +736,7 @@
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
 					"/Users/nicholasclark/Downloads/parse-library-1.7.5",
+					"$(PROJECT_DIR)",
 				);
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -827,6 +758,7 @@
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
 					"/Users/nicholasclark/Downloads/parse-library-1.7.5",
+					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = bluechipperTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";

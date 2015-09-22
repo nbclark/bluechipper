@@ -17,7 +17,7 @@ class PotWinnerViewController: UIViewController, UITableViewDelegate, UITableVie
     var pots : [Pot] = []
     var winnersChosenBlock : BCChooseWinnersBlock?
     
-    required init(coder aDecoder: NSCoder)
+    required init?(coder aDecoder: NSCoder)
     {
         super.init(coder: aDecoder)
     }
@@ -43,7 +43,7 @@ class PotWinnerViewController: UIViewController, UITableViewDelegate, UITableVie
     }
     
     func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        var pot = self.pots[section]
+        let pot = self.pots[section]
         
         if (section == 0) {
             return String(format: "Main Pot (%.02f)", pot.size)
@@ -53,7 +53,7 @@ class PotWinnerViewController: UIViewController, UITableViewDelegate, UITableVie
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        var pot = self.pots[section]
+        let pot = self.pots[section]
         return pot.players.count
     }
     
@@ -71,21 +71,21 @@ class PotWinnerViewController: UIViewController, UITableViewDelegate, UITableVie
         let cell = tableView.cellForRowAtIndexPath(indexPath) as! PlayerTableViewCell
         //cell.selected = true
         
-        var pot = self.pots[indexPath.section]
-        var user = pot.players[indexPath.row]
+        let pot = self.pots[indexPath.section]
+        let user = pot.players[indexPath.row]
         
         if (pot.winners.indexOf({ (p) -> Bool in p.objectId == user.objectId }) == nil) {
-            pot.winners.push(user)
+            pot.winners.append(user)
         }
         
         self.checkComplete()
     }
     
     func tableView(tableView: UITableView, didDeselectRowAtIndexPath indexPath: NSIndexPath) {
-        var pot = self.pots[indexPath.section]
-        var user = pot.players[indexPath.row]
+        let pot = self.pots[indexPath.section]
+        let user = pot.players[indexPath.row]
         
-        pot.winners.remove(user)
+        pot.winners.removeObject(user)
         self.checkComplete()
     }
     
@@ -105,8 +105,8 @@ class PotWinnerViewController: UIViewController, UITableViewDelegate, UITableVie
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("cell") as! PlayerTableViewCell
         
-        var pot = self.pots[indexPath.section]
-        var user = pot.players[indexPath.row]
+        let pot = self.pots[indexPath.section]
+        let user = pot.players[indexPath.row]
         
         cell.accessoryType = UITableViewCellAccessoryType.None
         cell.orderLabel.hidden = false

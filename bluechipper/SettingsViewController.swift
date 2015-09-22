@@ -9,6 +9,7 @@
 import Foundation
 import XLForm
 
+@available(iOS 8.0, *)
 class SettingsViewController : XLFormViewController {
     
     private enum Tags : String {
@@ -24,7 +25,7 @@ class SettingsViewController : XLFormViewController {
         self.initializeForm()
     }
     
-    required init(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         self.initializeForm()
     }

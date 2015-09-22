@@ -35,6 +35,7 @@ enum GameNotificationActions : String {
     case GameHandWinnersChosen = "handwinnerschosen"
 }
 
+@available(iOS 8.0, *)
 class GameManager: NSObject, BeaconRangedMonitorDelegate, BeaconMonitorDelegate, UIWebViewDelegate {
     var user : PFUser
     var beaconMonitor : BeaconMonitor
@@ -165,7 +166,7 @@ class GameManager: NSObject, BeaconRangedMonitorDelegate, BeaconMonitorDelegate,
     }
     
     internal func signalAction(userId: NSString, action: NSString, userInfo : NSDictionary) {
-        for (index, callback) in enumerate(waitActionCallbacks) {
+        for (index, callback) in waitActionCallbacks.enumerate() {
             let res : Bool = callback.predicate(userId, action, userInfo)
             if (res) {
                 callback.callback(userId, action, userInfo)
@@ -187,7 +188,7 @@ class GameManager: NSObject, BeaconRangedMonitorDelegate, BeaconMonitorDelegate,
     }
     
     internal func registerWaitForAction(predicate : BCWaitEvaluationBlock, callback : BCWaitCallbackBlock, persist: Bool) {
-        waitActionCallbacks.push((predicate: predicate, callback: callback, persist: persist))
+        waitActionCallbacks.append((predicate: predicate, callback: callback, persist: persist))
     }
     
     internal func rangedBeacons() {
@@ -198,7 +199,7 @@ class GameManager: NSObject, BeaconRangedMonitorDelegate, BeaconMonitorDelegate,
     }
     
     func fetchGame(gameId: String, block: BCGameResultBlock?) {
-        var query = PFQuery(className: "game")
+        let query = PFQuery(className: "game")
         query.whereKey("objectId", equalTo: self.gameId!)
         
         query.findObjectsInBackgroundWithBlock { (results, error) -> Void in
@@ -211,9 +212,9 @@ class GameManager: NSObject, BeaconRangedMonitorDelegate, BeaconMonitorDelegate,
                 return
             }
             
-            var game = results!.first as! Game
-            var existingUserList = game.users
-            var activeUserList = game.activeusers
+            let game = results!.first as! Game
+            let existingUserList = game.users
+            let activeUserList = game.activeusers
             
             PFObject.fetchAllIfNeededInBackground(existingUserList.union(activeUserList), block: { (results, error) -> Void in
                 if (nil != error) {
@@ -269,7 +270,7 @@ class GameManager: NSObject, BeaconRangedMonitorDelegate, BeaconMonitorDelegate,
     
     // Create a new game
     func createGame() {
-        var game = PFObject(className: "game", dictionary: ["name" : UIDevice.currentDevice().name, "users" : [], "activeusers" : [self.user], "owner" : self.user.objectId!])
+        let game = PFObject(className: "game", dictionary: ["name" : UIDevice.currentDevice().name, "users" : [], "activeusers" : [self.user], "owner" : self.user.objectId!])
         
         game.saveInBackgroundWithBlock({ (res, error) -> Void in
             self.processGame(game as! Game)
@@ -301,31 +302,30 @@ class GameManager: NSObject, BeaconRangedMonitorDelegate, BeaconMonitorDelegate,
         
         self.joinableGames.removeAll(keepCapacity: true)
         let dict = self.beaconMonitor.rangedUsers
-        var existingGameId : String = ""
         var userList : Array<AnyObject> = Array()
         var searchUserList : Array<AnyObject> = Array()
         
-        for (hashValue, user) in dict {
+        for (_, user) in dict {
             userList.append(user)
             searchUserList.append(user)
         }
         
         searchUserList.append(self.user)
         
-        var usersQuery = PFQuery(className: "game")
-        var activeUsersQuery = PFQuery(className: "game")
+        let usersQuery = PFQuery(className: "game")
+        let activeUsersQuery = PFQuery(className: "game")
         activeUsersQuery.whereKey("activeusers", containedIn: searchUserList)
         activeUsersQuery.whereKey("disabled", notEqualTo: true)
         usersQuery.whereKey("users", containedIn: searchUserList)
         usersQuery.whereKey("disabled", notEqualTo: true)
         
-        var query = PFQuery.orQueryWithSubqueries([usersQuery, activeUsersQuery]);
+        let query = PFQuery.orQueryWithSubqueries([usersQuery, activeUsersQuery]);
         
         query.findObjectsInBackgroundWithBlock { (games, error) -> Void in
             var mgames = games
-            mgames!.sort({ (a, b) -> Bool in
-                let pa = a as! PFObject
-                let pb = b as! PFObject
+            mgames!.sortInPlace({ (a, b) -> Bool in
+                let pa = a 
+                let pb = b 
                 
                 return pa.createdAt!.compare(pb.createdAt!) == NSComparisonResult.OrderedDescending
             })
@@ -339,15 +339,19 @@ class GameManager: NSObject, BeaconRangedMonitorDelegate, BeaconMonitorDelegate,
                 
                 if (nil == name && activeUserList.count > 0) {
                     let owner : PFUser = activeUserList[0]
-                    let ava = owner.isDataAvailable()
-                    owner.fetch()
+                    do {
+                        try owner.fetch()
+                    } catch {
+                        //
+                    }
+                    
                     if (nil != owner.name) {
                         name = String(owner.name!)
                     }
                 }
                 
                 if (nil != name) {
-                    self.joinableGames.push(game)
+                    self.joinableGames.append(game)
                 }
             }
             
@@ -357,12 +361,12 @@ class GameManager: NSObject, BeaconRangedMonitorDelegate, BeaconMonitorDelegate,
     }
     
     func joinGameId(gameId : String) {
-        let game = self.joinableGames.find({ (t) -> Bool in
+        let game = self.joinableGames.filter({ (t) -> Bool in
             if (t.objectId == gameId) {
                 return true
             }
             return false
-        })
+        }).first
         if (nil != game) {
             self.joinGame(game!)
         }
@@ -403,8 +407,8 @@ class GameManager: NSObject, BeaconRangedMonitorDelegate, BeaconMonitorDelegate,
     }
     
     func joinGame(game : Game) {
-        var existingUserList = game.users
-        var activeUserList = game.activeusers
+        let existingUserList = game.users
+        let activeUserList = game.activeusers
         
         if (activeUserList.indexOf({ (u) -> Bool in u.objectId == self.user.objectId }) == nil) {
             game.users = existingUserList.union([self.user]).uniqueBy { (u) -> String in

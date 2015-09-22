@@ -1,0 +1,13 @@
+PODS:
+  - MBProgressHUD (0.9.1)
+  - XLForm (3.0.2)
+
+DEPENDENCIES:
+  - MBProgressHUD (~> 0.9.1)
+  - XLForm (~> 3.0)
+
+SPEC CHECKSUMS:
+  MBProgressHUD: c47f2c166c126cf2ce36498d80f33e754d4e93ad
+  XLForm: 7817ce29f3f259186e837bb7309ac7e5b7e9b883
+
+COCOAPODS: 0.38.2

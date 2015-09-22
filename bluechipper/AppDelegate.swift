@@ -9,12 +9,14 @@
 import UIKit
 import CoreBluetooth
 
+@available(iOS 8.0, *)
 struct Settings {
     static var current: AppDelegate?
     static var beaconMonitor: BeaconMonitor?
     static var gameManager: GameManager?
 }
 
+@available(iOS 8.0, *)
 @UIApplicationMain
 internal class AppDelegate: UIResponder, UIApplicationDelegate {
     
@@ -29,7 +31,7 @@ internal class AppDelegate: UIResponder, UIApplicationDelegate {
         PFUser.enableAutomaticUser()
         PFAnalytics.trackAppOpenedWithLaunchOptionsInBackground(launchOptions, block: nil)
         
-        let settings = UIUserNotificationSettings(forTypes: UIUserNotificationType.Alert | UIUserNotificationType.Badge | UIUserNotificationType.Sound, categories: nil)
+        let settings = UIUserNotificationSettings(forTypes: [UIUserNotificationType.Alert, UIUserNotificationType.Badge, UIUserNotificationType.Sound], categories: nil)
         
         application.registerUserNotificationSettings(settings)
         application.registerForRemoteNotifications()
@@ -66,7 +68,7 @@ internal class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: NSData) {
         if let user = PFUser.currentUser() {
             let block = { () -> Void in
-                var installation = PFInstallation.currentInstallation()
+                let installation = PFInstallation.currentInstallation()
                 installation.setDeviceTokenFromData(deviceToken)
                 installation.addUniqueObject("c" + user.objectId!, forKey: "channels")
                 installation.saveInBackgroundWithBlock { (res, error) -> Void in

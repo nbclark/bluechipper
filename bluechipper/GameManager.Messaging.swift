@@ -9,6 +9,7 @@
 import Foundation
 import MBProgressHUD
 
+@available(iOS 8.0, *)
 extension GameManager {
 
     internal func notifyState(state: Int, message: String) {
@@ -19,7 +20,7 @@ extension GameManager {
     }
     
     internal func sendPlayerPush(user : PFUser, message: String) {
-        var push = PFPush()
+        let push = PFPush()
         push.setChannel("c" + user.objectId!)
         push.setMessage(message) // the game should be refetched...
         push.sendPushInBackgroundWithBlock(nil)
@@ -39,7 +40,7 @@ extension GameManager {
         }
         
         if (nil != self.game) {
-            var push = PFPush()
+            let push = PFPush()
             push.setChannel("c" + self.game.objectId!)
             push.setData(dict)
             push.sendPushInBackgroundWithBlock(nil)

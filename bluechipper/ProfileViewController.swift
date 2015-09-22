@@ -8,11 +8,12 @@
 
 import Foundation
 
+@available(iOS 8.0, *)
 class ProfileViewController : UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
   @IBOutlet var imageView : PFImageView!
   
   @IBAction func imageTapped() {
-    var actionSheet = UIImagePickerController()
+    let actionSheet = UIImagePickerController()
     actionSheet.sourceType = UIImagePickerControllerSourceType.PhotoLibrary
     actionSheet.delegate = self
     actionSheet.allowsEditing = true
@@ -21,11 +22,11 @@ class ProfileViewController : UIViewController, UIImagePickerControllerDelegate,
     })
   }
   
-  func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [NSObject : AnyObject]) {
+  func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
     
     let image = info[UIImagePickerControllerEditedImage] as! UIImage
     let data  = UIImagePNGRepresentation(image)
-    var file = PFFile(name: "profile.png", data: data)
+    let file = PFFile(name: "profile.png", data: data!)
     
     self.imageView.image = image
     file.saveInBackgroundWithBlock { (result, error) -> Void in
@@ -44,7 +45,7 @@ class ProfileViewController : UIViewController, UIImagePickerControllerDelegate,
   }
   
   override func viewDidLoad() {
-    var gesture = UITapGestureRecognizer(target: self, action: Selector("imageTapped"))
+    let gesture = UITapGestureRecognizer(target: self, action: Selector("imageTapped"))
     gesture.numberOfTapsRequired = 1
     
     self.imageView.addGestureRecognizer(gesture)

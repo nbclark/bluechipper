@@ -18,6 +18,7 @@ protocol BeaconMonitorDelegate : NSObjectProtocol {
     func rangedBeacons()
 }
 
+@available(iOS 8.0, *)
 internal class BeaconMonitor : NSObject
 {
     var locMan: CLLocationManager
@@ -72,7 +73,7 @@ internal class BeaconMonitor : NSObject
         self.locMan.requestAlwaysAuthorization()
         //}
         
-        let options: Dictionary<NSString, AnyObject> = [ CBPeripheralManagerOptionShowPowerAlertKey: true ]
+        let options: Dictionary<String, AnyObject> = [ CBPeripheralManagerOptionShowPowerAlertKey: true ]
         self.locAdv = CBPeripheralManager(delegate: self, queue: nil, options: options)
         
         // We will set up a beacon and range with the major and minor being this hash value
@@ -87,12 +88,12 @@ internal class BeaconMonitor : NSObject
         let hashValue : Int = PFUser.currentUser()!["hashvalue"]!.integerValue
         let major : UInt16 = (UInt16(hashValue >> 16) & 0xFFFF)
         let minor : UInt16 = UInt16(hashValue & 0xFFFF)
-        println("\(major) - \(minor)")
-        println("\(hashValue)")
+        print("\(major) - \(minor)")
+        print("\(hashValue)")
         
         advReg = CLBeaconRegion(proximityUUID: uuid, major: major, minor: minor, identifier: "")
-        let data = advReg.peripheralDataWithMeasuredPower(nil) as [NSObject : AnyObject]
-        locAdv.startAdvertising(data)
+        let data : NSDictionary = advReg.peripheralDataWithMeasuredPower(nil)
+        locAdv.startAdvertising(data as? [String : AnyObject])
         
         // For the simulator, pretend beacons are on
         #if arch(i386) || arch(x86_64)
@@ -105,13 +106,14 @@ internal class BeaconMonitor : NSObject
 }
 
 
+@available(iOS 8.0, *)
 extension BeaconMonitor : CBPeripheralManagerDelegate
 {
-    func peripheralManagerDidUpdateState(peripheral: CBPeripheralManager!) {
+    func peripheralManagerDidUpdateState(peripheral: CBPeripheralManager) {
         if (peripheral.state == CBPeripheralManagerState.PoweredOn) {
             
-            let perData = advReg.peripheralDataWithMeasuredPower(-63) as [NSObject : AnyObject]
-            locAdv.startAdvertising(perData)
+            let perData : NSDictionary = advReg.peripheralDataWithMeasuredPower(-63)
+            locAdv.startAdvertising(perData as? [String : AnyObject])
             
             self.advertisingEnabled = true
             self.checkLoaded()
@@ -121,30 +123,31 @@ extension BeaconMonitor : CBPeripheralManagerDelegate
     }
 }
 
+@available(iOS 8.0, *)
 extension BeaconMonitor : CLLocationManagerDelegate
 {
-    func locationManager(manager: CLLocationManager!, didDetermineState state: CLRegionState, forRegion region: CLRegion!) {
+    func locationManager(manager: CLLocationManager, didDetermineState state: CLRegionState, forRegion region: CLRegion) {
         manager.startRangingBeaconsInRegion(self.locReg)
     }
-    func locationManager(manager: CLLocationManager!, didEnterRegion region: CLRegion!) {
+    func locationManager(manager: CLLocationManager, didEnterRegion region: CLRegion) {
         manager.startRangingBeaconsInRegion(self.locReg)
     }
-    func locationManager(manager: CLLocationManager!, didExitRegion region: CLRegion!) {
+    func locationManager(manager: CLLocationManager, didExitRegion region: CLRegion) {
         manager.stopMonitoringForRegion(region)
     }
-    func locationManager(manager: CLLocationManager!, monitoringDidFailForRegion region: CLRegion!, withError error: NSError!) {
+    func locationManager(manager: CLLocationManager, monitoringDidFailForRegion region: CLRegion?, withError error: NSError) {
         sleep(0)
     }
-    func locationManager(manager: CLLocationManager!, rangingBeaconsDidFailForRegion region: CLBeaconRegion!, withError error: NSError!) {
+    func locationManager(manager: CLLocationManager, rangingBeaconsDidFailForRegion region: CLBeaconRegion, withError error: NSError) {
         sleep(0)
     }
-    func locationManager(manager: CLLocationManager!, didStartMonitoringForRegion region: CLRegion!) {
+    func locationManager(manager: CLLocationManager, didStartMonitoringForRegion region: CLRegion) {
         manager.requestStateForRegion(region)
         
         self.monitorEnabled = true
         self.checkLoaded()
     }
-    func locationManager(manager: CLLocationManager!, didRangeBeacons beacons: [AnyObject]!, inRegion region: CLBeaconRegion!) {
+    func locationManager(manager: CLLocationManager, didRangeBeacons beacons: [CLBeacon], inRegion region: CLBeaconRegion) {
         var needsUpdate : Bool = false
         
         var hashes : Array<AnyObject> = []
@@ -165,13 +168,12 @@ extension BeaconMonitor : CLLocationManagerDelegate
     }
     
     func fetchHashes(hashes : Array<AnyObject>) {
-        var query : PFQuery = PFUser.query()!
+        let query : PFQuery = PFUser.query()!
         query.whereKey("hashvalue", containedIn: hashes)
         self.isUpdating = true
         query.findObjectsInBackgroundWithBlock({ (users, error) -> Void in
             for user in users as! [PFUser] {
                 let hashValue = user.hashvalue!.unsignedIntValue
-                let name = user.name
                 let pfUser = user as PFUser
                 
                 self.rangedUsers[hashValue] = pfUser
@@ -189,7 +191,7 @@ extension BeaconMonitor : CLLocationManagerDelegate
 extension Array {
     mutating func removeObject<T: Equatable>(object: T) {
         var index: Int?
-        for (idx, objectToCompare) in enumerate(self) {
+        for (idx, objectToCompare) in self.enumerate() {
             let to = objectToCompare as! T
             if object == to {
                 index = idx

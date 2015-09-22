@@ -10,6 +10,7 @@ import UIKit
 import MultipeerConnectivity
 import CoreBluetooth
 
+@available(iOS 8.0, *)
 class ViewController: UIViewController, GameManagerDelegate {
     
     @IBOutlet var webView : UIWebView!
@@ -17,7 +18,7 @@ class ViewController: UIViewController, GameManagerDelegate {
     var winnersChosenBlock : BCChooseWinnersBlock?
     var pots : [Pot] = []
     
-    required init(coder aDecoder: NSCoder)
+    required init?(coder aDecoder: NSCoder)
     {
         self.firstLoad = true
         super.init(coder: aDecoder)
