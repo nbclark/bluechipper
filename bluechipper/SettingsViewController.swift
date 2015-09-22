@@ -30,6 +30,12 @@ class SettingsViewController : XLFormViewController {
         self.initializeForm()
     }
     
+    override func viewDidLayoutSubviews()
+    {
+        super.viewDidLayoutSubviews()
+        tableView.contentInset.top = topLayoutGuide.length
+    }
+    
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
         

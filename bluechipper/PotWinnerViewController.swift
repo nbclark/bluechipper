@@ -68,8 +68,6 @@ class PotWinnerViewController: UIViewController, UITableViewDelegate, UITableVie
         // TODO
         // select the row
         // when each section has at least one row selected, move on
-        let cell = tableView.cellForRowAtIndexPath(indexPath) as! PlayerTableViewCell
-        //cell.selected = true
         
         let pot = self.pots[indexPath.section]
         let user = pot.players[indexPath.row]

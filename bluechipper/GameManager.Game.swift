@@ -126,15 +126,11 @@ extension GameManager {
                         potData.append(data)
                     }
                     
-                    var err : NSError?
                     var data: NSData?
                     do {
                         data = try NSJSONSerialization.dataWithJSONObject(potData, options: NSJSONWritingOptions.PrettyPrinted)
-                    } catch let error as NSError {
-                        err = error
-                        data = nil
                     } catch {
-                        fatalError()
+                        data = nil
                     }
                     let encoded = NSString(data: data!, encoding: NSUTF8StringEncoding)
                     sleep(0)

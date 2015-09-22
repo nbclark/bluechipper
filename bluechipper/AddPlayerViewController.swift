@@ -31,6 +31,12 @@ class AddPlayerViewController : XLFormViewController {
         self.initializeForm()
     }
     
+    override func viewDidLayoutSubviews()
+    {
+        super.viewDidLayoutSubviews()
+        tableView.contentInset.top = topLayoutGuide.length
+    }
+    
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         

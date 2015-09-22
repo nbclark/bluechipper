@@ -7,22 +7,6 @@
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
-        <!--Navigation Controller-->
-        <scene sceneID="HF8-Y5-isy">
-            <objects>
-                <navigationController id="X90-Er-Ptv" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="B5a-Lo-8LL">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <connections>
-                        <segue destination="vXZ-lx-hvc" kind="relationship" relationship="rootViewController" id="NjD-qs-hcR"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="FbM-1C-pJu" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-435" y="307"/>
-        </scene>
         <!--Loading View Controller-->
         <scene sceneID="psn-HX-8dq">
             <objects>
@@ -158,13 +142,28 @@
                         <outlet property="joinGameButton" destination="zdH-uv-fkc" id="P7q-oB-Edx"/>
                         <outlet property="loadingLabel" destination="Dmp-vR-I8g" id="r2s-Sq-erf"/>
                         <outlet property="startGameButton" destination="4Ws-BR-54h" id="uJG-CF-o3a"/>
-                        <segue destination="X90-Er-Ptv" kind="showDetail" identifier="LoadedSegue" id="tG7-8L-shF"/>
-                        <segue destination="X90-Er-Ptv" kind="presentation" identifier="GameSettingsSegue" modalTransitionStyle="crossDissolve" id="KUe-L0-fbI"/>
+                        <segue destination="kKA-dn-AKZ" kind="presentation" identifier="GameSettingsSegue" modalTransitionStyle="crossDissolve" id="w9j-QX-fyF"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="k4E-vM-IZi" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-1323" y="315"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="HRf-NY-CV4">
+            <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="0np-oA-yDb" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <navigationController restorationIdentifier="GameNavigationController" storyboardIdentifier="GameNavigationController" id="kKA-dn-AKZ" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="etx-rC-UfD">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="vXZ-lx-hvc" kind="relationship" relationship="rootViewController" id="fyB-qj-crS"/>
+                    </connections>
+                </navigationController>
+            </objects>
+            <point key="canvasLocation" x="-539" y="315"/>
         </scene>
         <!--Blue Chipper-->
         <scene sceneID="ufC-wZ-h7g">
@@ -289,7 +288,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="251" y="307"/>
+            <point key="canvasLocation" x="251" y="315"/>
         </scene>
         <!--Choose Players-->
         <scene sceneID="cgu-6E-sUN">
@@ -305,7 +304,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="aBq-G1-yIa" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1079" y="72"/>
+            <point key="canvasLocation" x="969" y="315"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="WML-Fb-Lc8">
@@ -952,7 +951,4 @@
         <image name="IMG_1484.jpg" width="1000" height="1000"/>
         <image name="no-face.png" width="100" height="100"/>
     </resources>
-    <inferredMetricsTieBreakers>
-        <segue reference="KUe-L0-fbI"/>
-    </inferredMetricsTieBreakers>
 </document>

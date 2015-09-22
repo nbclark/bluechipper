@@ -47,6 +47,8 @@ class LoadingViewController: UIViewController, GameManagerDelegate, UIActionShee
     }
     
     @IBAction func startClicked() {
+        //var foo = self.storyboard?.instantiateViewControllerWithIdentifier("GameNavigationController")
+        //self.performSegueWithIdentifier("GameSettingsSegue", sender: self)
         Settings.gameManager!.createGame()
     }
     
@@ -94,6 +96,15 @@ class LoadingViewController: UIViewController, GameManagerDelegate, UIActionShee
     
     func joinedGame(game: Game) {
         self.performSegueWithIdentifier("GameSettingsSegue", sender: self)
+    }
+    
+    override func shouldPerformSegueWithIdentifier(identifier: String, sender: AnyObject?) -> Bool {
+        let res = super.shouldPerformSegueWithIdentifier(identifier, sender: sender)
+        return res
+    }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        super.prepareForSegue(segue, sender: sender)
     }
     
     func actionSheet(actionSheet: UIActionSheet, willDismissWithButtonIndex buttonIndex: Int) {

@@ -205,9 +205,7 @@ class PlayersViewController: UIViewController, UITableViewDelegate, UITableViewD
     func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
     }
     
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        let cell = tableView.cellForRowAtIndexPath(indexPath)
-        
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {        
         if (indexPath.section == 0) {
             let game = Settings.gameManager!.game
             let user = game.activeusers[indexPath.row]
